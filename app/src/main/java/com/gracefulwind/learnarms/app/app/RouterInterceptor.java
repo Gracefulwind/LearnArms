@@ -1,4 +1,4 @@
-package me.jessyan.armscomponent.app.app;
+package com.gracefulwind.learnarms.app.app;
 
 import android.content.Context;
 

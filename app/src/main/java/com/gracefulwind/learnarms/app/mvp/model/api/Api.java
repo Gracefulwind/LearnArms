@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.jessyan.armscomponent.app.mvp.model.api;
+package com.gracefulwind.learnarms.app.mvp.model.api;
 
 /**
  * ================================================

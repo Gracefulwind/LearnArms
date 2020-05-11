@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.jessyan.armscomponent.app.app.utils;
+package com.gracefulwind.learnarms.app.app.utils;
 
 import com.jess.arms.mvp.IView;
 import com.jess.arms.utils.RxLifecycleUtils;
