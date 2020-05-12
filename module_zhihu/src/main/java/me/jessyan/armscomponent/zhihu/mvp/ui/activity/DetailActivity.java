@@ -33,11 +33,11 @@ import com.jess.arms.utils.ArmsUtils;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import me.jessyan.armscomponent.zhihu.R;
 import me.jessyan.armscomponent.zhihu.R2;
 import me.jessyan.armscomponent.zhihu.app.ZhihuConstants;
-import me.jessyan.armscomponent.commonsdk.utils.HtmlUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.HtmlUtil;
 import me.jessyan.armscomponent.zhihu.di.component.DaggerDetailComponent;
 import me.jessyan.armscomponent.zhihu.mvp.contract.DetailContract;
 import me.jessyan.armscomponent.zhihu.mvp.model.entity.ZhihuDetailBean;

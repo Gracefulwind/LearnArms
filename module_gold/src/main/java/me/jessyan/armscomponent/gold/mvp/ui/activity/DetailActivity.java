@@ -29,8 +29,8 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 import butterknife.BindView;
-import me.jessyan.armscomponent.commonres.dialog.ProgresDialog;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonres.dialog.ProgresDialog;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import me.jessyan.armscomponent.gold.R;
 import me.jessyan.armscomponent.gold.R2;
 import me.jessyan.armscomponent.gold.app.GoldConstants;

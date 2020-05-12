@@ -22,7 +22,7 @@ import com.jess.arms.di.scope.ActivityScope;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import me.jessyan.armscomponent.commonres.dialog.ProgresDialog;
+import com.gracefulwind.learnarms.commonres.dialog.ProgresDialog;
 import me.jessyan.armscomponent.zhihu.mvp.contract.DetailContract;
 import me.jessyan.armscomponent.zhihu.mvp.model.ZhihuModel;
 

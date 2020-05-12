@@ -33,7 +33,7 @@ import com.paginate.Paginate;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import me.jessyan.armscomponent.gold.R;
 import me.jessyan.armscomponent.gold.R2;
 import me.jessyan.armscomponent.gold.di.component.DaggerGoldHomeComponent;

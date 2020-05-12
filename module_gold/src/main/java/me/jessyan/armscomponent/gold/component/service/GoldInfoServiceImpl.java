@@ -20,9 +20,9 @@ import android.content.Context;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.jess.arms.utils.ArmsUtils;
 
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
-import me.jessyan.armscomponent.commonservice.gold.bean.GoldInfo;
-import me.jessyan.armscomponent.commonservice.gold.service.GoldInfoService;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonservice.gold.bean.GoldInfo;
+import com.gracefulwind.learnarms.commonservice.gold.service.GoldInfoService;
 import me.jessyan.armscomponent.gold.R;
 
 /**

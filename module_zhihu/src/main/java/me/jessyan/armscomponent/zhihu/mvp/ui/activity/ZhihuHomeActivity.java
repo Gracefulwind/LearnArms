@@ -32,7 +32,7 @@ import com.jess.arms.utils.ArmsUtils;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import me.jessyan.armscomponent.zhihu.R;
 import me.jessyan.armscomponent.zhihu.R2;
 import me.jessyan.armscomponent.zhihu.di.component.DaggerZhihuHomeComponent;

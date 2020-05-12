@@ -29,7 +29,7 @@ import java.util.List;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import me.jessyan.armscomponent.gold.app.GoldConstants;
 import me.jessyan.armscomponent.gold.mvp.contract.GoldHomeContract;
 import me.jessyan.armscomponent.gold.mvp.model.GoldModel;

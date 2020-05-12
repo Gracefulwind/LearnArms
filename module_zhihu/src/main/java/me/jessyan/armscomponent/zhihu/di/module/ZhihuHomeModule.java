@@ -29,7 +29,7 @@ import java.util.List;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import me.jessyan.armscomponent.zhihu.app.ZhihuConstants;
 import me.jessyan.armscomponent.zhihu.mvp.contract.ZhihuHomeContract;
 import me.jessyan.armscomponent.zhihu.mvp.model.ZhihuModel;

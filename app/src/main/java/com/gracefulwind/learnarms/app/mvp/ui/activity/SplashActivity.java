@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gracefulwind.learnarms.app.R;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
@@ -28,9 +29,8 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import me.jessyan.armscomponent.app.R;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
-import me.jessyan.armscomponent.commonsdk.utils.Utils;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 
 /**
  * ================================================

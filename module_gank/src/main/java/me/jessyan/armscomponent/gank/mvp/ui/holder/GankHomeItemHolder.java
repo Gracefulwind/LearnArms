@@ -25,7 +25,7 @@ import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
-import me.jessyan.armscomponent.commonsdk.imgaEngine.config.CommonImageConfigImpl;
+import com.gracefulwind.learnarms.commonsdk.imgaEngine.config.CommonImageConfigImpl;
 import me.jessyan.armscomponent.gank.R;
 import me.jessyan.armscomponent.gank.R2;
 import me.jessyan.armscomponent.gank.mvp.model.entity.GankItemBean;

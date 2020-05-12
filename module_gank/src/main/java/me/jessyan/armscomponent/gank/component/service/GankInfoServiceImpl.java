@@ -20,9 +20,9 @@ import android.content.Context;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.jess.arms.utils.ArmsUtils;
 
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
-import me.jessyan.armscomponent.commonservice.gank.bean.GankInfo;
-import me.jessyan.armscomponent.commonservice.gank.service.GankInfoService;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonservice.gank.bean.GankInfo;
+import com.gracefulwind.learnarms.commonservice.gank.service.GankInfoService;
 import me.jessyan.armscomponent.gank.R;
 
 /**

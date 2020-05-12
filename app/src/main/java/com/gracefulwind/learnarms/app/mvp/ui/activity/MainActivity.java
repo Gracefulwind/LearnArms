@@ -24,18 +24,18 @@ import android.widget.Button;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.gracefulwind.learnarms.app.R;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import me.jessyan.armscomponent.app.R;
-import me.jessyan.armscomponent.commonsdk.core.RouterHub;
-import me.jessyan.armscomponent.commonsdk.utils.Utils;
-import me.jessyan.armscomponent.commonservice.gank.service.GankInfoService;
-import me.jessyan.armscomponent.commonservice.gold.service.GoldInfoService;
-import me.jessyan.armscomponent.commonservice.zhihu.service.ZhihuInfoService;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
+import com.gracefulwind.learnarms.commonservice.gank.service.GankInfoService;
+import com.gracefulwind.learnarms.commonservice.gold.service.GoldInfoService;
+import com.gracefulwind.learnarms.commonservice.zhihu.service.ZhihuInfoService;
 
 /**
  * ================================================
