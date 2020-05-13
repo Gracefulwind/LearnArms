@@ -19,12 +19,12 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.gracefulwind.learnarms.commonsdk.BuildConfig;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.utils.ArmsUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import me.jessyan.armscomponent.commonsdk.BuildConfig;
 
 
 /**

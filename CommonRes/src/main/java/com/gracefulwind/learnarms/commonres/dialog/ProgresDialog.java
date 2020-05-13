@@ -19,7 +19,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import me.jessyan.armscomponent.commonres.R;
+import com.gracefulwind.learnarms.commonres.R;
+
 
 /**
  * ================================================

@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "me.jessyan.armscomponent.app"
+        applicationId "com.gracefulwind.learnarms"
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
         versionCode rootProject.ext.android["versionCode"]

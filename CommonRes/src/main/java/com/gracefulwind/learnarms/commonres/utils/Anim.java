@@ -19,7 +19,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 
-import me.jessyan.armscomponent.commonres.R;
+import com.gracefulwind.learnarms.commonres.R;
 
 
 /**

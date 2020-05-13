@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.gracefulwind.learnarms.commonsdk.BuildConfig;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.ClientModule;
 import com.jess.arms.di.module.GlobalConfigModule;
@@ -31,7 +32,6 @@ import com.gracefulwind.learnarms.commonsdk.imgaEngine.Strategy.CommonGlideImage
 import java.util.List;
 
 import butterknife.ButterKnife;
-import me.jessyan.armscomponent.commonsdk.BuildConfig;
 import com.gracefulwind.learnarms.commonsdk.http.Api;
 import com.gracefulwind.learnarms.commonsdk.http.SSLSocketClient;
 
@@ -50,6 +50,8 @@ import timber.log.Timber;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
+
+//todo: 核心config，在application中的初始化在这里完成。
 public class GlobalConfiguration implements ConfigModule {
 
     @Override
@@ -78,6 +80,7 @@ public class GlobalConfiguration implements ConfigModule {
                     rxCacheBuilder.useExpiredDataIfLoaderNotAvailable(true);
                     return null;
                 });
+
     }
 
     @Override
@@ -87,6 +90,7 @@ public class GlobalConfiguration implements ConfigModule {
 
             @Override
             public void attachBaseContext(@NonNull Context base) {
+                System.out.println("---call attachBaseContext");
             }
 
             @Override
@@ -99,11 +103,14 @@ public class GlobalConfiguration implements ConfigModule {
                     RetrofitUrlManager.getInstance().setDebug(true);
                 }
                 ARouter.init(application); // 尽可能早,推荐在Application中初始化
+                //todo: application的init
+                System.out.println("---call onCreate");
+
             }
 
             @Override
             public void onTerminate(@NonNull Application application) {
-
+                System.out.println("---call onTerminate");
             }
         });
     }
