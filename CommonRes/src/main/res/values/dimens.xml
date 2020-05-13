@@ -64,4 +64,19 @@
     //marginBottom
     <dimen name="public_mar_bottom_4dp">4dp</dimen>
     <dimen name="public_mar_bottom_5dp">5dp</dimen>
+
+<!-- 基本dimen属性   -->
+    <dimen name="public_dimen_1dp">1dp</dimen>
+    <dimen name="public_dimen_5dp">5dp</dimen>
+    <dimen name="public_dimen_10dp">10dp</dimen>
+    <dimen name="public_dimen_15dp">15dp</dimen>
+    <dimen name="public_dimen_20dp">20dp</dimen>
+    <dimen name="public_dimen_30dp">30dp</dimen>
+    <dimen name="public_dimen_40dp">40dp</dimen>
+    <dimen name="public_dimen_60dp">60dp</dimen>
+    <dimen name="public_dimen_80dp">80dp</dimen>
+
+
+
+
 </resources>

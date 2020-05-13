@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-</LinearLayout>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/as_iv_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_pic_splash"
+        />
+
+    <TextView
+        android:id="@+id/as_tv_jump_button"
+        android:layout_width="@dimen/public_dimen_60dp"
+        android:layout_height="@dimen/public_dimen_30dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/public_dimen_20dp"
+        android:layout_marginRight="@dimen/public_dimen_20dp"
+        android:paddingLeft="@dimen/public_dimen_10dp"
+        android:paddingRight="@dimen/public_dimen_10dp"
+        android:background="@drawable/public_shape_corner15_green_trans"
+        android:gravity="center"
+        android:textColor="@color/public_black"
+        android:textSize="@dimen/public_font_14sp"
+        android:text="转跳"
+        />
+
+</android.support.constraint.ConstraintLayout>

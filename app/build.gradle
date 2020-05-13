@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08"))
+}
+
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     buildToolsVersion rootProject.ext.android["buildToolsVersion"]
@@ -8,6 +13,27 @@ android {
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        release {
+            keyAlias releaseKeyAlias
+            keyPassword releaseKeyPassword
+            storeFile file(releaseStoreFile)
+            storePassword releaseStorePassword
+//            default
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        debug {
+            keyAlias debugKeyAlias
+            keyPassword debugKeyPassword
+            storeFile file(debugStoreFile)
+            storePassword debugStorePassword
+//            default
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
 
     defaultConfig {
@@ -22,6 +48,10 @@ android {
                 arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
+        manifestPlaceholders = [
+                DEFAULT_PLACE_HOLDER    :  "developer-default"
+//                DEEP_LINK_SCHEME    :  "${DEEP_LINK_SCHEME}",
+        ]
     }
     buildTypes {
         debug {
@@ -48,6 +78,13 @@ android {
         disable "ResourceType"
         abortOnError false
     }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${APP_NAME}-${APP_MODE}-${defaultConfig.versionCode}-${releaseTime()}.apk"
+        }
+    }
+
 }
 
 dependencies {

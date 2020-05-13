@@ -18,19 +18,25 @@ package com.gracefulwind.learnarms.app.mvp.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.app.R;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
-import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 
 /**
  * ================================================
@@ -41,6 +47,12 @@ import com.gracefulwind.learnarms.commonsdk.utils.Utils;
  */
 @Route(path = RouterHub.APP_SPLASHACTIVITY)
 public class SplashActivity extends BaseActivity {
+    @BindView(R.id.as_iv_bg)
+    ImageView asIvBg;
+    @BindView(R.id.as_tv_jump_button)
+    TextView asTvJumpButton;
+    private Disposable jumpToMainTimer;
+
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
 
@@ -53,15 +65,34 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        Observable.timer(2, TimeUnit.SECONDS)
+        jumpToMainTimer = Observable.timer(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        Utils.navigation(SplashActivity.this, RouterHub.APP_MAINACTIVITY);
-                        finish();
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        jumpToMain();
                     }
                 });
+    }
+
+
+    @OnClick({R.id.as_tv_jump_button})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.as_tv_jump_button:
+                jumpToMainImmediately();
+                break;
+        }
+    }
+
+    private void jumpToMain() {
+        Utils.navigation(SplashActivity.this, RouterHub.APP_MAINACTIVITY);
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    private void jumpToMainImmediately() {
+        jumpToMainTimer.dispose();
+        jumpToMain();
     }
 }

@@ -20,8 +20,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.gracefulwind.learnarms.commonsdk.BuildConfig;
+import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.utils.ArmsUtils;
+import com.jess.arms.utils.LogUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -45,6 +47,7 @@ public class AppLifecyclesImpl implements AppLifecycles {
 
     @Override
     public void onCreate(@NonNull Application application) {
+        LogUtils.debugInfo("---app AppLifecyclesImpl onCreate0");
         if (LeakCanary.isInAnalyzerProcess(application)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -52,10 +55,16 @@ public class AppLifecyclesImpl implements AppLifecycles {
         }
         //leakCanary内存泄露检查
         ArmsUtils.obtainAppComponentFromContext(application).extras().put(RefWatcher.class.getName(), BuildConfig.USE_CANARY ? LeakCanary.install(application) : RefWatcher.DISABLED);
+        LogUtils.debugInfo("---app AppLifecyclesImpl onCreate1");
+        initUiUtil(application.getBaseContext());
     }
 
     @Override
     public void onTerminate(@NonNull Application application) {
 
+    }
+
+    private void initUiUtil(Context context) {
+        UiUtil.initUiUtil(context);
     }
 }

@@ -46,4 +46,8 @@ dependencies {
         exclude module: 'support-annotations'
     }
     api rootProject.ext.dependencies["retrofit-url-manager"]
+
+    //ui
+    api rootProject.ext.dependencies["constraintlayout"]
+    api rootProject.ext.dependencies["FlexboxLayout"]
 }
