@@ -1,5 +1,3 @@
-![Logo](arts/arms_component_banner_v1.0.jpg)
-![Official](https://raw.githubusercontent.com/JessYanCoding/MVPArms/master/image/official.jpeg)
 
 <p align="center">
   <a href="https://developer.android.com/about/versions/android-4.0.html">
@@ -14,12 +12,9 @@
 ## MVPArms级androidGank学习demo
 
 ## Overview
-<p align="center">
-  <img src="arts/ArmsComponent.gif"/>
-</p>  
 
 ## Wiki
-[**Wiki Documents (开发前必看!!!)**](https://github.com/JessYanCoding/ArmsComponent/wiki)
+
 
 ## Notice
 
