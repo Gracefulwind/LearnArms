@@ -41,5 +41,8 @@ captures/
 
 # MacOS
 .DS_Store
+
+# other
 *.hprof
 tmpmob/
+output.json

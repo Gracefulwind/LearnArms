@@ -1,1 +1,3 @@
 include ':app', ':CommonSDK', ':CommonService', ':CommonRes', ':module_zhihu', ':module_gank', 'module_gold'
+include ':module_weather'
+include ':module_test_dagger'

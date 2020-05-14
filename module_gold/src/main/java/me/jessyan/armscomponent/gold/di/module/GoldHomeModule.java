@@ -71,7 +71,7 @@ public abstract class GoldHomeModule {
             @Override
             public void onItemClick(View view, int viewType, GoldListBean data, int position) {
                 ARouter.getInstance()
-                        .build(RouterHub.GOLD_DETAILACTIVITY)
+                        .build(RouterHub.GOLD.GOLD_DETAILACTIVITY)
                         .withString(GoldConstants.DETAIL_URL, data.getUrl())
                         .withString(GoldConstants.DETAIL_TITLE, data.getTitle())
                         .navigation(GoldHomeView.getActivity());

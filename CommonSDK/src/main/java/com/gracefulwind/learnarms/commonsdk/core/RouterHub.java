@@ -42,44 +42,80 @@ public interface RouterHub {
     /**
      * 组名
      */
-    String APP = "/app";//宿主 App 组件
-    String ZHIHU = "/zhihu";//知乎组件
-    String GANK = "/gank";//干货集中营组件
-    String GOLD = "/gold";//稀土掘金组件
+    String APP_HOME = "/app";//宿主 App 组件
+    String ZHIHU_HOME = "/zhihu";//知乎组件
+    String GANK_HOME = "/gank";//干货集中营组件
+    String GOLD_HOME = "/gold";//稀土掘金组件
+    String TEST_DAGGER_HOME = "/test_dagger";//测试dagger组件
+    String WEATHER_HOME = "/weather";//天气组件
 
     /**
      * 服务组件, 用于给每个组件暴露特有的服务
      */
     String SERVICE = "/service";
 
-
+//====================================================================================================
     /**
      * 宿主 App 分组
      */
-    String APP_SPLASHACTIVITY = APP + "/SplashActivity";
-    String APP_MAINACTIVITY = APP + "/MainActivity";
+    String APP_SPLASHACTIVITY = APP_HOME + "/SplashActivity";
+    String APP_MAINACTIVITY = APP_HOME + "/MainActivity";
 
 
+//====================================================================================================
     /**
      * 知乎分组
      */
-    String ZHIHU_SERVICE_ZHIHUINFOSERVICE = ZHIHU + SERVICE + "/ZhihuInfoService";
+    interface ZHIHU{
+        String ZHIHU_SERVICE_ZHIHUINFOSERVICE = ZHIHU_HOME + SERVICE + "/ZhihuInfoService";
 
-    String ZHIHU_HOMEACTIVITY = ZHIHU + "/HomeActivity";
-    String ZHIHU_DETAILACTIVITY = ZHIHU + "/DetailActivity";
+        String ZHIHU_HOMEACTIVITY = ZHIHU_HOME + "/HomeActivity";
+        String ZHIHU_DETAILACTIVITY = ZHIHU_HOME + "/DetailActivity";
+    }
 
+
+//====================================================================================================
     /**
      * 干货集中营分组
      */
-    String GANK_SERVICE_GANKINFOSERVICE = GANK + SERVICE + "/GankInfoService";
+    interface GANK{
+        String GANK_SERVICE_GANKINFOSERVICE = GANK_HOME + SERVICE + "/GankInfoService";
 
-    String GANK_HOMEACTIVITY = GANK + "/HomeActivity";
+        String GANK_HOMEACTIVITY = GANK_HOME + "/HomeActivity";
+    }
 
+
+//====================================================================================================
     /**
      * 稀土掘金分组
      */
-    String GOLD_SERVICE_GOLDINFOSERVICE = GOLD + SERVICE + "/GoldInfoService";
+    interface GOLD{
+        String GOLD_SERVICE_GOLDINFOSERVICE = GOLD_HOME + SERVICE + "/GoldInfoService";
 
-    String GOLD_HOMEACTIVITY = GOLD + "/HomeActivity";
-    String GOLD_DETAILACTIVITY = GOLD + "/DetailActivity";
+        String GOLD_HOMEACTIVITY = GOLD_HOME + "/HomeActivity";
+        String GOLD_DETAILACTIVITY = GOLD_HOME + "/DetailActivity";
+    }
+
+//====================================================================================================
+    /**
+     * 测试dagger分组
+    */
+    interface TEST_DAGGER{
+        String SERVICE_INFOSERVICE = TEST_DAGGER_HOME + SERVICE + "/InfoService";
+
+        String HOMEACTIVITY = TEST_DAGGER_HOME + "/HomeActivity";
+//        String GOLD_DETAILACTIVITY = GOLD_HOME + "/DetailActivity";
+    }
+
+//====================================================================================================
+    /**
+     * 天气分组
+     */
+    interface WEATHER{
+        String GOLD_SERVICE_GOLDINFOSERVICE = WEATHER_HOME + SERVICE + "/InfoService";
+
+//        String GOLD_HOMEACTIVITY = GOLD_HOME + "/HomeActivity";
+//        String GOLD_DETAILACTIVITY = GOLD_HOME + "/DetailActivity";
+    }
+
 }

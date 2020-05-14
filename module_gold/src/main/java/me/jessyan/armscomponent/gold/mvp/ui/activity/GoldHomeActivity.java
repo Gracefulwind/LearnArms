@@ -52,7 +52,7 @@ import timber.log.Timber;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-@Route(path = RouterHub.GOLD_HOMEACTIVITY)
+@Route(path = RouterHub.GOLD.GOLD_HOMEACTIVITY)
 public class GoldHomeActivity extends BaseActivity<GoldHomePresenter> implements GoldHomeContract.View, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R2.id.recyclerView)
     RecyclerView mRecyclerView;

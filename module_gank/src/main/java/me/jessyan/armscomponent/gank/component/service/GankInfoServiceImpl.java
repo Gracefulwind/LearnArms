@@ -35,7 +35,7 @@ import me.jessyan.armscomponent.gank.R;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-@Route(path = RouterHub.GANK_SERVICE_GANKINFOSERVICE, name = "干货集中营信息服务")
+@Route(path = RouterHub.GANK.GANK_SERVICE_GANKINFOSERVICE, name = "干货集中营信息服务")
 public class GankInfoServiceImpl implements GankInfoService {
     private Context mContext;
 

@@ -35,7 +35,7 @@ import me.jessyan.armscomponent.gold.R;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-@Route(path = RouterHub.GOLD_SERVICE_GOLDINFOSERVICE, name = "稀土掘金信息服务")
+@Route(path = RouterHub.GOLD.GOLD_SERVICE_GOLDINFOSERVICE, name = "稀土掘金信息服务")
 public class GoldInfoServiceImpl implements GoldInfoService {
     private Context mContext;
 

@@ -56,11 +56,11 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.bt_gold)
     Button mGoldButton;
 
-    @Autowired(name = RouterHub.ZHIHU_SERVICE_ZHIHUINFOSERVICE)
+    @Autowired(name = RouterHub.ZHIHU.ZHIHU_SERVICE_ZHIHUINFOSERVICE)
     ZhihuInfoService mZhihuInfoService;
-    @Autowired(name = RouterHub.GANK_SERVICE_GANKINFOSERVICE)
+    @Autowired(name = RouterHub.GANK.GANK_SERVICE_GANKINFOSERVICE)
     GankInfoService mGankInfoService;
-    @Autowired(name = RouterHub.GOLD_SERVICE_GOLDINFOSERVICE)
+    @Autowired(name = RouterHub.GOLD.GOLD_SERVICE_GOLDINFOSERVICE)
     GoldInfoService mGoldInfoService;
 
     private long mPressedTime;
@@ -146,16 +146,17 @@ public class MainActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_zhihu:
-                Utils.navigation(MainActivity.this, RouterHub.ZHIHU_HOMEACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.ZHIHU.ZHIHU_HOMEACTIVITY);
                 break;
             case R.id.bt_gank:
-                Utils.navigation(MainActivity.this, RouterHub.GANK_HOMEACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.GANK.GANK_HOMEACTIVITY);
                 break;
             case R.id.bt_gold:
-                Utils.navigation(MainActivity.this, RouterHub.GOLD_HOMEACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.GOLD.GOLD_HOMEACTIVITY);
                 break;
             case R.id.am_tv_click1:
                 //转跳模块1
+                Utils.navigation(MainActivity.this, RouterHub.TEST_DAGGER.HOMEACTIVITY);
                 break;
             default:
                 break;
