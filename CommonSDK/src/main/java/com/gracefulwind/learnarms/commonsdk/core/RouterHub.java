@@ -104,7 +104,7 @@ public interface RouterHub {
         String SERVICE_INFOSERVICE = TEST_DAGGER_HOME + SERVICE + "/InfoService";
 
         String HOMEACTIVITY = TEST_DAGGER_HOME + "/HomeActivity";
-//        String GOLD_DETAILACTIVITY = GOLD_HOME + "/DetailActivity";
+        String DAGGER_PAGE_1_ACTIVITY = TEST_DAGGER_HOME + "/DaggerPage1Activity";
     }
 
 //====================================================================================================
@@ -114,8 +114,6 @@ public interface RouterHub {
     interface WEATHER{
         String GOLD_SERVICE_GOLDINFOSERVICE = WEATHER_HOME + SERVICE + "/InfoService";
 
-//        String GOLD_HOMEACTIVITY = GOLD_HOME + "/HomeActivity";
-//        String GOLD_DETAILACTIVITY = GOLD_HOME + "/DetailActivity";
     }
 
 }

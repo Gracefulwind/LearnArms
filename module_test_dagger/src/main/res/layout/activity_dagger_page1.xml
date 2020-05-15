@@ -6,18 +6,33 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/atdm_tv_title"
+        android:id="@+id/adp1_tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="this is test dagger activity!"
+        android:text="this is dagger page1 activity!"
         android:gravity="center"
         />
 
     <TextView
-        android:id="@+id/atdm_tv_click1"
+        android:id="@+id/adp1_tv_click1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="点击转跳dagger2-1-activity "
+        android:text=""
        />
+
+    <TextView
+        android:id="@+id/adp1_tv_click2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        />
+
+    <TextView
+        android:id="@+id/adp1_tv_click3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        />
+
 
 </LinearLayout>
