@@ -101,6 +101,8 @@ public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter
         }
         else if(R.id.atdm_tv_click1 == id){
             Utils.navigation(this, RouterHub.TEST_DAGGER.DAGGER_PAGE_1_ACTIVITY);
+//            Intent intent = new Intent(this, DaggerPage1Activity.class);
+//            startActivity(intent);
         }
     }
 }

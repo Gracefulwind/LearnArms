@@ -1,6 +1,9 @@
 package com.gracefulwind.learnarms.module_test_dagger.di.module;
 
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.DaggerPage1Contract;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.model.DaggerPage1Model;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage1Presenter;
+import com.jess.arms.di.scope.ActivityScope;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,17 +20,43 @@ import dagger.Provides;
  * @Email: 429344332@qq.com
  */
 
-//@Module
+@Module
 public class DaggerPage1Module {
 
     private DaggerPage1Contract.View mView;
+    private DaggerPage1Contract.Model mModel;
 
-    public DaggerPage1Module(DaggerPage1Contract.View view) {
-        mView = view;
+    public DaggerPage1Module() {
+    }
+
+    public DaggerPage1Module(DaggerPage1Contract.View mView, DaggerPage1Contract.Model mModel) {
+        this.mView = mView;
+        this.mModel = mModel;
+    }
+
+    //    public DaggerPage1Module(DaggerPage1Contract.View view, DaggerPage1Contract.Model model) {
+//        mView = view;
+//        mModel = model;
+//    }
+
+    @Provides
+    DaggerPage1Presenter providePresenter(DaggerPage1Contract.View view, DaggerPage1Contract.Model model) {
+        return new DaggerPage1Presenter(view, model);
     }
 
 //    @Provides
-    DaggerPage1Contract.View provideMainView() {
-        return mView;
+//    DaggerPage1Contract.View provideView() {
+//        return mView;
+//    }
+//
+//    @Provides
+//    DaggerPage1Contract.Model provideModel() {
+//        return mModel;
+//    }
+
+    @Provides
+    DaggerPage1Model provideModelImp() {
+        return new DaggerPage1Model("from DaggerPage1Model");
     }
+
 }

@@ -13,25 +13,31 @@
         android:gravity="center"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/public_dimen_1dp"
+        android:background="@color/public_black"
+        />
+
     <TextView
         android:id="@+id/adp1_tv_click1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="click1"
        />
 
     <TextView
         android:id="@+id/adp1_tv_click2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="click2"
         />
 
     <TextView
         android:id="@+id/adp1_tv_click3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="click3"
         />
 
 
