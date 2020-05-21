@@ -105,6 +105,7 @@ public interface RouterHub {
 
         String HOMEACTIVITY = TEST_DAGGER_HOME + "/HomeActivity";
         String DAGGER_PAGE_1_ACTIVITY = TEST_DAGGER_HOME + "/DaggerPage1Activity";
+        String DAGGER_PAGE_2_ACTIVITY = TEST_DAGGER_HOME + "/DaggerPage2Activity";
     }
 
 //====================================================================================================

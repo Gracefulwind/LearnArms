@@ -12,15 +12,19 @@ import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.module_test_dagger.R;
 import com.gracefulwind.learnarms.module_test_dagger.R2;
+import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerDaggerPage2Component;
+import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerPage2Component;
 import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerTestDaggerMainComponent;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.DaggerPage2Contract;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.TestDaggerMainContract;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage1Presenter;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage2Presenter;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.TestDaggerMainPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -38,32 +42,30 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-@Route(path = RouterHub.TEST_DAGGER.HOMEACTIVITY)
-public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter> implements TestDaggerMainContract.View {
+@Route(path = RouterHub.TEST_DAGGER.DAGGER_PAGE_2_ACTIVITY)
+public class DaggerPage2Activity extends BaseActivity<DaggerPage2Presenter> implements DaggerPage2Contract.View {
 
-    @BindView(R2.id.atdm_tv_title)
-    TextView atdmTvTitle;
-    @BindView(R2.id.atdm_tv_click1)
-    TextView atdmTvClick1;
+
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
-        DaggerTestDaggerMainComponent //如找不到该类,请编译一下项目
+        DaggerDaggerPage2Component//如找不到该类,请编译一下项目
                 .builder()
                 .appComponent(appComponent)
                 .view(this)
+                .activity(this)
                 .build()
                 .inject(this);
     }
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
-        return R.layout.activity_test_dagger_main; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
+        return R.layout.activity_dagger_page2; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-
+        mPresenter.requestData();
     }
 
     @Override
@@ -93,7 +95,7 @@ public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter
         finish();
     }
 
-    @OnClick({R2.id.atdm_tv_title, R2.id.atdm_tv_click1, R2.id.atdm_tv_click2})
+    @OnClick({R2.id.atdm_tv_title, R2.id.atdm_tv_click1})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.atdm_tv_title == id){
@@ -104,8 +106,10 @@ public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter
 //            Intent intent = new Intent(this, DaggerPage1Activity.class);
 //            startActivity(intent);
         }
-        else if(R.id.atdm_tv_click2 == id){
-            Utils.navigation(this, RouterHub.TEST_DAGGER.DAGGER_PAGE_2_ACTIVITY);
-        }
+    }
+
+    @Override
+    public void showPage2View(String str) {
+        ArmsUtils.makeText(this, str);
     }
 }

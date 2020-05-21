@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/adp2_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="this is test dagger activity!"
+        android:gravity="center"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/public_dimen_1dp"
+        android:background="@color/public_black"
+        />
+
+    <TextView
+        android:id="@+id/adp2_tv_click1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click1"
+        android:layout_margin="@dimen/public_dimen_2dp"
+        android:background="@color/public_red"
+       />
+
+    <TextView
+        android:id="@+id/adp2_tv_click2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click2"
+        android:layout_margin="@dimen/public_dimen_2dp"
+        android:background="@color/public_green"
+        />
+
+    <TextView
+        android:id="@+id/adp2_tv_click3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click3"
+        android:layout_margin="@dimen/public_dimen_2dp"
+        android:background="@color/public_blue"
+        />
+
+</LinearLayout>

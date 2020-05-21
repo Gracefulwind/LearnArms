@@ -20,4 +20,11 @@
         android:text="点击转跳dagger2-1-activity "
        />
 
+    <TextView
+        android:id="@+id/atdm_tv_click2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击转跳dagger2-2-activity "
+        />
+
 </LinearLayout>
