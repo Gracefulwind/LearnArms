@@ -35,7 +35,7 @@ public interface DaggerPage2Component {
 
         DaggerPage2Component.Builder appComponent(AppComponent appComponent);
         @BindsInstance
-        DaggerPage2Component.Builder activity(DaggerPage2Activity appComponent);
+        DaggerPage2Component.Builder activity(DaggerPage2Activity activity);
 
         DaggerPage2Component build();
     }

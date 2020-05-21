@@ -43,7 +43,7 @@ import butterknife.OnClick;
 @Route(path = RouterHub.TEST_DAGGER.DAGGER_PAGE_1_ACTIVITY)
 public class DaggerPage1Activity extends AppCompatActivity/*<DaggerPage1Presenter>*/ implements DaggerPage1Contract.View {
 
-    //    @Inject
+    @Inject
     DaggerPage1Item1 item1Test;
 
     @Inject

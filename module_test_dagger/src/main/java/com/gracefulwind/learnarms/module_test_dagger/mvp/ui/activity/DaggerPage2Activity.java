@@ -17,12 +17,16 @@ import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerPage2Com
 import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerTestDaggerMainComponent;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.DaggerPage2Contract;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.TestDaggerMainContract;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.model.entity.DaggerPage1Item1;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage1Presenter;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage2Presenter;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.TestDaggerMainPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+import com.jess.arms.utils.LogUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,7 +49,8 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 @Route(path = RouterHub.TEST_DAGGER.DAGGER_PAGE_2_ACTIVITY)
 public class DaggerPage2Activity extends BaseActivity<DaggerPage2Presenter> implements DaggerPage2Contract.View {
 
-
+    @Inject
+    DaggerPage1Item1 item1;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -95,21 +100,25 @@ public class DaggerPage2Activity extends BaseActivity<DaggerPage2Presenter> impl
         finish();
     }
 
-    @OnClick({R2.id.atdm_tv_title, R2.id.atdm_tv_click1})
+    @OnClick({R2.id.adp2_tv_click1, R2.id.adp2_tv_click2, R2.id.adp2_tv_click3})
     public void onViewClicked(View view) {
         int id = view.getId();
-        if(R.id.atdm_tv_title == id){
+        if(R.id.adp2_tv_click1 == id){
             //do nothing
         }
-        else if(R.id.atdm_tv_click1 == id){
-            Utils.navigation(this, RouterHub.TEST_DAGGER.DAGGER_PAGE_1_ACTIVITY);
+        else if(R.id.adp2_tv_click2 == id){
+//            Utils.navigation(this, RouterHub.TEST_DAGGER.DAGGER_PAGE_1_ACTIVITY);
 //            Intent intent = new Intent(this, DaggerPage1Activity.class);
 //            startActivity(intent);
+        }
+        else if(R.id.adp2_tv_click3 == id){
+
         }
     }
 
     @Override
     public void showPage2View(String str) {
         ArmsUtils.makeText(this, str);
+        LogUtils.debugInfo("---" + item1 + "");
     }
 }

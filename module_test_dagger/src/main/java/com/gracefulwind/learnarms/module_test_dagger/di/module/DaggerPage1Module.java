@@ -2,8 +2,12 @@ package com.gracefulwind.learnarms.module_test_dagger.di.module;
 
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.DaggerPage1Contract;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.model.DaggerPage1Model;
+import com.gracefulwind.learnarms.module_test_dagger.mvp.model.entity.DaggerPage1Item1;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage1Presenter;
 import com.jess.arms.di.scope.ActivityScope;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import dagger.Module;
 import dagger.Provides;
@@ -42,6 +46,13 @@ public class DaggerPage1Module {
     @Provides
     DaggerPage1Presenter providePresenter(DaggerPage1Contract.View view, DaggerPage1Contract.Model model) {
         return new DaggerPage1Presenter(view, model);
+    }
+
+    @Provides
+    DaggerPage1Item1 provideItem1(DaggerPage1Contract.View view) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = simpleDateFormat.format(new Date());
+        return new DaggerPage1Item1("lalala" + view.toString(), dateString);
     }
 
 //    @Provides
