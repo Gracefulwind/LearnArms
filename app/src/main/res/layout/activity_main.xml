@@ -75,7 +75,8 @@
             />
 
         <TextView
-            android:text="影视天堂"
+            android:id="@+id/am_tv_click2"
+            android:text="天气预报"
             style="@style/style_common_text_button"
             />
         <TextView
@@ -97,7 +98,7 @@
             style="@style/style_common_text_button"
             />
         <TextView
-            android:text="娱乐八卦"
+            android:text="影视天堂"
             style="@style/style_common_text_button"
             />
         <TextView

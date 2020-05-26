@@ -4,17 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.Button;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
+import com.gracefulwind.learnarms.module_weather.R;
+import com.gracefulwind.learnarms.module_weather.R2;
+import com.gracefulwind.learnarms.module_weather.di.component.DaggerMainComponent;
+import com.gracefulwind.learnarms.module_weather.mvp.contract.MainContract;
+import com.gracefulwind.learnarms.module_weather.mvp.presenter.MainPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
-import com.gracefulwind.learnarms.module_weather.di.component.DaggerMainComponent;
-import com.gracefulwind.learnarms.module_weather.mvp.contract.MainContract;
-import com.gracefulwind.learnarms.module_weather.mvp.presenter.MainPresenter;
-
-import com.gracefulwind.learnarms.module_weather.R;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
@@ -31,7 +38,14 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
+
+@Route(path = RouterHub.WEATHER.HOME_ACTIVITY)
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
+
+    @BindView(R2.id.wam_btn_click1)
+    Button wamBtnClick1;
+    @BindView(R2.id.wam_btn_click2)
+    Button wamBtnClick2;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -45,7 +59,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
-        return R.layout.activity_main; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
+        return R.layout.weather_activity_main; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
     @Override
@@ -78,5 +92,17 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     public void killMyself() {
         finish();
+    }
+
+    @OnClick({R2.id.wam_btn_click1, R2.id.wam_btn_click2})
+    public void onViewClicked(View view) {
+        int id = view.getId();
+        if(R.id.wam_btn_click1 == id){
+            //打开天气详情
+            Utils.navigation(MainActivity.this, RouterHub.WEATHER.WEATHER_ACTIVITY);
+        }
+        else if(R.id.wam_btn_click2 == id){
+            //其他页面，设置啥的，以后再做
+        }
     }
 }

@@ -20,7 +20,6 @@ import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -38,7 +37,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-@Route(path = RouterHub.TEST_DAGGER.HOMEACTIVITY)
+@Route(path = RouterHub.TEST_DAGGER.HOME_ACTIVITY)
 public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter> implements TestDaggerMainContract.View {
 
     @BindView(R2.id.atdm_tv_title)

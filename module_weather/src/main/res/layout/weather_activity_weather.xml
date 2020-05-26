@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="@dimen/public_dimen_15dp"
+        android:textSize="@dimen/public_font_16sp"
+        android:textColor="@color/public_color_06CB7E"
+        android:text="This is weather activity"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/waw_btn_click1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="功能1"
+            />
+
+        <Button
+            android:id="@+id/waw_btn_click2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="功能2"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/waw_tv_show_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <FrameLayout
+        android:id="@+id/waw_fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+</LinearLayout>
