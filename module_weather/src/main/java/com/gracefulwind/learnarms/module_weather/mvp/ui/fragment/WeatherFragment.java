@@ -16,6 +16,7 @@ import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.interfaces.IBaseFragment;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
+import com.gracefulwind.learnarms.module_weather.di.component.DaggerWeatherFragmentComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherFragmentPresenter;
 import com.jess.arms.di.component.AppComponent;
@@ -60,12 +61,19 @@ public class WeatherFragment extends MyBaseFragment<WeatherFragmentPresenter> im
 
     @Override
     public void setupFragmentComponent(@NonNull AppComponent appComponent) {
+        DaggerWeatherFragmentComponent
+                .builder()
+                .appComponent(appComponent)
+                .view(this)
+                .build()
+                .inject(this);
         ARouter.getInstance().inject(this);
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         System.out.println("========");
+
     }
 
 
@@ -74,6 +82,7 @@ public class WeatherFragment extends MyBaseFragment<WeatherFragmentPresenter> im
         int id = view.getId();
         if(R.id.wfw_tv_title == id){
             System.out.println("======================");
+            mPresenter.getWeather("hangzhou");
         }
     }
 
@@ -86,6 +95,18 @@ public class WeatherFragment extends MyBaseFragment<WeatherFragmentPresenter> im
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public void showWeather(String weatherJson) {
+        //todo:show weather json。 then translate into bean
+    }
+
+    public void click1(){
+        mPresenter.click1();
+    }
+    public void click2(){
+        mPresenter.click2();
     }
 
 }

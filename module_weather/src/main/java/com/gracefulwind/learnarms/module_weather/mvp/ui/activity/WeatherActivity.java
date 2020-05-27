@@ -64,8 +64,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     SlidingTabLayout wawStlWeatherTitle;
     @BindView(R2.id.waw_vp_weather_container)
     ViewPager wawVpWeatherContainer;
-
-
+    private ArrayList<WeatherFragment> fragments;
 
 
     @Override
@@ -87,8 +86,8 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         FragmentManager fm = getSupportFragmentManager();
-        ArrayList<WeatherFragment> fragments = new ArrayList<>();
-        for(int x = 1; x < 4; x++){
+        fragments = new ArrayList<>();
+        for(int x = 1; x <= 1; x++){
             WeatherFragment fragment = (WeatherFragment) ARouter.getInstance()
                     .build(RouterHub.WEATHER.WEATHER_FRAGMENT)
 //                    .withString(WeatherFragment.KEY_TITLE, "title_" + x)
@@ -99,6 +98,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
 
         WeatherActivityViewPagerAdapter vpAdapter = new WeatherActivityViewPagerAdapter(fm, fragments);
         wawVpWeatherContainer.setAdapter(vpAdapter);
+
         wawStlWeatherTitle.setViewPager(wawVpWeatherContainer);
     }
 
@@ -110,11 +110,13 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     @OnClick({R2.id.waw_btn_click1, R2.id.waw_btn_click2})
     public void onViewClicked(View view) {
         int id = view.getId();
+        //todo:修改下。不合理方式
         if(R.id.waw_btn_click1 == id){
-            mPresenter.doSomething();
+//            mPresenter.doSomething();
+            fragments.get(0).click1();
         }
         else if(R.id.waw_btn_click2 == id){
-
+            fragments.get(0).click2();
         }
     }
 
@@ -126,6 +128,8 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     public static class WeatherActivityViewPagerAdapter extends FragmentStatePagerAdapter {
 
         private List<WeatherFragment> fragments = new ArrayList<>();
+
+        private WeatherFragment primaryItem;
 
         public WeatherActivityViewPagerAdapter(FragmentManager fm, List<WeatherFragment> fragmentList) {
             super(fm);
@@ -143,6 +147,12 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
         @Override
         public int getCount() {
             return null == fragments ? 0 : fragments.size();
+        }
+
+        @Override
+        public void setPrimaryItem(@NonNull View container, int position, @NonNull Object object) {
+            super.setPrimaryItem(container, position, object);
+//            primaryItem = object;
         }
 
         /**

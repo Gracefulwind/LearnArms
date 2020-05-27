@@ -3,13 +3,17 @@ package com.gracefulwind.learnarms.module_weather.mvp.model;
 import android.app.Application;
 
 import com.google.gson.Gson;
-import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherContract;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
+import com.gracefulwind.learnarms.module_weather.app.api.service.WeatherService;
+import com.gracefulwind.learnarms.module_weather.mvp.model.entity.WeatherEntity;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
 
+
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
 
 
 /**
@@ -41,5 +45,12 @@ public class WeatherFragmentModel extends BaseModel implements WeatherFragmentCo
         super.onDestroy();
         this.mGson = null;
         this.mApplication = null;
+    }
+
+    @Override
+    public Observable<WeatherEntity> getWeather(String city, String key) {
+        return mRepositoryManager
+                .obtainRetrofitService(WeatherService.class)
+                .getWeather(city, key);
     }
 }
