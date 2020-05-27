@@ -12,6 +12,7 @@
     <color name="public_green">#00FF00</color>
     <color name="public_blue">#0000FF</color>
     <color name="public_color_transparent">#00000000</color>
+    <color name="public_color_dark_gold">#CFB53B </color>
 
 <!--    App Color-->
     <color name="public_text_color">@color/public_black</color>

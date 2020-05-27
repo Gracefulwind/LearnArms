@@ -3,20 +3,33 @@ package com.gracefulwind.learnarms.module_weather.mvp.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.flyco.tablayout.SlidingTabLayout;
+import com.gracefulwind.learnarms.commonres.base.MyBaseFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
 import com.gracefulwind.learnarms.module_weather.di.component.DaggerWeatherComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherContract;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherPresenter;
+import com.gracefulwind.learnarms.module_weather.mvp.ui.fragment.WeatherFragment;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +58,15 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     TextView wawTvShowResult;
     @BindView(R2.id.waw_fl_container)
     FrameLayout wawFlContainer;
+    @BindView(R2.id.waw_ll_container)
+    LinearLayout wawLlContainer;
+    @BindView(R2.id.waw_stl_weather_title)
+    SlidingTabLayout wawStlWeatherTitle;
+    @BindView(R2.id.waw_vp_weather_container)
+    ViewPager wawVpWeatherContainer;
+
+
+
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -64,7 +86,20 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        FragmentManager fm = getSupportFragmentManager();
+        ArrayList<WeatherFragment> fragments = new ArrayList<>();
+        for(int x = 1; x < 4; x++){
+            WeatherFragment fragment = (WeatherFragment) ARouter.getInstance()
+                    .build(RouterHub.WEATHER.WEATHER_FRAGMENT)
+//                    .withString(WeatherFragment.KEY_TITLE, "title_" + x)
+                    .navigation();
+            fragment.setTitle("title_" + x);
+            fragments.add(fragment);
+        }
 
+        WeatherActivityViewPagerAdapter vpAdapter = new WeatherActivityViewPagerAdapter(fm, fragments);
+        wawVpWeatherContainer.setAdapter(vpAdapter);
+        wawStlWeatherTitle.setViewPager(wawVpWeatherContainer);
     }
 
     @Override
@@ -87,4 +122,40 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     public void showSomeThing(String str) {
         wawTvShowResult.setText("result : " + str);
     }
+
+    public static class WeatherActivityViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        private List<WeatherFragment> fragments = new ArrayList<>();
+
+        public WeatherActivityViewPagerAdapter(FragmentManager fm, List<WeatherFragment> fragmentList) {
+            super(fm);
+            fragments.clear();
+            if(null != fragmentList){
+                fragments.addAll(fragmentList);
+            }
+        }
+
+        @Override
+        public WeatherFragment getItem(int i) {
+            return fragments.get(i);
+        }
+
+        @Override
+        public int getCount() {
+            return null == fragments ? 0 : fragments.size();
+        }
+
+        /**
+         *
+         * 这个方法的执行顺序在fragment的setupFragmentComponent之前
+         *
+         * */
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return getItem(position).getTitle();
+        }
+    }
+
+
 }

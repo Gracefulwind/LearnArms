@@ -115,6 +115,7 @@ public interface RouterHub {
     interface WEATHER{
         String HOME_ACTIVITY = WEATHER_HOME + "/HomeActivity";
         String WEATHER_ACTIVITY = WEATHER_HOME + "/WeatherActivity";
+        String WEATHER_FRAGMENT = WEATHER_HOME + "/WeatherFragment";
 
         String GOLD_SERVICE_GOLDINFOSERVICE = WEATHER_HOME + SERVICE + "/InfoService";
 

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
 
@@ -40,13 +41,58 @@
     <TextView
         android:id="@+id/waw_tv_show_result"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="@dimen/public_dimen_30dp"/>
 
     <FrameLayout
         android:id="@+id/waw_fl_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/waw_ll_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <!--tabIndicatorColor：指示器的颜色-->
+            <!--tabIndicatorHeight：指示器的高度，可设置为0，相当于没有指示器-->
+            <!--tabTextColor：Tab未选中时字体的颜色-->
+            <!--tabSelectedTextColor：Tab选中时字体的颜色-->
+            <!--tabTextAppearance：Tab内文字的样式，TabLayout没有提供直接属性设置文字大小，需通过该属性指定style样式从而改变文字大小-->
+            <!--tabMode：Tab的显示模式，默认为fixed（固定不能滑动，标签很多时会被挤压），可设置为scrollable（标签很多时可向左滑动）-->
+            <!--tabGravity：内容的显示模式，可选center（居中）和fill（填充）-->
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/waw_stl_weather_title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:background="@color/public_white_trans"
+
+                app:tl_textsize="@dimen/public_font_16sp"
+                app:tl_textSelectColor="@color/public_color_dark_gold"
+                app:tl_textUnselectColor="@color/public_color_06CB7E"
+
+                app:tl_indicator_color="@color/public_color_dark_gold"
+                app:tl_indicator_corner_radius="@dimen/public_dimen_1_5dp"
+                app:tl_indicator_height="@dimen/public_dimen_4dp"
+                app:tl_indicator_width="@dimen/public_dimen_27dp"
+
+                app:tl_tab_padding="@dimen/public_dimen_12dp"
+                app:tl_tab_space_equal="false"
+                />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/waw_vp_weather_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+<!--        动态天气效果，后续替换成相关的view，暂时占坑-->
+        <ImageView
+            android:id="@+id/waw_iv_dynamic_weather"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
 
 
 </LinearLayout>
