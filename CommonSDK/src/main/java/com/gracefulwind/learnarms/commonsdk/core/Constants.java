@@ -29,6 +29,7 @@ public interface Constants {
     String PHONE_REGULAR = "^1[3-9]\\d{9}$";
 
     interface KEY{
+        String HEFENG_KEY = "94c2ffc7db1949389f228612266fc7f8";
         String DOUBAN_KEY = "0df993c66c0c636e29ecbb5344252a4a";
     }
 }

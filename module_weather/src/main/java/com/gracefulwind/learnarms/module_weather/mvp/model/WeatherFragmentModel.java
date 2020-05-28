@@ -5,7 +5,7 @@ import android.app.Application;
 import com.google.gson.Gson;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
-import com.gracefulwind.learnarms.module_weather.app.api.service.WeatherService;
+import com.gracefulwind.learnarms.module_weather.mvp.model.api.service.WeatherService;
 import com.gracefulwind.learnarms.module_weather.mvp.model.entity.DoubanMovieBean;
 import com.gracefulwind.learnarms.module_weather.mvp.model.entity.WeatherEntity;
 import com.jess.arms.di.scope.ActivityScope;
@@ -50,10 +50,11 @@ public class WeatherFragmentModel extends BaseModel implements WeatherFragmentCo
     }
 
     @Override
-    public Observable<WeatherEntity> getWeather(String city, String key) {
+    public Observable<WeatherEntity> getWeather(String city) {
         return mRepositoryManager
                 .obtainRetrofitService(WeatherService.class)
-                .getWeather(city, key);
+                .getWeather(city, Constants.KEY.HEFENG_KEY);
+//                .getWeather();
     }
     @Override
     public Observable<DoubanMovieBean> getDouban(int start, int count) {

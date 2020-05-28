@@ -3,9 +3,7 @@ package com.gracefulwind.learnarms.module_weather.mvp.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.flyco.tablayout.SlidingTabLayout;
-import com.gracefulwind.learnarms.commonres.base.MyBaseFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
@@ -32,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -66,6 +62,8 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     ViewPager wawVpWeatherContainer;
     private ArrayList<WeatherFragment> fragments;
 
+    public static String[] cities = {"hangzhou", "shanghai", "beijing", "yichang"};
+    public static String[] citiesName = {"杭州", "上海", "北京", "宜昌"};
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -87,12 +85,14 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     public void initData(@Nullable Bundle savedInstanceState) {
         FragmentManager fm = getSupportFragmentManager();
         fragments = new ArrayList<>();
-        for(int x = 1; x <= 1; x++){
+        for(int x = 0; x < 4; x++){
             WeatherFragment fragment = (WeatherFragment) ARouter.getInstance()
                     .build(RouterHub.WEATHER.WEATHER_FRAGMENT)
 //                    .withString(WeatherFragment.KEY_TITLE, "title_" + x)
                     .navigation();
-            fragment.setTitle("title_" + x);
+            //设置city
+            fragment.setTitle(citiesName[x]);
+            fragment.setCityName(cities[x]);
             fragments.add(fragment);
         }
 

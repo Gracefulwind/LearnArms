@@ -13,5 +13,6 @@ package com.gracefulwind.learnarms.module_weather.mvp.model.api;
  * ================================================
  */
 public interface Api {
-
+    String WEATHER_DOMAIN_NAME = "weather";
+    String WEATHER_DOMAIN = "https://free-api.heweather.net/";
 }
