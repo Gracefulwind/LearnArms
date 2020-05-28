@@ -56,10 +56,15 @@ public final class GlobalConfiguration implements ConfigModule {
         lifecycles.add(new AppLifecyclesImpl());
     }
 
+    /**
+     *
+     * 绑定activity的生命周期
+     * */
     @Override
     public void injectActivityLifecycle(Context context, List<Application.ActivityLifecycleCallbacks> lifecycles) {
 
     }
+
 
     @Override
     public void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles) {

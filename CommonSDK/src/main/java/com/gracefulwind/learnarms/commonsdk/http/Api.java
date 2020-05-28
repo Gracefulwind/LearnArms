@@ -25,7 +25,12 @@ package com.gracefulwind.learnarms.commonsdk.http;
  * ================================================
  */
 public interface Api {
-    String APP_DOMAIN = "https://api.github.com";
+    /**
+     *
+     * app默认的baseUrl
+     * */
+//    String APP_DOMAIN = "https://api.github.com";
+    String APP_DOMAIN = "https://api.douban.com/";
 
     String REQUEST_SUCCESS = "200";
 

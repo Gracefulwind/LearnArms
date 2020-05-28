@@ -27,4 +27,8 @@ package com.gracefulwind.learnarms.commonsdk.core;
 public interface Constants {
     //电话号码正则
     String PHONE_REGULAR = "^1[3-9]\\d{9}$";
+
+    interface KEY{
+        String DOUBAN_KEY = "0df993c66c0c636e29ecbb5344252a4a";
+    }
 }

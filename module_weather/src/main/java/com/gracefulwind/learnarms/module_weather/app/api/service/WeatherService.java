@@ -30,10 +30,10 @@ public interface WeatherService {
      */
 //    @GET("weather/now"  + IDENTIFICATION_IGNORE)
     @Headers({DOMAIN_NAME_HEADER + WEATHER_DOMAIN_NAME})
-    @GET("weather/now")
+    @GET("s6/weather/now")
     Observable<WeatherEntity> getWeather(@Query("location") String location, @Query("key") String key);
 
 
-    @GET("movie/in_theaters")
+    @GET("v2/movie/in_theaters")
     Observable<DoubanMovieBean> getMovieSubjectRx(@Query("apikey") String apiKey, @Query("start") int start, @Query("count") int count);
 }

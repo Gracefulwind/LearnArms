@@ -114,7 +114,41 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
     public void click1(){
         String cityStr = "hangzhou";
         String keyStr = "94c2ffc7db1949389f228612266fc7f8";
-        mModel.getWeather(cityStr, keyStr)
+//        mModel.getWeather(cityStr, keyStr)
+//                .subscribeOn(Schedulers.io())
+//                .retryWhen(new RetryWithDelay(3, 2))//遇到错误时重试,第一个参数为重试几次,第二个参数为重试的间隔
+//                .doOnSubscribe(disposable -> {
+//                    //显示下拉刷新的进度条
+//                }).subscribeOn(AndroidSchedulers.mainThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .doFinally(() -> {
+//                    //隐藏下拉刷新的进度条
+//                })
+//                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+//                //使用 Rxlifecycle,使 Disposable 和 Activity 一起销毁
+//                .subscribe(new ErrorHandleSubscriber<WeatherEntity>(mErrorHandler) {
+//                    @Override
+//                    public void onNext(WeatherEntity datas) {
+//                        System.out.println("result!!");
+//                        System.out.println("json == " + datas);
+//                        System.out.println("result!!");
+//                    }
+//                });
+
+        simpleRetrofit(mModel.getWeather(cityStr, keyStr), new ErrorHandleSubscriber<WeatherEntity>(mErrorHandler) {
+            @Override
+            public void onNext(WeatherEntity datas) {
+                System.out.println("result!!");
+                System.out.println("json == " + datas);
+                System.out.println("result!!");
+            }
+        });
+    }
+
+    public void click2(){
+        int start = 0;
+        int count = 1;
+        mModel.getDouban(start, count)
                 .subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(3, 2))//遇到错误时重试,第一个参数为重试几次,第二个参数为重试的间隔
                 .doOnSubscribe(disposable -> {
@@ -126,9 +160,9 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 })
                 .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
                 //使用 Rxlifecycle,使 Disposable 和 Activity 一起销毁
-                .subscribe(new ErrorHandleSubscriber<WeatherEntity>(mErrorHandler) {
+                .subscribe(new ErrorHandleSubscriber<DoubanMovieBean>(mErrorHandler) {
                     @Override
-                    public void onNext(WeatherEntity datas) {
+                    public void onNext(DoubanMovieBean datas) {
                         System.out.println("result!!");
                         System.out.println("json == " + datas);
                         System.out.println("result!!");
@@ -136,7 +170,8 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 });
     }
 
-    public void click2(){
+    @Deprecated
+    public void connectWeatherByNewRetrofit(){
         //走通了
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://free-api.heweather.net/s6/")
@@ -174,6 +209,49 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                     }
                 });
     }
+
+    @Deprecated
+    public void connectDoubanByNewRetrofit(){
+        //走通了
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.douban.com/v2/")
+                //设置 Json 转换器
+                .addConverterFactory(GsonConverterFactory.create())
+                //RxJava 适配器
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        WeatherService doubanServices = retrofit.create(WeatherService.class);
+
+        int count = 1;
+        System.out.println("count ==" + count);
+        doubanServices.getMovieSubjectRx("0df993c66c0c636e29ecbb5344252a4a", 0, count)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<DoubanMovieBean>(){
+                    @Override
+                    public void onNext(DoubanMovieBean responseBean) {
+                        System.out.println("success=============");
+                        System.out.println(responseBean);
+                        System.out.println("===end===");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        System.out.println("error");
+                        System.out.println("error==");
+                        System.out.println("error====");
+                    }
+
+                    //onNext后会执行
+                    @Override
+                    public void onComplete() {
+                        System.out.println("onComplete");
+                        System.out.println("onComplete==");
+                        System.out.println("onComplete====");
+                    }
+                });
+    }
+
     public void getWeather(String city){
 //        mModel.
 //        https://free-api.heweather.net/s6/weather/now?location=hangzhou&key=94c2ffc7db1949389f228612266fc7f8
@@ -279,7 +357,28 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
 
     }
 
+//------------------------------------------------------------------------------------------------------
 
+    public<T> void simpleRetrofit(Observable<T> observable, ErrorHandleSubscriber<T> subcriber){
+        simpleRetrofit(observable, subcriber, false);
+    }
+    //网络回调统一处理
+    public<T> void simpleRetrofit(Observable<T> observable, ErrorHandleSubscriber<T> subcriber, boolean showLoading){
+        observable.subscribeOn(Schedulers.io())
+                .retryWhen(new RetryWithDelay(3, 2))//遇到错误时重试,第一个参数为重试几次,第二个参数为重试的间隔
+                .doOnSubscribe(disposable -> {
+                    if(showLoading){
+                        //显示下拉刷新的进度条
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    //隐藏下拉刷新的进度条
+                })
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                //使用 Rxlifecycle,使 Disposable 和 Activity 一起销毁
+                .subscribe(subcriber);
+    }
 
 //-------------------------------------------------------------------------------------------------------
     @Override
