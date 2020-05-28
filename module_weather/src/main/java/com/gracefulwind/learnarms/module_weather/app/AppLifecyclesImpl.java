@@ -12,6 +12,11 @@ import com.squareup.leakcanary.RefWatcher;
 
 import com.gracefulwind.learnarms.module_weather.BuildConfig;
 
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
+
+import static com.gracefulwind.learnarms.module_weather.app.api.Api.WEATHER_DOMAIN;
+import static com.gracefulwind.learnarms.module_weather.app.api.Api.WEATHER_DOMAIN_NAME;
+
 /**
  * ================================================
  * 展示 {@link AppLifecycles} 的用法
@@ -45,6 +50,7 @@ public class AppLifecyclesImpl implements AppLifecycles {
                     .put(IntelligentCache.getKeyOfKeep(RefWatcher.class.getName())
                             , BuildConfig.USE_CANARY ? LeakCanary.install(application) : RefWatcher.DISABLED);
         }
+        RetrofitUrlManager.getInstance().putDomain(WEATHER_DOMAIN_NAME, WEATHER_DOMAIN);
     }
 
     @Override

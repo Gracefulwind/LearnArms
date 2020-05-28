@@ -38,6 +38,14 @@ import com.squareup.leakcanary.RefWatcher;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
+
+/**
+ *
+ * application初始化的时候调用，先是app的，再是几个module的，依次调用
+ * GlobalConfig也是。且globalConfig都执行完再是AppLife的
+ *
+ * */
+
 public class AppLifecyclesImpl implements AppLifecycles {
 
     @Override
