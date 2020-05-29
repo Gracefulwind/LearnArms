@@ -50,6 +50,12 @@ public class FirstMatchInScrollViewLinearLayout extends LinearLayout {
                 }
                 final int height = getHeight;
                 if(height > 0 ){
+                    /**
+                     * childView的第一个控件的高度无所谓。
+                     * 在viewPager中，第三个view加载的时候父控件的大小已经确定了，何解？
+                     * 问题头2个100高度的都正常显示了，为什么反而后面的没显示
+                     *
+                     * */
                     final View firstChild = getChildAt(0);
                     LayoutParams layoutParams = (LayoutParams) firstChild.getLayoutParams();
                     layoutParams.height = height;

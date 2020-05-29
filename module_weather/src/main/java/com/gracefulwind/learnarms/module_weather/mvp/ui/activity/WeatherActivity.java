@@ -83,6 +83,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        //todo:后面用newInstance获取,便于入参
         FragmentManager fm = getSupportFragmentManager();
         fragments = new ArrayList<>();
         for(int x = 0; x < 4; x++){
@@ -91,8 +92,8 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
 //                    .withString(WeatherFragment.KEY_TITLE, "title_" + x)
                     .navigation();
             //设置city
-            fragment.setTitle(citiesName[x]);
-            fragment.setCityName(cities[x]);
+            fragment.setCityName(citiesName[x]);
+            fragment.setCitySearchName(cities[x]);
             fragments.add(fragment);
         }
 
@@ -163,7 +164,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            return getItem(position).getTitle();
+            return getItem(position).getCityName();
         }
     }
 

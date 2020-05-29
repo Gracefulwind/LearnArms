@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonsdk.BuildConfig;
+import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.ClientModule;
 import com.jess.arms.di.module.GlobalConfigModule;
@@ -34,6 +35,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import com.gracefulwind.learnarms.commonsdk.http.Api;
 import com.gracefulwind.learnarms.commonsdk.http.SSLSocketClient;
+import com.jess.arms.utils.ArmsUtils;
+import com.jess.arms.utils.LogUtils;
 
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 import okhttp3.OkHttpClient;
@@ -86,6 +89,7 @@ public class GlobalConfiguration implements ConfigModule {
     @Override
     public void injectAppLifecycle(Context context, List<AppLifecycles> lifecycles) {
         // AppDelegate.Lifecycle 的所有方法都会在基类Application对应的生命周期中被调用,所以在对应的方法中可以扩展一些自己需要的逻辑
+        LogUtils.debugInfo("===context==" + context.toString());
         lifecycles.add(new AppLifecycles() {
 
             @Override
@@ -102,7 +106,10 @@ public class GlobalConfiguration implements ConfigModule {
                     ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
                     RetrofitUrlManager.getInstance().setDebug(true);
                 }
+                //init Arouter
                 ARouter.init(application); // 尽可能早,推荐在Application中初始化
+                //init UiUtil
+                UiUtil.initUiUtil(application.getBaseContext());
                 //todo: application的init
                 System.out.println("---call onCreate");
 
@@ -113,6 +120,7 @@ public class GlobalConfiguration implements ConfigModule {
                 System.out.println("---call onTerminate");
             }
         });
+//        initUiUtil(application.getBaseContext());
     }
 
     @Override

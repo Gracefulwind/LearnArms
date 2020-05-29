@@ -13,7 +13,7 @@ package com.gracefulwind.learnarms.commonsdk.interfaces;
  */
 
 public interface IBaseFragment {
-    default String getTitle(){
+    default String getFragmentName(){
         return this.toString();
     }
 }

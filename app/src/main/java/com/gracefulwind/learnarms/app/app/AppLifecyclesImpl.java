@@ -55,6 +55,7 @@ public class AppLifecyclesImpl implements AppLifecycles {
 
     @Override
     public void onCreate(@NonNull Application application) {
+        //比SDK的GlobalConfig里的callBack早
         LogUtils.debugInfo("---app AppLifecyclesImpl onCreate0");
         if (LeakCanary.isInAnalyzerProcess(application)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -64,7 +65,7 @@ public class AppLifecyclesImpl implements AppLifecycles {
         //leakCanary内存泄露检查
         ArmsUtils.obtainAppComponentFromContext(application).extras().put(RefWatcher.class.getName(), BuildConfig.USE_CANARY ? LeakCanary.install(application) : RefWatcher.DISABLED);
         LogUtils.debugInfo("---app AppLifecyclesImpl onCreate1");
-        initUiUtil(application.getBaseContext());
+
     }
 
     @Override
@@ -72,7 +73,4 @@ public class AppLifecyclesImpl implements AppLifecycles {
 
     }
 
-    private void initUiUtil(Context context) {
-        UiUtil.initUiUtil(context);
-    }
 }
