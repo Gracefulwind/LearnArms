@@ -3,10 +3,12 @@ package com.gracefulwind.learnarms.module_weather.mvp.presenter;
 import android.app.Application;
 import android.text.TextUtils;
 
+import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.module_weather.api.service.WeatherService;
+import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
-import com.gracefulwind.learnarms.module_weather.app.entity.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherData;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;
@@ -111,9 +113,9 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
 //        https://free-api.heweather.net/s6/weather/now?location=hangzhou&key=94c2ffc7db1949389f228612266fc7f8
 //        String cityStr = "hangzhou";
 //        String keyStr = "94c2ffc7db1949389f228612266fc7f8";
-        simpleRetrofit(mModel.getWeather(city), new ErrorHandleSubscriber<WeatherEntity>(mErrorHandler) {
+        simpleRetrofit(mModel.getWeather(city), new ErrorHandleSubscriber<WeatherData>(mErrorHandler) {
             @Override
-            public void onNext(WeatherEntity datas) {
+            public void onNext(WeatherData datas) {
                 //todo:获取到data后的处理应该在view里写
                 if(null == datas.getWeatherList() || 0 == datas.getWeatherList().size()){
                     mRootView.showWeather("通讯错误");
@@ -122,8 +124,8 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 System.out.println("result!!");
                 System.out.println("json == " + datas);
                 System.out.println("result!!");
-                WeatherEntity.WeatherBean weatherBean = datas.getWeatherList().get(0);
-                if(!TextUtils.equals(WeatherEntity.STATUS_OK, weatherBean.getStatus())){
+                WeatherEntity weatherBean = datas.getWeatherList().get(0);
+                if(!TextUtils.equals(WeatherData.STATUS_OK, weatherBean.getStatus())){
                     mRootView.showWeather("获取数据异常 : " + weatherBean.getStatus());
                 }
                 StringBuilder sbWeatherInfo = new StringBuilder();
@@ -133,13 +135,38 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
         });
     }
 
+    public void getWeatherByType(String weatherType, String city){
+        //走通了-getWeatherByType
+        simpleRetrofit(mModel.getWeatherByType(weatherType, city), new ErrorHandleSubscriber<WeatherData>(mErrorHandler) {
+            @Override
+            public void onNext(WeatherData datas) {
+                //todo:获取到data后的处理应该在view里写
+                if(null == datas.getWeatherList() || 0 == datas.getWeatherList().size()){
+                    mRootView.showWeather("通讯错误");
+                    return;
+                }
+                System.out.println("result!!");
+                System.out.println("json == " + datas);
+                System.out.println("result!!");
+                WeatherEntity weatherBean = datas.getWeatherList().get(0);
+                if(!TextUtils.equals(WeatherData.STATUS_OK, weatherBean.getStatus())){
+                    mRootView.showWeather("获取数据异常 : " + weatherBean.getStatus());
+                }
+                StringBuilder sbWeatherInfo = new StringBuilder();
+                sbWeatherInfo.append(weatherBean.getBasic().getLocation()).append("天气：");//.append(weatherBean.getNow().getCond_txt());
+                mRootView.showWeather(sbWeatherInfo.toString());
+            }
+        });
+    }
+
+
 
     public void click1(){
         String cityStr = "hangzhou";
         String keyStr = "94c2ffc7db1949389f228612266fc7f8";
-        simpleRetrofit(mModel.getWeather(cityStr), new ErrorHandleSubscriber<WeatherEntity>(mErrorHandler) {
+        simpleRetrofit(mModel.getWeather(cityStr), new ErrorHandleSubscriber<WeatherData>(mErrorHandler) {
             @Override
-            public void onNext(WeatherEntity datas) {
+            public void onNext(WeatherData datas) {
                 System.out.println("result!!");
                 System.out.println("json == " + datas);
                 System.out.println("result!!");
@@ -222,9 +249,9 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
         service.getWeather("hangzhou", "")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<WeatherEntity>(){
+                .subscribe(new DisposableObserver<WeatherData>(){
                     @Override
-                    public void onNext(WeatherEntity responseBean) {
+                    public void onNext(WeatherData responseBean) {
                         System.out.println("success=============");
                         System.out.println(responseBean);
                         System.out.println("===end===");

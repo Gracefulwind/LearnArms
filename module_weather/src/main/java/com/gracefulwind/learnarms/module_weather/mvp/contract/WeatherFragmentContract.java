@@ -1,7 +1,7 @@
 package com.gracefulwind.learnarms.module_weather.mvp.contract;
 
 import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
-import com.gracefulwind.learnarms.module_weather.app.entity.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherData;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
 
@@ -30,7 +30,8 @@ public interface WeatherFragmentContract {
     }
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
     interface Model extends IModel{
-        Observable<WeatherEntity> getWeather(String city);
+        Observable<WeatherData> getWeather(String city);
+        Observable<WeatherData> getWeatherByType(String type, String city);
         Observable<DoubanMovieBean> getDouban(int start, int count);
     }
 }

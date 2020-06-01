@@ -28,25 +28,30 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/public_color_06CB7E"
                 >
+
                 <TextView
-                    android:id="@+id/w_now_tmp_minus"
+                    android:id="@+id/wfw_tv_now_tmp_minus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="56dp"
-                    android:layout_toLeftOf="@+id/w_now_tmp"
+                    app:layout_constraintTop_toTopOf="@id/wfw_now_tmp"
+                    app:layout_constraintBottom_toBottomOf="@id/wfw_now_tmp"
+                    app:layout_constraintRight_toLeftOf="@id/wfw_now_tmp"
                     android:text="-"
                     android:textColor="@color/weather_text_primary"
                     android:textSize="72dp" />
 
                 <TextView
-                    android:id="@+id/w_now_tmp"
+                    android:id="@+id/wfw_now_tmp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="56dp"
                     android:paddingLeft="0dp"
@@ -57,18 +62,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="56dp"
-                    android:layout_toRightOf="@+id/w_now_tmp"
+                    app:layout_constraintLeft_toRightOf="@id/wfw_now_tmp"
+                    app:layout_constraintTop_toTopOf="@id/wfw_now_tmp"
                     android:text="°"
                     android:textColor="@color/weather_text_primary"
                     android:textSize="72dp" />
 
                 <TextView
-                    android:id="@+id/w_now_cond_text"
+                    android:id="@+id/wfw_now_condition_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/w_now_tmp"
-                    android:layout_centerHorizontal="true"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wfw_now_tmp"
                     android:layout_marginTop="8dp"
                     android:text=""
                     android:textColor="@color/weather_text_secondary"
@@ -78,7 +84,9 @@
                     android:id="@+id/w_aqi_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/w_now_cond_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wfw_now_condition_text"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="2dp"
                     android:text=""
@@ -89,20 +97,20 @@
                     android:id="@+id/w_basic_update_loc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="228dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginBottom="28dp"
                     android:layout_marginRight="8dp"
-                    android:text=""
+                    android:text="10:50发布"
                     android:textColor="@color/weather_text_secondary"
                     android:textSize="12dp" />
 
-<!--                <com.gracefulwind.weather.weather.widget.DailyForecastView-->
-<!--                    android:id="@+id/w_dailyForecastView"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="216dp"-->
-<!--                    android:layout_alignParentBottom="true" />-->
-            </RelativeLayout>
+                <!--                <com.gracefulwind.weather.weather.widget.DailyForecastView-->
+                <!--                    android:id="@+id/w_dailyForecastView"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="216dp"-->
+                <!--                    android:layout_alignParentBottom="true" />-->
+            </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"

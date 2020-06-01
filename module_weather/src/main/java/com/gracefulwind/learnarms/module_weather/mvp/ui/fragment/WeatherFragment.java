@@ -23,6 +23,7 @@ import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.OkHttpClient;
 
 /**
  * @ClassName: WeatherFragment
@@ -59,6 +60,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     @Override
     protected int getLayoutId() {
+//        new OkHttpClient()
         return R.layout.weather_fragment_weather;
     }
 
@@ -134,6 +136,12 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     public void click1() {
 //        mPresenter.click1();
+//        mPresenter.getWeatherByType("now", "hangzhou");
+//        mPresenter.getWeatherByType("forecast", "hangzhou");
+//        mPresenter.getWeatherByType("lifestyle", "hangzhou");
+//        mPresenter.getWeatherByType("hourly", "hangzhou");
+        String weatherType = "hourly";
+        mPresenter.getWeatherByType(weatherType, "hangzhou");
 
         System.out.println("===111===");
     }
