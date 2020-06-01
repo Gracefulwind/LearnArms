@@ -7,6 +7,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -46,7 +47,8 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     @BindView(R2.id.wfw_tv_title)
     TextView wfwTvTitle;
     @BindView(R2.id.wfw_fmisvll_container)
-    FirstMatchInScrollViewLinearLayout wfwFmisvllContainer;
+//    FirstMatchInScrollViewLinearLayout wfwFmisvllContainer;
+    LinearLayout wfwFmisvllContainer;
     @BindView(R2.id.wfw_nsv_container)
     NestedScrollView wfwNsvContainer;
 
@@ -121,7 +123,8 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     public void showWeather(String weatherJson) {
         //todo:show weather json。 then translate into bean
         ArmsUtils.makeText(this.getContext(), weatherJson);
-
+        //获取数据后重新测绘高度，让第一个子类能正确占满父控件
+        wfwFmisvllContainer.requestLayout();
     }
 
     @Override
