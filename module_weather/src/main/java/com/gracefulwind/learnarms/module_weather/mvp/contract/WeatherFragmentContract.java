@@ -1,11 +1,9 @@
 package com.gracefulwind.learnarms.module_weather.mvp.contract;
 
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.DoubanMovieBean;
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
+import com.gracefulwind.learnarms.module_weather.app.entity.WeatherEntity;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
-
-import java.util.List;
 
 import io.reactivex.Observable;
 

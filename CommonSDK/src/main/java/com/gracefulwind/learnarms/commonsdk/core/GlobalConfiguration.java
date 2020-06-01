@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonsdk.BuildConfig;
+import com.gracefulwind.learnarms.commonsdk.utils.TypefaceUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.ClientModule;
@@ -35,7 +36,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import com.gracefulwind.learnarms.commonsdk.http.Api;
 import com.gracefulwind.learnarms.commonsdk.http.SSLSocketClient;
-import com.jess.arms.utils.ArmsUtils;
 import com.jess.arms.utils.LogUtils;
 
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
@@ -110,6 +110,8 @@ public class GlobalConfiguration implements ConfigModule {
                 ARouter.init(application); // 尽可能早,推荐在Application中初始化
                 //init UiUtil
                 UiUtil.initUiUtil(application.getBaseContext());
+                //init typefaceUtil
+                TypefaceUtil.init(application.getBaseContext());
                 //todo: application的init
                 System.out.println("---call onCreate");
 

@@ -18,7 +18,7 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
-import com.gracefulwind.learnarms.module_weather.di.component.DaggerWeatherComponent;
+import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherContract;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherPresenter;
 import com.gracefulwind.learnarms.module_weather.mvp.ui.fragment.WeatherFragment;

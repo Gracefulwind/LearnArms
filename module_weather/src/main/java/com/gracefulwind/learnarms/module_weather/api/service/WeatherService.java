@@ -1,16 +1,15 @@
-package com.gracefulwind.learnarms.module_weather.mvp.model.api.service;
+package com.gracefulwind.learnarms.module_weather.api.service;
 
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.DoubanMovieBean;
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
+import com.gracefulwind.learnarms.module_weather.app.entity.WeatherEntity;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
-import static com.gracefulwind.learnarms.module_weather.mvp.model.api.Api.WEATHER_DOMAIN_NAME;
+import static com.gracefulwind.learnarms.module_weather.api.Api.WEATHER_DOMAIN_NAME;
 import static me.jessyan.retrofiturlmanager.RetrofitUrlManager.DOMAIN_NAME_HEADER;
-import static me.jessyan.retrofiturlmanager.RetrofitUrlManager.IDENTIFICATION_IGNORE;
 
 /**
  * @ClassName: WeatherService

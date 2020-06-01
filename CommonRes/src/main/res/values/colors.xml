@@ -13,6 +13,9 @@
     <color name="public_blue">#0000FF</color>
     <color name="public_color_transparent">#00000000</color>
     <color name="public_color_dark_gold">#CFB53B </color>
+    <color name="public_color_divider">#30ffffff </color>
+<!--      ====================================  -->
+
 
 <!--    App Color-->
     <color name="public_text_color">@color/public_black</color>
@@ -31,6 +34,7 @@
     <color name="public_color_E7E7E7">#E7E7E7</color>
     <color name="public_color_D8D8D8">#D8D8D8</color>
     <color name="public_color_06CB7E">#06CB7E</color>
+    <color name="public_color_7706CB7E">#7706CB7E</color>
     <color name="public_color_6C6C6C">#6C6C6C</color>
     <color name="public_color_666F80">#666F80</color>
     <color name="public_color_0F79FD">#0F79FD</color>

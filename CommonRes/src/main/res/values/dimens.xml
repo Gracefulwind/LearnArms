@@ -66,6 +66,7 @@
     <dimen name="public_mar_bottom_5dp">5dp</dimen>
 
 <!-- 基本dimen属性   -->
+    <dimen name="public_dimen_0_5dp">0.5dp</dimen>
     <dimen name="public_dimen_1dp">1dp</dimen>
     <dimen name="public_dimen_1_5dp">1.5dp</dimen>
     <dimen name="public_dimen_2dp">2dp</dimen>

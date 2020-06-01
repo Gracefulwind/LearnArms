@@ -4,30 +4,25 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
-import com.gracefulwind.learnarms.commonres.widget.FirstMatchInScrollViewLinearLayout;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
-import com.gracefulwind.learnarms.module_weather.di.component.DaggerWeatherFragmentComponent;
+import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.CityEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.CityEntity;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherFragmentPresenter;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * @ClassName: WeatherFragment
@@ -138,11 +133,14 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     }
 
     public void click1() {
-        mPresenter.click1();
+//        mPresenter.click1();
+
+        System.out.println("===111===");
     }
 
     public void click2() {
-        mPresenter.click2();
+//        mPresenter.click2();
+        System.out.println("====222===");
     }
 
 }

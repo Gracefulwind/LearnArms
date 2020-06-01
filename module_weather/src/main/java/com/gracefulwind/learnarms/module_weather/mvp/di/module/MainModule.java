@@ -1,10 +1,7 @@
-package com.gracefulwind.learnarms.module_weather.di.module;
-
-import com.jess.arms.di.scope.ActivityScope;
+package com.gracefulwind.learnarms.module_weather.mvp.di.module;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 
 import com.gracefulwind.learnarms.module_weather.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.module_weather.mvp.model.MainModel;

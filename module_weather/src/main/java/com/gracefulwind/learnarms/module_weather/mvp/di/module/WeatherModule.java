@@ -1,7 +1,7 @@
-package com.gracefulwind.learnarms.module_weather.di.module;
+package com.gracefulwind.learnarms.module_weather.mvp.di.module;
 
-import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
-import com.gracefulwind.learnarms.module_weather.mvp.model.WeatherFragmentModel;
+import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherContract;
+import com.gracefulwind.learnarms.module_weather.mvp.model.WeatherModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -20,8 +20,8 @@ import dagger.Module;
  * ================================================
  */
 @Module
-public abstract class WeatherFragmentModule {
+public abstract class WeatherModule {
 
     @Binds
-    abstract WeatherFragmentContract.Model bindMainModel(WeatherFragmentModel model);
+    abstract WeatherContract.Model bindMainModel(WeatherModel model);
 }

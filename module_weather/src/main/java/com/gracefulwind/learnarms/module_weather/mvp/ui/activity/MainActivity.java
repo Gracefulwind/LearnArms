@@ -12,7 +12,7 @@ import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
-import com.gracefulwind.learnarms.module_weather.di.component.DaggerMainComponent;
+import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.MainPresenter;
 import com.jess.arms.base.BaseActivity;
@@ -20,7 +20,6 @@ import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;

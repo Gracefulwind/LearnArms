@@ -14,8 +14,8 @@ import com.gracefulwind.learnarms.module_weather.BuildConfig;
 
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
-import static com.gracefulwind.learnarms.module_weather.mvp.model.api.Api.WEATHER_DOMAIN;
-import static com.gracefulwind.learnarms.module_weather.mvp.model.api.Api.WEATHER_DOMAIN_NAME;
+import static com.gracefulwind.learnarms.module_weather.api.Api.WEATHER_DOMAIN;
+import static com.gracefulwind.learnarms.module_weather.api.Api.WEATHER_DOMAIN_NAME;
 
 /**
  * ================================================

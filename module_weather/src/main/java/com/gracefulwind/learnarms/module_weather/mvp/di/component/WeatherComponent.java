@@ -1,11 +1,8 @@
-package com.gracefulwind.learnarms.module_weather.di.component;
+package com.gracefulwind.learnarms.module_weather.mvp.di.component;
 
-import com.gracefulwind.learnarms.module_weather.di.module.WeatherFragmentModule;
-import com.gracefulwind.learnarms.module_weather.di.module.WeatherModule;
+import com.gracefulwind.learnarms.module_weather.mvp.di.module.WeatherModule;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherContract;
-import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.mvp.ui.activity.WeatherActivity;
-import com.gracefulwind.learnarms.module_weather.mvp.ui.fragment.WeatherFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.di.scope.ActivityScope;
 
@@ -26,14 +23,14 @@ import dagger.Component;
  * ================================================
  */
 @ActivityScope
-@Component(modules = WeatherFragmentModule.class, dependencies = AppComponent.class)
-public interface WeatherFragmentComponent {
-    void inject(WeatherFragment view);
+@Component(modules = WeatherModule.class, dependencies = AppComponent.class)
+public interface WeatherComponent {
+    void inject(WeatherActivity activity);
     @Component.Builder
     interface Builder {
         @BindsInstance
-        WeatherFragmentComponent.Builder view(WeatherFragmentContract.View view);
-        WeatherFragmentComponent.Builder appComponent(AppComponent appComponent);
-        WeatherFragmentComponent build();
+        WeatherComponent.Builder view(WeatherContract.View view);
+        WeatherComponent.Builder appComponent(AppComponent appComponent);
+        WeatherComponent build();
     }
 }

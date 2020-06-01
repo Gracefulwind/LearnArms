@@ -13,14 +13,14 @@
         android:gravity="center"
         android:layout_margin="@dimen/public_dimen_15dp"
         android:textSize="@dimen/public_font_16sp"
-        android:textColor="@color/public_color_06CB7E"
+        android:textColor="@color/public_color_7706CB7E"
         android:text="This is weather fragment"
         />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/wfw_nsv_container"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="match_parent">
 
         <com.gracefulwind.learnarms.commonres.widget.FirstMatchInScrollViewLinearLayout
             android:id="@+id/wfw_fmisvll_container"
@@ -28,12 +28,86 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/public_color_06CB7E"
+                >
+                <TextView
+                    android:id="@+id/w_now_tmp_minus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="56dp"
+                    android:layout_toLeftOf="@+id/w_now_tmp"
+                    android:text="-"
+                    android:textColor="@color/weather_text_primary"
+                    android:textSize="72dp" />
+
+                <TextView
+                    android:id="@+id/w_now_tmp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="56dp"
+                    android:paddingLeft="0dp"
+                    android:text="26"
+                    android:textColor="@color/weather_text_primary"
+                    android:textSize="72dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="56dp"
+                    android:layout_toRightOf="@+id/w_now_tmp"
+                    android:text="°"
+                    android:textColor="@color/weather_text_primary"
+                    android:textSize="72dp" />
+
+                <TextView
+                    android:id="@+id/w_now_cond_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/w_now_tmp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text=""
+                    android:textColor="@color/weather_text_secondary"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/w_aqi_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/w_now_cond_text"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="2dp"
+                    android:text=""
+                    android:textColor="@color/weather_text_secondary"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/w_basic_update_loc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="228dp"
+                    android:layout_marginRight="8dp"
+                    android:text=""
+                    android:textColor="@color/weather_text_secondary"
+                    android:textSize="12dp" />
+
+<!--                <com.gracefulwind.weather.weather.widget.DailyForecastView-->
+<!--                    android:id="@+id/w_dailyForecastView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="216dp"-->
+<!--                    android:layout_alignParentBottom="true" />-->
+            </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/public_color_06CB7E"
-                />
-
+                android:layout_height="@dimen/public_dimen_0_5dp"
+                android:background="@color/public_color_divider" />
 
             <TextView
                 android:layout_width="wrap_content"

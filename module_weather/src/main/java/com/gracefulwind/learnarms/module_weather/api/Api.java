@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_weather.mvp.model.api;
+package com.gracefulwind.learnarms.module_weather.api;
 
 /**
  * ================================================

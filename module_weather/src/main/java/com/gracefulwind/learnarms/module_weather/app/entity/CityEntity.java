@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_weather.mvp.model.entity;
+package com.gracefulwind.learnarms.module_weather.app.entity;
 
 /**
  * @ClassName: CityEntity

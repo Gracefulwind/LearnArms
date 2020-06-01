@@ -1,14 +1,12 @@
 package com.gracefulwind.learnarms.module_weather.mvp.presenter;
 
 import android.app.Application;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.text.TextUtils;
 
-import com.gracefulwind.learnarms.module_weather.mvp.model.api.service.WeatherService;
+import com.gracefulwind.learnarms.module_weather.api.service.WeatherService;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.DoubanMovieBean;
-import com.gracefulwind.learnarms.module_weather.mvp.model.entity.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
+import com.gracefulwind.learnarms.module_weather.app.entity.WeatherEntity;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;

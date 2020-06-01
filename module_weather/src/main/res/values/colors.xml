@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="weather_text_primary">#ffffffff</color>
+    <color name="weather_text_secondary">#88ffffff</color>
+
+
+
+
 </resources>
