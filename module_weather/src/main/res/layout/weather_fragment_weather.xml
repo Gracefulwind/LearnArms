@@ -41,6 +41,7 @@
                     app:layout_constraintTop_toTopOf="@id/wfw_now_tmp"
                     app:layout_constraintBottom_toBottomOf="@id/wfw_now_tmp"
                     app:layout_constraintRight_toLeftOf="@id/wfw_now_tmp"
+                    android:visibility="gone"
                     android:text="-"
                     android:textColor="@color/weather_text_primary"
                     android:textSize="72dp" />
@@ -81,7 +82,7 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/w_aqi_text"
+                    android:id="@+id/wfw_aqi_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -94,7 +95,7 @@
                     android:textSize="14dp" />
 
                 <TextView
-                    android:id="@+id/w_basic_update_loc"
+                    android:id="@+id/wfw_basic_update_loc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -130,7 +130,7 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 }
                 StringBuilder sbWeatherInfo = new StringBuilder();
                 sbWeatherInfo.append(weatherBean.getBasic().getLocation()).append("天气：").append(weatherBean.getNow().getCond_txt());
-                mRootView.showWeather(sbWeatherInfo.toString());
+                mRootView.showMessage(sbWeatherInfo.toString());
             }
         });
     }
@@ -143,6 +143,7 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 //todo:获取到data后的处理应该在view里写
                 if(null == datas.getWeatherList() || 0 == datas.getWeatherList().size()){
                     mRootView.showWeather("通讯错误");
+//                    onError();
                     return;
                 }
                 System.out.println("result!!");
@@ -151,10 +152,10 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 WeatherEntity weatherBean = datas.getWeatherList().get(0);
                 if(!TextUtils.equals(WeatherData.STATUS_OK, weatherBean.getStatus())){
                     mRootView.showWeather("获取数据异常 : " + weatherBean.getStatus());
+//                    onError();
+                    return;
                 }
-                StringBuilder sbWeatherInfo = new StringBuilder();
-                sbWeatherInfo.append(weatherBean.getBasic().getLocation()).append("天气：");//.append(weatherBean.getNow().getCond_txt());
-                mRootView.showWeather(sbWeatherInfo.toString());
+                mRootView.showWeatherByType(weatherType, weatherBean);
             }
         });
     }

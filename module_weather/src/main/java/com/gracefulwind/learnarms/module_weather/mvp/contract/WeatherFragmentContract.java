@@ -2,6 +2,7 @@ package com.gracefulwind.learnarms.module_weather.mvp.contract;
 
 import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherData;
+import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
 
@@ -25,6 +26,13 @@ public interface WeatherFragmentContract {
     interface View extends IView {
 //        void showSomeThing(String str);
         void showWeather(String weatherJson);
+        //下面四个方法后续简化为一个
+        void showWeatherByType(String weatherType, WeatherEntity weatherEntity);
+//        void showWeatherNow(WeatherEntity weatherEntity);
+//        void showWeatherForecast(WeatherEntity weatherEntity);
+//        void showWeatherLifeStyle(WeatherEntity weatherEntity);
+//        void showWeatherHourly(WeatherEntity weatherEntity);
+        //------------
         void setCitySearchName(String citySearchName);
         String getCitySearchName();
     }

@@ -14,6 +14,21 @@ import com.google.gson.annotations.SerializedName;
  * @Email: 429344332@qq.com
  */
 
+/**
+ * {
+ *   "basic": {
+ *     "cid": "CN101210101",
+ *     "location": "杭州",
+ *     "parent_city": "杭州",
+ *     "admin_area": "浙江",
+ *     "cnty": "中国",
+ *     "lat": "30.28745842",
+ *     "lon": "120.15357971",
+ *     "tz": "+8.00"
+ *   }
+ * }
+ * */
+
 public class WeatherBasic {
     @SerializedName("cid")
     String cid;

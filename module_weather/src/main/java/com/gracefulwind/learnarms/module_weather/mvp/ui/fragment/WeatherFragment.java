@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,18 +14,22 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.TimeUtil;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
-import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
-import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.app.entity.CityEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherNow;
+import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
+import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherFragmentPresenter;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.OkHttpClient;
+import butterknife.Unbinder;
 
 /**
  * @ClassName: WeatherFragment
@@ -39,7 +45,12 @@ import okhttp3.OkHttpClient;
 @Route(path = RouterHub.WEATHER.WEATHER_FRAGMENT)
 public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresenter> implements WeatherFragmentContract.View {
 
-
+//=======================================================================================================
+    public static final String WEATHER_TYPE_NOW = "now";
+    public static final String WEATHER_TYPE_FORECAST = "forecast";
+    public static final String WEATHER_TYPE_LIFESTYLE = "lifestyle";
+    public static final String WEATHER_TYPE_HOURLY = "hourly";
+//=======================================================================================================
     @BindView(R2.id.wfw_tv_title)
     TextView wfwTvTitle;
     @BindView(R2.id.wfw_fmisvll_container)
@@ -47,6 +58,16 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     LinearLayout wfwFmisvllContainer;
     @BindView(R2.id.wfw_nsv_container)
     NestedScrollView wfwNsvContainer;
+    @BindView(R2.id.wfw_tv_now_tmp_minus)
+    TextView wfwTvNowTmpMinus;
+    @BindView(R2.id.wfw_now_tmp)
+    TextView wfwNowTmp;
+    @BindView(R2.id.wfw_now_condition_text)
+    TextView wfwNowConditionText;
+    @BindView(R2.id.wfw_aqi_text)
+    TextView wfwAqiText;
+    @BindView(R2.id.wfw_basic_update_loc)
+    TextView wfwBasicUpdateLoc;
 
 //-----------------------------------------------------------------------------------------------------
 
@@ -55,6 +76,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 //    @Autowired(name = KEY_TITLE, required = false)
     String cityName = "default";
     String citySearchName = "";
+
 //-----------------------------------------------------------------------------------------------------
 
 
@@ -66,7 +88,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     @Override
     public void lazyLoadData() {
-        mPresenter.getWeather(citySearchName);
+        mPresenter.getWeatherByType(WEATHER_TYPE_NOW, citySearchName);
     }
 
     public WeatherFragment makeInstance(CityEntity cityEntity) {
@@ -125,6 +147,56 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     }
 
     @Override
+    public void showWeatherByType(String weatherType, WeatherEntity weatherEntity) {
+        switch (weatherType){
+            case WEATHER_TYPE_NOW:
+                WeatherNow now = weatherEntity.getNow();
+                if(null != now){
+                    setNowWeather(weatherEntity);
+                }
+                break;
+            case WEATHER_TYPE_FORECAST:
+                break;
+            case WEATHER_TYPE_LIFESTYLE:
+                break;
+            case WEATHER_TYPE_HOURLY:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setNowWeather(WeatherEntity weatherEntity) {
+        WeatherNow weatherNow = weatherEntity.getNow();
+        //set Tmp
+        try {
+            final int tmpInt = Integer.valueOf(weatherNow.getTmp());
+            if(tmpInt < 0){
+                wfwTvNowTmpMinus.setVisibility(View.VISIBLE);
+                wfwNowTmp.setText(String.valueOf(-tmpInt));
+            }else{
+                wfwTvNowTmpMinus.setVisibility(View.GONE);
+                wfwNowTmp.setText(String.valueOf(tmpInt));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            wfwTvNowTmpMinus.setVisibility(View.GONE);
+            wfwNowTmp.setText(weatherNow.getTmp());
+        }
+        //
+        wfwNowConditionText.setText(weatherNow.getCond_txt());
+        //更新时间
+        String updateTime = weatherEntity.getUpdate().getLoc();
+        if (TimeUtil.isToday(updateTime)) {
+            wfwBasicUpdateLoc.setText(updateTime.substring(11) + " 发布");
+        } else {
+            wfwBasicUpdateLoc.setText(updateTime.substring(5) + " 发布");
+        }
+
+    }
+
+
+    @Override
     public String getCitySearchName() {
         return citySearchName;
     }
@@ -140,7 +212,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 //        mPresenter.getWeatherByType("forecast", "hangzhou");
 //        mPresenter.getWeatherByType("lifestyle", "hangzhou");
 //        mPresenter.getWeatherByType("hourly", "hangzhou");
-        String weatherType = "hourly";
+        String weatherType = WEATHER_TYPE_FORECAST;
         mPresenter.getWeatherByType(weatherType, "hangzhou");
 
         System.out.println("===111===");

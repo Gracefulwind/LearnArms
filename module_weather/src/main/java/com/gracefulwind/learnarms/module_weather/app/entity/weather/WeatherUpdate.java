@@ -14,6 +14,12 @@ import com.google.gson.annotations.SerializedName;
  * @Email: 429344332@qq.com
  */
 
+/**
+ *   "update": {
+ *     "loc": "2020-06-01 14:55",
+ *     "utc": "2020-06-01 06:55"
+ *   }
+ * */
 public class WeatherUpdate {
 
     @SerializedName("loc")
