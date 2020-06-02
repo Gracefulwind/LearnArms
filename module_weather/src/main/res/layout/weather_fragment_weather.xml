@@ -100,17 +100,20 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginBottom="28dp"
+                    android:layout_marginBottom="228dp"
                     android:layout_marginRight="8dp"
                     android:text="10:50发布"
                     android:textColor="@color/weather_text_secondary"
                     android:textSize="12dp" />
 
-                <!--                <com.gracefulwind.weather.weather.widget.DailyForecastView-->
-                <!--                    android:id="@+id/w_dailyForecastView"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="216dp"-->
-                <!--                    android:layout_alignParentBottom="true" />-->
+                <com.gracefulwind.learnarms.module_weather.widget.DailyForecastView
+                    android:id="@+id/wfw_daily_forecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="216dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
             </android.support.constraint.ConstraintLayout>
 
             <View

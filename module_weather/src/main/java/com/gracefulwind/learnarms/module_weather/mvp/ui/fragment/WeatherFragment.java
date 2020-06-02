@@ -23,6 +23,7 @@ import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherNow;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherFragmentPresenter;
+import com.gracefulwind.learnarms.module_weather.widget.DailyForecastView;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
@@ -68,6 +69,8 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     TextView wfwAqiText;
     @BindView(R2.id.wfw_basic_update_loc)
     TextView wfwBasicUpdateLoc;
+    @BindView(R2.id.wfw_daily_forecast)
+    DailyForecastView wfwDailyForecast;
 
 //-----------------------------------------------------------------------------------------------------
 
@@ -89,6 +92,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     @Override
     public void lazyLoadData() {
         mPresenter.getWeatherByType(WEATHER_TYPE_NOW, citySearchName);
+        mPresenter.getWeatherByType(WEATHER_TYPE_FORECAST, citySearchName);
     }
 
     public WeatherFragment makeInstance(CityEntity cityEntity) {
@@ -156,6 +160,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
                 }
                 break;
             case WEATHER_TYPE_FORECAST:
+                wfwDailyForecast.setData(weatherEntity);
                 break;
             case WEATHER_TYPE_LIFESTYLE:
                 break;
