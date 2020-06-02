@@ -57,6 +57,7 @@ public class HourlyForecastView extends View {
     public HourlyForecastView(Context context, AttributeSet attrs) {
         super(context, attrs);
         density = context.getResources().getDisplayMetrics().density;
+        //设置虚线
         dashPathEffect = new DashPathEffect(new float[]{density * 3,density * 3}, 1);
         if (isInEditMode()) {
             return;

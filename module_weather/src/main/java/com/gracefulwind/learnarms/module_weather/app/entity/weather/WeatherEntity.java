@@ -3,6 +3,7 @@ package com.gracefulwind.learnarms.module_weather.app.entity.weather;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +19,18 @@ import java.util.List;
  */
 
 public class WeatherEntity {
+
+    //生成实例的时候自动产生
+    long createTime = new Date().getTime();
+    //更新数据时刷新
+    long updateTime;
+    //4个开关判断数据对不对。。。全拿到了再一次更新呗。。。
+    //todo:加个isOk()方法
+    boolean hasNow;
+    boolean hasDailyForecast;
+    boolean hasLifeStyle;
+    boolean hasHourly;
+
 
     @SerializedName("basic")
     WeatherBasic basic;

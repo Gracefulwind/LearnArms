@@ -9,4 +9,30 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:textSize">16dp</item>
     </style>
+
+    <style name="weather_day_detail_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/public_dimen_32dp</item>
+        <item name="android:textColor">@color/weather_text_secondary</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="layout_constraintLeft_toRightOf">@id/wfw_day_detail_left_container</item>
+    </style>
+
+    <style name="weather_day_detail">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/public_dimen_32dp</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="android:layout_marginRight">@dimen/public_dimen_5dp</item>
+        <item name="android:layout_marginLeft">@dimen/public_dimen_5dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/weather_text_primary</item>
+    </style>
+
+    <style name="weather_day_detail_divider">
+        <item name="android:layout_width">@dimen/public_dimen_0dp</item>
+        <item name="android:layout_height">@dimen/public_dimen_0_5dp</item>
+        <item name="android:background">@color/public_color_divider</item>
+        <item name="layout_constraintLeft_toRightOf">@id/wfw_day_detail_left_container</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+    </style>
 </resources>

@@ -10,16 +10,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.TimeUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
+import com.gracefulwind.learnarms.commonservice.gank.service.GankInfoService;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
 import com.gracefulwind.learnarms.module_weather.app.entity.CityEntity;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherNow;
+import com.gracefulwind.learnarms.module_weather.app.utils.WeatherUtil;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherFragmentPresenter;
@@ -47,12 +51,12 @@ import butterknife.Unbinder;
 @Route(path = RouterHub.WEATHER.WEATHER_FRAGMENT)
 public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresenter> implements WeatherFragmentContract.View {
 
-//=======================================================================================================
+    //=======================================================================================================
     public static final String WEATHER_TYPE_NOW = "now";
     public static final String WEATHER_TYPE_FORECAST = "forecast";
     public static final String WEATHER_TYPE_LIFESTYLE = "lifestyle";
     public static final String WEATHER_TYPE_HOURLY = "hourly";
-//=======================================================================================================
+    //=======================================================================================================
     @BindView(R2.id.wfw_tv_title)
     TextView wfwTvTitle;
     @BindView(R2.id.wfw_fmisvll_container)
@@ -74,14 +78,32 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     DailyForecastView wfwDailyForecast;
     @BindView(R2.id.wfw_hourly_forecast)
     HourlyForecastView wfwHourlyForecast;
+    //----day detail-----------------
+    @BindView(R2.id.wfw_day_detail_temp)
+    TextView wfwDayDetailTemp;
+    @BindView(R2.id.wfw_today_detail_bottomline)
+    TextView wfwTodayDetailBottomline;
+    @BindView(R2.id.wfw_tv_temp)
+    TextView wfwTvTemp;
+    @BindView(R2.id.wfw_tv_hum)
+    TextView wfwTvHum;
+    @BindView(R2.id.wfw_tv_vis)
+    TextView wfwTvVis;
+    @BindView(R2.id.wfw_tv_pcpn)
+    TextView wfwTvPcpn;
 
 //-----------------------------------------------------------------------------------------------------
 
     //    public static final String KEY_TITLE = "key_title";
 //-----------------------------------------------------------------------------------------------------
-//    @Autowired(name = KEY_TITLE, required = false)
+    //todo: for test, delete latter
+    //不用引入相关module，只需要公共接口就能引入相关服务
+    @Autowired(name = RouterHub.GANK.GANK_SERVICE_GANKINFOSERVICE)
+    GankInfoService mGankInfoService;
+    //    @Autowired(name = KEY_TITLE, required = false)
     String cityName = "default";
     String citySearchName = "";
+
 
 //-----------------------------------------------------------------------------------------------------
 
@@ -155,11 +177,12 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     @Override
     public void showWeatherByType(String weatherType, WeatherEntity weatherEntity) {
-        switch (weatherType){
+        switch (weatherType) {
             case WEATHER_TYPE_NOW:
                 WeatherNow now = weatherEntity.getNow();
-                if(null != now){
+                if (null != now) {
                     setNowWeather(weatherEntity);
+                    setDayDetail(weatherEntity);
                 }
                 break;
             case WEATHER_TYPE_FORECAST:
@@ -180,10 +203,10 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
         //set Tmp
         try {
             final int tmpInt = Integer.valueOf(weatherNow.getTmp());
-            if(tmpInt < 0){
+            if (tmpInt < 0) {
                 wfwTvNowTmpMinus.setVisibility(View.VISIBLE);
                 wfwNowTmp.setText(String.valueOf(-tmpInt));
-            }else{
+            } else {
                 wfwTvNowTmpMinus.setVisibility(View.GONE);
                 wfwNowTmp.setText(String.valueOf(tmpInt));
             }
@@ -202,6 +225,17 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
             wfwBasicUpdateLoc.setText(updateTime.substring(5) + " 发布");
         }
 
+    }
+
+    private void setDayDetail(WeatherEntity weatherEntity) {
+        WeatherNow weatherNow = weatherEntity.getNow();
+        wfwDayDetailTemp.setText(weatherNow.getTmp() + "°");
+        //todo:维护weatherManager，从那边拿数据填充
+        wfwTodayDetailBottomline.setText(weatherNow.getCond_txt() + WeatherUtil.getTodayTempDescription(weatherEntity));
+        wfwTvTemp.setText(weatherNow.getTmp() + "°");
+        wfwTvHum.setText(weatherNow.getHum() + "%");
+        wfwTvVis.setText(weatherNow.getVis() + "km");
+        wfwTvPcpn.setText(weatherNow.getPcpn() + "mm");
     }
 
 
@@ -229,6 +263,9 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     public void click2() {
 //        mPresenter.click2();
+        //todo:test open without implement  =>it's OK
+        //路由的意义在于不用依赖关系，就可以调起相关的组件
+        Utils.navigation(this.getContext(), RouterHub.GANK.GANK_HOMEACTIVITY);
         System.out.println("====222===");
     }
 

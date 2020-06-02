@@ -139,6 +139,131 @@
                 android:background="@color/public_color_divider" />
 
             <TextView
+                style="@style/weather_section_title"
+                android:text="详细信息" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/wfw_day_detail_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/wfw_day_detail_left_container"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/wfw_day_detail_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="-°"
+                        android:singleLine="true"
+                        android:textColor="@color/weather_text_primary"
+                        android:textSize="52dp" />
+
+                    <TextView
+                        android:id="@+id/wfw_today_detail_bottomline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:gravity="center_horizontal"
+                        android:text="-"
+                        android:layout_marginTop="@dimen/public_dimen_8dp"
+                        android:textColor="@color/weather_text_primary"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/wfw_tv_tmp_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="体感温度"
+                    style="@style/weather_day_detail_title" />
+
+                <TextView
+                    android:id="@+id/wfw_tv_temp"
+                    app:layout_constraintTop_toTopOf="@id/wfw_tv_tmp_title"
+                    app:layout_constraintBottom_toBottomOf="@id/wfw_tv_tmp_title"
+                    style="@style/weather_day_detail"
+                    android:text="0"
+                    />
+
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/wfw_tv_tmp_title"
+                    style="@style/weather_day_detail_divider"
+                    />
+
+                <TextView
+                    android:id="@+id/wfw_tv_hum_title"
+                    style="@style/weather_day_detail_title"
+                    app:layout_constraintTop_toBottomOf="@id/wfw_tv_tmp_title"
+                    android:layout_marginTop="@dimen/public_dimen_0_5dp"
+                    android:text="湿度"
+                    />
+
+                <TextView
+                    android:id="@+id/wfw_tv_hum"
+                    app:layout_constraintTop_toTopOf="@id/wfw_tv_hum_title"
+                    app:layout_constraintBottom_toBottomOf="@id/wfw_tv_hum_title"
+                    style="@style/weather_day_detail"
+                    android:text="0%"
+                    />
+
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/wfw_tv_hum_title"
+                    style="@style/weather_day_detail_divider"
+                    />
+
+                <TextView
+                    android:id="@+id/wfw_tv_vis_title"
+                    style="@style/weather_day_detail_title"
+                    app:layout_constraintTop_toBottomOf="@id/wfw_tv_hum_title"
+                    android:layout_marginTop="@dimen/public_dimen_0_5dp"
+                    android:text="能见度"
+                    />
+
+                <TextView
+                    android:id="@+id/wfw_tv_vis"
+                    app:layout_constraintTop_toTopOf="@id/wfw_tv_vis_title"
+                    app:layout_constraintBottom_toBottomOf="@id/wfw_tv_vis_title"
+                    style="@style/weather_day_detail"
+                    android:text="0km"
+                    />
+
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/wfw_tv_vis_title"
+                    style="@style/weather_day_detail_divider" />
+
+                <TextView
+                    android:id="@+id/wfw_tv_pcpn_title"
+                    style="@style/weather_day_detail_title"
+                    app:layout_constraintTop_toBottomOf="@id/wfw_tv_vis_title"
+                    android:layout_marginTop="@dimen/public_dimen_0_5dp"
+                    android:text="降雨量"
+                    />
+
+                <TextView
+                    android:id="@+id/wfw_tv_pcpn"
+                    app:layout_constraintTop_toTopOf="@id/wfw_tv_pcpn_title"
+                    app:layout_constraintBottom_toBottomOf="@id/wfw_tv_pcpn_title"
+                    style="@style/weather_day_detail"
+                    android:text="0mm"
+                    />
+
+
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/public_dimen_0_5dp"
+                android:background="@color/public_color_divider" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="气温，天气情况等"
