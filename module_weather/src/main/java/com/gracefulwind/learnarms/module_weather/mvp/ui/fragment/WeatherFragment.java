@@ -24,6 +24,7 @@ import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentCon
 import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.WeatherFragmentPresenter;
 import com.gracefulwind.learnarms.module_weather.widget.DailyForecastView;
+import com.gracefulwind.learnarms.module_weather.widget.HourlyForecastView;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
@@ -71,6 +72,8 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     TextView wfwBasicUpdateLoc;
     @BindView(R2.id.wfw_daily_forecast)
     DailyForecastView wfwDailyForecast;
+    @BindView(R2.id.wfw_hourly_forecast)
+    HourlyForecastView wfwHourlyForecast;
 
 //-----------------------------------------------------------------------------------------------------
 
@@ -81,19 +84,6 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     String citySearchName = "";
 
 //-----------------------------------------------------------------------------------------------------
-
-
-    @Override
-    protected int getLayoutId() {
-//        new OkHttpClient()
-        return R.layout.weather_fragment_weather;
-    }
-
-    @Override
-    public void lazyLoadData() {
-        mPresenter.getWeatherByType(WEATHER_TYPE_NOW, citySearchName);
-        mPresenter.getWeatherByType(WEATHER_TYPE_FORECAST, citySearchName);
-    }
 
     public WeatherFragment makeInstance(CityEntity cityEntity) {
 //        WeatherFragment newInstance = new WeatherFragment();
@@ -114,6 +104,19 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
                 .build()
                 .inject(this);
         ARouter.getInstance().inject(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+//        new OkHttpClient()
+        return R.layout.weather_fragment_weather;
+    }
+
+    @Override
+    public void lazyLoadData() {
+        mPresenter.getWeatherByType(WEATHER_TYPE_NOW, citySearchName);
+        mPresenter.getWeatherByType(WEATHER_TYPE_FORECAST, citySearchName);
+        mPresenter.getWeatherByType(WEATHER_TYPE_HOURLY, citySearchName);
     }
 
     @Override
@@ -165,6 +168,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
             case WEATHER_TYPE_LIFESTYLE:
                 break;
             case WEATHER_TYPE_HOURLY:
+                wfwHourlyForecast.setData(weatherEntity);
                 break;
             default:
                 break;

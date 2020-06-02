@@ -17,10 +17,13 @@
         android:text="This is weather fragment"
         />
 
+<!--    todo:修改写死的高度和StringRes-->
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/wfw_nsv_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/public_color_53A8F4"
+        >
 
         <com.gracefulwind.learnarms.commonres.widget.FirstMatchInScrollViewLinearLayout
             android:id="@+id/wfw_fmisvll_container"
@@ -115,6 +118,20 @@
                     app:layout_constraintRight_toRightOf="parent"
                     />
             </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/public_dimen_0_5dp"
+                android:background="@color/public_color_divider" />
+
+            <TextView
+                style="@style/weather_section_title"
+                android:text="24h预报" />
+
+            <com.gracefulwind.learnarms.module_weather.widget.HourlyForecastView
+                android:id="@+id/wfw_hourly_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="144dp" />
 
             <View
                 android:layout_width="match_parent"
