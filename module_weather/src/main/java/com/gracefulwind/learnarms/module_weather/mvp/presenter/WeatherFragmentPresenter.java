@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.module_weather.api.service.WeatherService;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
+import com.gracefulwind.learnarms.module_weather.app.utils.WeatherManager;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.app.entity.DoubanMovieBean;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherData;
@@ -118,7 +119,7 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
             public void onNext(WeatherData datas) {
                 //todo:获取到data后的处理应该在view里写
                 if(null == datas.getWeatherList() || 0 == datas.getWeatherList().size()){
-                    mRootView.showWeather("通讯错误");
+                    mRootView.showMessage("通讯错误");
                     return;
                 }
                 System.out.println("result!!");
@@ -126,7 +127,7 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 System.out.println("result!!");
                 WeatherEntity weatherBean = datas.getWeatherList().get(0);
                 if(!TextUtils.equals(WeatherData.STATUS_OK, weatherBean.getStatus())){
-                    mRootView.showWeather("获取数据异常 : " + weatherBean.getStatus());
+                    mRootView.showMessage("获取数据异常 : " + weatherBean.getStatus());
                 }
                 StringBuilder sbWeatherInfo = new StringBuilder();
                 sbWeatherInfo.append(weatherBean.getBasic().getLocation()).append("天气：").append(weatherBean.getNow().getCond_txt());
@@ -142,7 +143,7 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
             public void onNext(WeatherData datas) {
                 //todo:获取到data后的处理应该在view里写
                 if(null == datas.getWeatherList() || 0 == datas.getWeatherList().size()){
-                    mRootView.showWeather("通讯错误");
+                    mRootView.showMessage("通讯错误");
 //                    onError();
                     return;
                 }
@@ -151,11 +152,14 @@ public class WeatherFragmentPresenter extends BasePresenter<WeatherFragmentContr
                 System.out.println("result!!");
                 WeatherEntity weatherBean = datas.getWeatherList().get(0);
                 if(!TextUtils.equals(WeatherData.STATUS_OK, weatherBean.getStatus())){
-                    mRootView.showWeather("获取数据异常 : " + weatherBean.getStatus());
+                    mRootView.showMessage("获取数据异常 : " + weatherBean.getStatus());
 //                    onError();
                     return;
                 }
-                mRootView.showWeatherByType(weatherType, weatherBean);
+                WeatherManager wm = WeatherManager.getInstance();
+                wm.putWeather(city, weatherType, weatherBean);
+                mRootView.showWeather(city);
+//                mRootView.showWeatherByType(weatherType, weatherBean);
             }
         });
     }

@@ -26,10 +26,7 @@ public class WeatherEntity {
     long updateTime;
     //4个开关判断数据对不对。。。全拿到了再一次更新呗。。。
     //todo:加个isOk()方法
-    boolean hasNow;
-    boolean hasDailyForecast;
-    boolean hasLifeStyle;
-    boolean hasHourly;
+    boolean hasNow, hasDailyForecast, hasLifeStyle, hasHourly;
 
 
     @SerializedName("basic")
@@ -47,12 +44,47 @@ public class WeatherEntity {
     @SerializedName("hourly")
     List<WeatherHourly> hourly = new ArrayList<>();
 
+    private void refreshUpdateTime() {
+        updateTime = new Date().getTime();
+    }
+
+    public boolean isDateOk(){
+        return hasNow() && hasDailyForecast() /*&& hasLifeStyle()*/ && hasHourly();
+    }
+
+    public boolean hasNow(){
+        return null != now;
+    }
+
+    public boolean hasDailyForecast(){
+        return null != dailyForecast && 0 != dailyForecast.size();
+    }
+
+    public boolean hasLifeStyle(){
+        return null != lifeStyle && 0 != lifeStyle.size();
+    }
+
+    public boolean hasHourly(){
+        return null != hourly && 0 != hourly.size();
+    }
+
+
+    //==================================================================================================
     public WeatherBasic getBasic() {
         return basic;
     }
 
+/**
+ *
+ * 其实对时间要求没这么严谨的，这个synchronized是否可以不要？ == 现在不用4个boolean标志位了
+ *
+ *
+ * */
     public void setBasic(WeatherBasic basic) {
-        this.basic = basic;
+        synchronized (this){
+            refreshUpdateTime();
+            this.basic = basic;
+        }
     }
 
     public WeatherUpdate getUpdate() {
@@ -60,7 +92,10 @@ public class WeatherEntity {
     }
 
     public void setUpdate(WeatherUpdate update) {
-        this.update = update;
+        synchronized (this){
+            refreshUpdateTime();
+            this.update = update;
+        }
     }
 
     public String getStatus() {
@@ -68,7 +103,10 @@ public class WeatherEntity {
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        synchronized (this){
+            refreshUpdateTime();
+            this.status = status;
+        }
     }
 
     public WeatherNow getNow() {
@@ -76,7 +114,11 @@ public class WeatherEntity {
     }
 
     public void setNow(WeatherNow now) {
-        this.now = now;
+        synchronized (this){
+            refreshUpdateTime();
+            this.now = now;
+        }
+
     }
 
     public List<DailyForecast> getDailyForecast() {
@@ -84,7 +126,11 @@ public class WeatherEntity {
     }
 
     public void setDailyForecast(List<DailyForecast> dailyForecast) {
-        this.dailyForecast = dailyForecast;
+        synchronized (this){
+            refreshUpdateTime();
+            this.dailyForecast = dailyForecast;
+        }
+
     }
 
     public List<LifeStyle> getLifeStyle() {
@@ -92,7 +138,11 @@ public class WeatherEntity {
     }
 
     public void setLifeStyle(List<LifeStyle> lifeStyle) {
-        this.lifeStyle = lifeStyle;
+        synchronized (this){
+            refreshUpdateTime();
+            this.lifeStyle = lifeStyle;
+        }
+
     }
 
     public List<WeatherHourly> getHourly() {
@@ -100,7 +150,10 @@ public class WeatherEntity {
     }
 
     public void setHourly(List<WeatherHourly> hourly) {
-        this.hourly = hourly;
+        synchronized (this){
+            refreshUpdateTime();
+            this.hourly = hourly;
+        }
     }
 
     @Override

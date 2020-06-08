@@ -23,6 +23,7 @@ import com.gracefulwind.learnarms.module_weather.R2;
 import com.gracefulwind.learnarms.module_weather.app.entity.CityEntity;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherNow;
+import com.gracefulwind.learnarms.module_weather.app.utils.WeatherManager;
 import com.gracefulwind.learnarms.module_weather.app.utils.WeatherUtil;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.WeatherFragmentContract;
 import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerWeatherFragmentComponent;
@@ -169,33 +170,59 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     @Override
     public void showWeather(String weatherJson) {
-        //todo:show weather json。 then translate into bean
-        ArmsUtils.makeText(this.getContext(), weatherJson);
+//        //todo:show weather json。 then translate into bean
+//        ArmsUtils.makeText(this.getContext(), weatherJson);
         //获取数据后重新测绘高度，让第一个子类能正确占满父控件
         wfwFmisvllContainer.requestLayout();
+        WeatherEntity weather = WeatherManager.getInstance().getWeather(weatherJson);
+        if(weather.isDateOk()){
+            setNowWeather(weather);
+            setDayDetail(weather);
+            setWeatherByForecast(weather);
+            setWeatherByHourly(weather);
+        }
+    }
+
+    @Override
+    public void showMessage(@NonNull String message) {
+        ArmsUtils.makeText(getContext(), message);
     }
 
     @Override
     public void showWeatherByType(String weatherType, WeatherEntity weatherEntity) {
         switch (weatherType) {
             case WEATHER_TYPE_NOW:
-                WeatherNow now = weatherEntity.getNow();
-                if (null != now) {
-                    setNowWeather(weatherEntity);
-                    setDayDetail(weatherEntity);
-                }
+                setWeatherByNow(weatherEntity);
                 break;
             case WEATHER_TYPE_FORECAST:
-                wfwDailyForecast.setData(weatherEntity);
+                setWeatherByForecast(weatherEntity);
                 break;
             case WEATHER_TYPE_LIFESTYLE:
                 break;
             case WEATHER_TYPE_HOURLY:
-                wfwHourlyForecast.setData(weatherEntity);
+                setWeatherByHourly(weatherEntity);
                 break;
             default:
                 break;
         }
+    }
+
+    private void setWeatherByNow(WeatherEntity weatherEntity) {
+        WeatherNow now = weatherEntity.getNow();
+        if (null != now) {
+            setNowWeather(weatherEntity);
+            setDayDetail(weatherEntity);
+        }
+    }
+
+    //=========lifestyle
+
+    private void setWeatherByForecast(WeatherEntity weatherEntity) {
+        wfwDailyForecast.setData(weatherEntity);
+    }
+
+    private void setWeatherByHourly(WeatherEntity weatherEntity) {
+        wfwHourlyForecast.setData(weatherEntity);
     }
 
     private void setNowWeather(WeatherEntity weatherEntity) {
@@ -256,6 +283,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 //        mPresenter.getWeatherByType("lifestyle", "hangzhou");
 //        mPresenter.getWeatherByType("hourly", "hangzhou");
         String weatherType = WEATHER_TYPE_FORECAST;
+        //just for test
         mPresenter.getWeatherByType(weatherType, "hangzhou");
 
         System.out.println("===111===");
