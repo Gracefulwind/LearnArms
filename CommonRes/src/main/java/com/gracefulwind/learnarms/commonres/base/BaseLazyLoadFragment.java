@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public abstract class BaseLazyLoadFragment<P extends IPresenter> extends BaseFra
      */
     protected abstract @LayoutRes int getLayoutId();
 
+
     @Override
     public View initView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mRootView == null) {
@@ -68,6 +70,12 @@ public abstract class BaseLazyLoadFragment<P extends IPresenter> extends BaseFra
         super.onResume();
         isViewCreated = true;
         tryLoadData();
+    }
+
+    @Override
+    public void onDestroy() {
+        isViewCreated = false;
+        super.onDestroy();
     }
 
     @Override
@@ -107,6 +115,7 @@ public abstract class BaseLazyLoadFragment<P extends IPresenter> extends BaseFra
         if (isViewCreated)
             setAllChildFragment(isVisibleToUser);//父fragment变化带动子fragment的visibleToUser变化
     }
+
     List<Fragment> cacheVisibleToUserChildFragment; //保存可见子fragment,在父fragment下次切回来的时候重新给予赋值
     private void setAllChildFragment(boolean isParentVisibleToUser) {
         if (!this.isAdded()) return;

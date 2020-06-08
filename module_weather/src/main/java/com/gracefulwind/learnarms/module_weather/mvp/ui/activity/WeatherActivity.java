@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
@@ -62,7 +63,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
     ViewPager wawVpWeatherContainer;
     private ArrayList<WeatherFragment> fragments;
 
-    public static String[] cities = {"hangzhou", "shanghai", "beijing", "yichang"};
+    public static String[] cityCode = {"hangzhou", "shanghai", "beijing", "yichang"};
     public static String[] citiesName = {"杭州", "上海", "北京", "宜昌"};
 
     @Override
@@ -93,7 +94,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
                     .navigation();
             //设置city
             fragment.setCityName(citiesName[x]);
-            fragment.setCitySearchName(cities[x]);
+            fragment.setCitySearchName(cityCode[x]);
             fragments.add(fragment);
         }
 
@@ -114,10 +115,10 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
         //todo:修改下。不合理方式
         if(R.id.waw_btn_click1 == id){
 //            mPresenter.doSomething();
-            fragments.get(0).click1();
+            fragments.get(1).click1();
         }
         else if(R.id.waw_btn_click2 == id){
-            fragments.get(0).click2();
+            fragments.get(1).click2();
         }
     }
 

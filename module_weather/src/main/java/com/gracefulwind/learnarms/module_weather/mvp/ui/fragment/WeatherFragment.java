@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ import com.gracefulwind.learnarms.module_weather.widget.DailyForecastView;
 import com.gracefulwind.learnarms.module_weather.widget.HourlyForecastView;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -145,7 +148,6 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         System.out.println("========");
-
     }
 
 
@@ -278,23 +280,89 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 
     public void click1() {
 //        mPresenter.click1();
-//        mPresenter.getWeatherByType("now", "hangzhou");
-//        mPresenter.getWeatherByType("forecast", "hangzhou");
-//        mPresenter.getWeatherByType("lifestyle", "hangzhou");
-//        mPresenter.getWeatherByType("hourly", "hangzhou");
-        String weatherType = WEATHER_TYPE_FORECAST;
-        //just for test
-        mPresenter.getWeatherByType(weatherType, "hangzhou");
+//        String weatherType = WEATHER_TYPE_FORECAST;
+//        //just for test
+//        mPresenter.getWeatherByType(weatherType, "hangzhou");
 
         System.out.println("===111===");
     }
 
     public void click2() {
-//        mPresenter.click2();
-        //todo:test open without implement  =>it's OK
-        //路由的意义在于不用依赖关系，就可以调起相关的组件
-        Utils.navigation(this.getContext(), RouterHub.GANK.GANK_HOMEACTIVITY);
-        System.out.println("====222===");
+////        mPresenter.click2();
+//        //todo:test open without implement  =>it's OK
+//        //路由的意义在于不用依赖关系，就可以调起相关的组件
+//        Utils.navigation(this.getContext(), RouterHub.GANK.GANK_HOMEACTIVITY);
+//        System.out.println("====222===");
+        //------
+//        this.startThread("one");
+//        this.startThread("two");
+//        this.notifyThread();
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+        //------
+//        String test = "9fil3dj11P0jAsf11j ";
+//        System.out.println(FindMost(test));
     }
 
+    public static int FindMost(final String str){
+        if(str==null||str.length()==0)return -1;
+        int result = 0;
+
+        String temp1 = str.replaceAll("[a-zA-Z]+","/");
+        System.out.println(temp1);
+        String[] temp = temp1.split("/");
+
+        HashMap<String,Integer> map = new HashMap<>();
+
+        //用来记录出现次数最多的数字和出现的次数
+        int max = 0;
+        String maxString = "";
+        for(String s : temp){
+            int num = map.containsKey(s)?map.get(s):0;
+            map.put(s,++num);
+            if(max<=num){
+                max = num;
+                maxString = s;
+            }
+        }
+
+        return Integer.valueOf(maxString)*max;
+    }
+
+    private volatile Object lock = new Object();
+    void startThread(final String name) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    synchronized (lock) {
+                        lock.wait();
+                        System.out.println("thread " + name + " finish");
+                    }
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    void notifyThread() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    synchronized (lock){
+                        Thread.sleep(1000);
+                        lock.notify();
+                        Thread.sleep(1000);
+                        System.out.println("thread notify finish");
+                    }
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 }
