@@ -1,8 +1,14 @@
 package com.gracefulwind.learnarms.commonsdk.utils;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import static android.util.TypedValue.applyDimension;
 
@@ -78,6 +84,28 @@ public class UiUtil {
         checkInit();
         DisplayMetrics mDisplayMetrics = appContext.getResources().getDisplayMetrics();
         return pxValue / mDisplayMetrics.scaledDensity;
+    }
+
+    public static View inflate(@LayoutRes int layoutId){
+//        checkInit();
+        View inflate = inflate(layoutId, null);
+        return inflate;
+    }
+
+    public static View inflate(@LayoutRes int layoutId, ViewGroup parent){
+        checkInit();
+        View inflate = LayoutInflater.from(appContext).inflate(layoutId, parent, false);
+        return inflate;
+    }
+
+    public static int getTextViewHeight(TextView tv){
+        Layout layout = tv.getLayout();
+        if(null == layout){
+            return 0;
+        }
+        int desired = layout.getLineTop(tv.getLineCount());
+        int padding = tv.getCompoundPaddingTop() + tv.getCompoundPaddingBottom();
+        return desired + padding;
     }
 
 }
