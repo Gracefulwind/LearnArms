@@ -19,6 +19,8 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
+import org.simple.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -53,7 +55,12 @@ public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter
                 .view(this)
                 .build()
                 .inject(this);
+//        EventBus.getDefault().post(new Object(), "11222");
     }
+
+//    public void testEventBus(){
+//
+//    }
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {

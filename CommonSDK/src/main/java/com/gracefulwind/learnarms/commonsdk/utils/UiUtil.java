@@ -28,7 +28,7 @@ public class UiUtil {
 
     private static Context appContext = null;
 
-    public static void initUiUtil(Context appContext){
+    public static void init(Context appContext){
         UiUtil.appContext = appContext;
     }
 

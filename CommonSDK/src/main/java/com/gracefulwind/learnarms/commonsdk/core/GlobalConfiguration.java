@@ -109,7 +109,7 @@ public class GlobalConfiguration implements ConfigModule {
                 //init Arouter
                 ARouter.init(application); // 尽可能早,推荐在Application中初始化
                 //init UiUtil
-                UiUtil.initUiUtil(application.getBaseContext());
+                UiUtil.init(application.getBaseContext());
                 //init typefaceUtil
                 TypefaceUtil.init(application.getBaseContext());
                 //todo: application的init

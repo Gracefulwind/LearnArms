@@ -31,6 +31,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
+<!--            一周天气-->
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -124,6 +125,7 @@
                 android:layout_height="@dimen/public_dimen_0_5dp"
                 android:background="@color/public_color_divider" />
 
+<!--            24小时预报-->
             <TextView
                 style="@style/weather_section_title"
                 android:text="24h预报" />
@@ -138,6 +140,7 @@
                 android:layout_height="@dimen/public_dimen_0_5dp"
                 android:background="@color/public_color_divider" />
 
+<!--            详情体感-->
             <TextView
                 style="@style/weather_section_title"
                 android:text="详细信息" />

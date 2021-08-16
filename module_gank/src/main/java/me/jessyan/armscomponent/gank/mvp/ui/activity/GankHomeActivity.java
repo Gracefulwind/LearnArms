@@ -34,6 +34,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+
+import org.simple.eventbus.EventBus;
+
 import me.jessyan.armscomponent.gank.R;
 import me.jessyan.armscomponent.gank.R2;
 import me.jessyan.armscomponent.gank.di.component.DaggerGankHomeComponent;
@@ -87,6 +90,7 @@ public class GankHomeActivity extends BaseActivity<GankHomePresenter> implements
         mRecyclerView.setAdapter(mAdapter);
         initPaginate();
     }
+
 
 
     @Override

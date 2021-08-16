@@ -90,14 +90,17 @@ public class DailyForecastView extends View {
         final float textSize = this.height / 18f;
         paint.setTextSize(textSize);
         final float textOffset = getTextPaintOffset(paint);
+        //单位高度
         final float dH = textSize * 8f;
+        //中心Y高度
         final float dCenterY = textSize * 6f ;
         if (datas == null || datas.length <= 1) {
             canvas.drawLine(0, dCenterY, this.width, dCenterY, paint);//没有数据的情况下只画一条线
             return;
         }
+        //单位宽度
         final float dW = this.width * 1f / datas.length;
-        //画直线
+        //画直线(天气折线而非赛贝尔曲线)
 //		for (int i = 0; i < (datas.length - 1); i++) {
 //			final Data leftD = datas[i];
 //			final Data rightD = datas[i+1];
