@@ -48,6 +48,7 @@ public interface RouterHub {
     String GOLD_HOME = "/gold";//稀土掘金组件
     String TEST_DAGGER_HOME = "/test_dagger";//测试dagger组件
     String WEATHER_HOME = "/weather";//天气组件
+    String NOVELS_HOME = "/novels";//小说组件
 
     /**
      * 服务组件, 用于给每个组件暴露特有的服务
@@ -79,9 +80,10 @@ public interface RouterHub {
      * 干货集中营分组
      */
     interface GANK{
-        String GANK_SERVICE_GANKINFOSERVICE = GANK_HOME + SERVICE + "/GankInfoService";
+        String BASE = GANK_HOME;
+        String GANK_SERVICE_GANKINFOSERVICE = BASE + SERVICE + "/GankInfoService";
 
-        String GANK_HOMEACTIVITY = GANK_HOME + "/HomeActivity";
+        String GANK_HOMEACTIVITY = BASE + "/HomeActivity";
     }
 
 
@@ -90,10 +92,12 @@ public interface RouterHub {
      * 稀土掘金分组
      */
     interface GOLD{
-        String GOLD_SERVICE_GOLDINFOSERVICE = GOLD_HOME + SERVICE + "/GoldInfoService";
+        String BASE = GOLD_HOME;
 
-        String GOLD_HOMEACTIVITY = GOLD_HOME + "/HomeActivity";
-        String GOLD_DETAILACTIVITY = GOLD_HOME + "/DetailActivity";
+        String GOLD_SERVICE_GOLDINFOSERVICE = BASE + SERVICE + "/GoldInfoService";
+
+        String GOLD_HOMEACTIVITY = BASE + "/HomeActivity";
+        String GOLD_DETAILACTIVITY = BASE + "/DetailActivity";
     }
 
 //====================================================================================================
@@ -101,11 +105,16 @@ public interface RouterHub {
      * 测试dagger分组
     */
     interface TEST_DAGGER{
-        String SERVICE_INFOSERVICE = TEST_DAGGER_HOME + SERVICE + "/InfoService";
+        String BASE = TEST_DAGGER_HOME;
+//        String SERVICE_INFOSERVICE = BASE + SERVICE + "/InfoService";
 
-        String HOME_ACTIVITY = TEST_DAGGER_HOME + "/HomeActivity";
-        String DAGGER_PAGE_1_ACTIVITY = TEST_DAGGER_HOME + "/DaggerPage1Activity";
-        String DAGGER_PAGE_2_ACTIVITY = TEST_DAGGER_HOME + "/DaggerPage2Activity";
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
+        String DAGGER_PAGE_1_ACTIVITY = BASE + "/DaggerPage1Activity";
+        String DAGGER_PAGE_2_ACTIVITY = BASE + "/DaggerPage2Activity";
+
+        interface SERVER{
+            String INFO_SERVICE = BASE + SERVICE + "/InfoService";
+        }
     }
 
 //====================================================================================================
@@ -113,11 +122,30 @@ public interface RouterHub {
      * 天气分组
      */
     interface WEATHER{
-        String HOME_ACTIVITY = WEATHER_HOME + "/HomeActivity";
-        String WEATHER_ACTIVITY = WEATHER_HOME + "/WeatherActivity";
-        String WEATHER_FRAGMENT = WEATHER_HOME + "/WeatherFragment";
+        String BASE = WEATHER_HOME;
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
+        String WEATHER_ACTIVITY = BASE + "/WeatherActivity";
+        String WEATHER_FRAGMENT = BASE + "/WeatherFragment";
 
-        String GOLD_SERVICE_GOLDINFOSERVICE = WEATHER_HOME + SERVICE + "/InfoService";
+        interface SERVER{
+            String COMMON_SERVER = BASE + SERVICE + "/CommonService";
+        }
+
+    }
+
+//====================================================================================================
+    /**
+     * 天气分组
+     */
+    interface NOVELS{
+        String BASE = NOVELS_HOME;
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
+//        String WEATHER_ACTIVITY = BASE + "/WeatherActivity";
+//        String WEATHER_FRAGMENT = BASE + "/WeatherFragment";
+
+        interface SERVER{
+            String COMMON_SERVER = BASE + SERVICE + "/CommonService";
+        }
 
     }
 
