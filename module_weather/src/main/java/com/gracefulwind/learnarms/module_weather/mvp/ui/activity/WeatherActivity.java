@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.flyco.tablayout.SlidingTabLayout;
-import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
@@ -44,7 +43,7 @@ import butterknife.OnClick;
  * @Email: 429344332@qq.com
  */
 
-@Route(path = RouterHub.WEATHER.WEATHER_ACTIVITY)
+@Route(path = RouterHub.Weather.WEATHER_ACTIVITY)
 public class WeatherActivity extends BaseActivity<WeatherPresenter> implements WeatherContract.View {
 
     @BindView(R2.id.waw_btn_click1)
@@ -89,7 +88,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> implements W
         fragments = new ArrayList<>();
         for(int x = 0; x < 4; x++){
             WeatherFragment fragment = (WeatherFragment) ARouter.getInstance()
-                    .build(RouterHub.WEATHER.WEATHER_FRAGMENT)
+                    .build(RouterHub.Weather.WEATHER_FRAGMENT)
 //                    .withString(WeatherFragment.KEY_TITLE, "title_" + x)
                     .navigation();
             //设置city

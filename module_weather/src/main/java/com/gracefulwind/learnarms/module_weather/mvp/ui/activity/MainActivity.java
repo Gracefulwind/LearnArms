@@ -38,7 +38,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * ================================================
  */
 
-@Route(path = RouterHub.WEATHER.HOME_ACTIVITY)
+@Route(path = RouterHub.Weather.HOME_ACTIVITY)
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
 
     @BindView(R2.id.wam_btn_click1)
@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         int id = view.getId();
         if(R.id.wam_btn_click1 == id){
             //打开天气详情
-            Utils.navigation(MainActivity.this, RouterHub.WEATHER.WEATHER_ACTIVITY);
+            Utils.navigation(MainActivity.this, RouterHub.Weather.WEATHER_ACTIVITY);
         }
         else if(R.id.wam_btn_click2 == id){
             //其他页面，设置啥的，以后再做

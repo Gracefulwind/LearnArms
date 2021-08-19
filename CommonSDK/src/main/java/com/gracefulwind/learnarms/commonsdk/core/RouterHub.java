@@ -48,7 +48,7 @@ public interface RouterHub {
     String GOLD_HOME = "/gold";//稀土掘金组件
     String TEST_DAGGER_HOME = "/test_dagger";//测试dagger组件
     String WEATHER_HOME = "/weather";//天气组件
-    String NOVELS_HOME = "/novels";//小说组件
+    String READER_HOME = "/novels";//小说组件
 
     /**
      * 服务组件, 用于给每个组件暴露特有的服务
@@ -67,7 +67,7 @@ public interface RouterHub {
     /**
      * 知乎分组
      */
-    interface ZHIHU{
+    interface ZhiHu{
         String ZHIHU_SERVICE_ZHIHUINFOSERVICE = ZHIHU_HOME + SERVICE + "/ZhihuInfoService";
 
         String ZHIHU_HOMEACTIVITY = ZHIHU_HOME + "/HomeActivity";
@@ -79,7 +79,7 @@ public interface RouterHub {
     /**
      * 干货集中营分组
      */
-    interface GANK{
+    interface Gank {
         String BASE = GANK_HOME;
         String GANK_SERVICE_GANKINFOSERVICE = BASE + SERVICE + "/GankInfoService";
 
@@ -91,7 +91,7 @@ public interface RouterHub {
     /**
      * 稀土掘金分组
      */
-    interface GOLD{
+    interface Gold {
         String BASE = GOLD_HOME;
 
         String GOLD_SERVICE_GOLDINFOSERVICE = BASE + SERVICE + "/GoldInfoService";
@@ -104,7 +104,7 @@ public interface RouterHub {
     /**
      * 测试dagger分组
     */
-    interface TEST_DAGGER{
+    interface TestDagger {
         String BASE = TEST_DAGGER_HOME;
 //        String SERVICE_INFOSERVICE = BASE + SERVICE + "/InfoService";
 
@@ -112,7 +112,7 @@ public interface RouterHub {
         String DAGGER_PAGE_1_ACTIVITY = BASE + "/DaggerPage1Activity";
         String DAGGER_PAGE_2_ACTIVITY = BASE + "/DaggerPage2Activity";
 
-        interface SERVER{
+        interface Server{
             String INFO_SERVICE = BASE + SERVICE + "/InfoService";
         }
     }
@@ -121,13 +121,13 @@ public interface RouterHub {
     /**
      * 天气分组
      */
-    interface WEATHER{
+    interface Weather {
         String BASE = WEATHER_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
         String WEATHER_ACTIVITY = BASE + "/WeatherActivity";
         String WEATHER_FRAGMENT = BASE + "/WeatherFragment";
 
-        interface SERVER{
+        interface Server{
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";
         }
 
@@ -135,15 +135,15 @@ public interface RouterHub {
 
 //====================================================================================================
     /**
-     * 天气分组
+     * 小说阅读器
      */
-    interface NOVELS{
-        String BASE = NOVELS_HOME;
+    interface Reader {
+        String BASE = READER_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
 //        String WEATHER_ACTIVITY = BASE + "/WeatherActivity";
 //        String WEATHER_FRAGMENT = BASE + "/WeatherFragment";
 
-        interface SERVER{
+        interface Server{
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";
         }
 

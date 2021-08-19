@@ -45,7 +45,7 @@ import me.jessyan.armscomponent.gold.app.GoldConstants;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-@Route(path = RouterHub.GOLD.GOLD_DETAILACTIVITY)
+@Route(path = RouterHub.Gold.GOLD_DETAILACTIVITY)
 public class DetailActivity extends BaseActivity {
     @BindView(R2.id.webView)
     WebView mWebView;

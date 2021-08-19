@@ -35,7 +35,7 @@ import me.jessyan.armscomponent.zhihu.R;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-@Route(path = RouterHub.ZHIHU.ZHIHU_SERVICE_ZHIHUINFOSERVICE, name = "知乎信息服务")
+@Route(path = RouterHub.ZhiHu.ZHIHU_SERVICE_ZHIHUINFOSERVICE, name = "知乎信息服务")
 public class ZhihuInfoServiceImpl implements ZhihuInfoService {
     private Context mContext;
 

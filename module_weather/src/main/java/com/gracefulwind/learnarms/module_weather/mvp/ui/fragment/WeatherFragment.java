@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +14,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.TimeUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.commonservice.gank.service.GankInfoService;
 import com.gracefulwind.learnarms.module_weather.R;
 import com.gracefulwind.learnarms.module_weather.R2;
@@ -37,9 +33,7 @@ import com.jess.arms.utils.ArmsUtils;
 import java.util.HashMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * @ClassName: WeatherFragment
@@ -52,7 +46,7 @@ import butterknife.Unbinder;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-@Route(path = RouterHub.WEATHER.WEATHER_FRAGMENT)
+@Route(path = RouterHub.Weather.WEATHER_FRAGMENT)
 public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresenter> implements WeatherFragmentContract.View {
 
     //=======================================================================================================
@@ -102,7 +96,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
 //-----------------------------------------------------------------------------------------------------
     //todo: for test, delete latter
     //不用引入相关module，只需要公共接口就能引入相关服务
-    @Autowired(name = RouterHub.GANK.GANK_SERVICE_GANKINFOSERVICE)
+    @Autowired(name = RouterHub.Gank.GANK_SERVICE_GANKINFOSERVICE)
     GankInfoService mGankInfoService;
     //    @Autowired(name = KEY_TITLE, required = false)
     String cityName = "default";
@@ -114,7 +108,7 @@ public class WeatherFragment extends BaseLazyLoadFragment<WeatherFragmentPresent
     public WeatherFragment makeInstance(CityEntity cityEntity) {
 //        WeatherFragment newInstance = new WeatherFragment();
         WeatherFragment newInstance = (WeatherFragment) ARouter.getInstance()
-                .build(RouterHub.WEATHER.WEATHER_FRAGMENT)
+                .build(RouterHub.Weather.WEATHER_FRAGMENT)
                 .navigation();
         newInstance.setCityName(cityEntity.getCityName());
         newInstance.setCitySearchName(cityEntity.getCitySearchName());

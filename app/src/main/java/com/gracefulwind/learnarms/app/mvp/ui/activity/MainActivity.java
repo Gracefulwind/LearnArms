@@ -56,11 +56,11 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.bt_gold)
     Button mGoldButton;
 
-    @Autowired(name = RouterHub.ZHIHU.ZHIHU_SERVICE_ZHIHUINFOSERVICE)
+    @Autowired(name = RouterHub.ZhiHu.ZHIHU_SERVICE_ZHIHUINFOSERVICE)
     ZhihuInfoService mZhihuInfoService;
-    @Autowired(name = RouterHub.GANK.GANK_SERVICE_GANKINFOSERVICE)
+    @Autowired(name = RouterHub.Gank.GANK_SERVICE_GANKINFOSERVICE)
     GankInfoService mGankInfoService;
-    @Autowired(name = RouterHub.GOLD.GOLD_SERVICE_GOLDINFOSERVICE)
+    @Autowired(name = RouterHub.Gold.GOLD_SERVICE_GOLDINFOSERVICE)
     GoldInfoService mGoldInfoService;
 
     private long mPressedTime;
@@ -146,21 +146,21 @@ public class MainActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_zhihu:
-                Utils.navigation(MainActivity.this, RouterHub.ZHIHU.ZHIHU_HOMEACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.ZhiHu.ZHIHU_HOMEACTIVITY);
                 break;
             case R.id.bt_gank:
-                Utils.navigation(MainActivity.this, RouterHub.GANK.GANK_HOMEACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.Gank.GANK_HOMEACTIVITY);
                 break;
             case R.id.bt_gold:
-                Utils.navigation(MainActivity.this, RouterHub.GOLD.GOLD_HOMEACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.Gold.GOLD_HOMEACTIVITY);
                 break;
             case R.id.am_tv_click1:
                 //转跳模块1
-                Utils.navigation(MainActivity.this, RouterHub.TEST_DAGGER.HOME_ACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.TestDagger.HOME_ACTIVITY);
                 break;
             case R.id.am_tv_weather_report:
                 //转跳模块1
-                Utils.navigation(MainActivity.this, RouterHub.WEATHER.HOME_ACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.Weather.HOME_ACTIVITY);
                 break;
             case R.id.am_tv_see_novels:
                 //看小说

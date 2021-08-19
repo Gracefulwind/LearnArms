@@ -5,22 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
-import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.module_test_dagger.R;
 import com.gracefulwind.learnarms.module_test_dagger.R2;
 import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerDaggerPage2Component;
-import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerPage2Component;
-import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerTestDaggerMainComponent;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.DaggerPage2Contract;
-import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.TestDaggerMainContract;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.model.entity.DaggerPage1Item1;
-import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage1Presenter;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.DaggerPage2Presenter;
-import com.gracefulwind.learnarms.module_test_dagger.mvp.presenter.TestDaggerMainPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -28,7 +21,6 @@ import com.jess.arms.utils.LogUtils;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -46,7 +38,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-@Route(path = RouterHub.TEST_DAGGER.DAGGER_PAGE_2_ACTIVITY)
+@Route(path = RouterHub.TestDagger.DAGGER_PAGE_2_ACTIVITY)
 public class DaggerPage2Activity extends BaseActivity<DaggerPage2Presenter> implements DaggerPage2Contract.View {
 
     @Inject

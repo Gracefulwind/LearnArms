@@ -35,8 +35,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 
-import org.simple.eventbus.EventBus;
-
 import me.jessyan.armscomponent.gank.R;
 import me.jessyan.armscomponent.gank.R2;
 import me.jessyan.armscomponent.gank.di.component.DaggerGankHomeComponent;
@@ -55,7 +53,7 @@ import timber.log.Timber;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-@Route(path = RouterHub.GANK.GANK_HOMEACTIVITY)
+@Route(path = RouterHub.Gank.GANK_HOMEACTIVITY)
 public class GankHomeActivity extends BaseActivity<GankHomePresenter> implements GankHomeContract.View, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R2.id.recyclerView)
     RecyclerView mRecyclerView;

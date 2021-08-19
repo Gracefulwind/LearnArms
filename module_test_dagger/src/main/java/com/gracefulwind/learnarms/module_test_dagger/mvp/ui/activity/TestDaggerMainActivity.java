@@ -19,8 +19,6 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
-import org.simple.eventbus.EventBus;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -39,7 +37,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-@Route(path = RouterHub.TEST_DAGGER.HOME_ACTIVITY)
+@Route(path = RouterHub.TestDagger.HOME_ACTIVITY)
 public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter> implements TestDaggerMainContract.View {
 
     @BindView(R2.id.atdm_tv_title)
@@ -106,12 +104,12 @@ public class TestDaggerMainActivity extends BaseActivity<TestDaggerMainPresenter
             //do nothing
         }
         else if(R.id.atdm_tv_click1 == id){
-            Utils.navigation(this, RouterHub.TEST_DAGGER.DAGGER_PAGE_1_ACTIVITY);
+            Utils.navigation(this, RouterHub.TestDagger.DAGGER_PAGE_1_ACTIVITY);
 //            Intent intent = new Intent(this, DaggerPage1Activity.class);
 //            startActivity(intent);
         }
         else if(R.id.atdm_tv_click2 == id){
-            Utils.navigation(this, RouterHub.TEST_DAGGER.DAGGER_PAGE_2_ACTIVITY);
+            Utils.navigation(this, RouterHub.TestDagger.DAGGER_PAGE_2_ACTIVITY);
         }
     }
 }

@@ -1,8 +1,6 @@
 package com.gracefulwind.learnarms.module_test_dagger.mvp.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.module_test_dagger.R;
 import com.gracefulwind.learnarms.module_test_dagger.R2;
 import com.gracefulwind.learnarms.module_test_dagger.di.component.DaggerDaggerPage1Component;
-import com.gracefulwind.learnarms.module_test_dagger.di.module.DaggerPage1Module;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.contract.DaggerPage1Contract;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.model.DaggerPage1Model;
 import com.gracefulwind.learnarms.module_test_dagger.mvp.model.entity.DaggerPage1Item1;
@@ -40,7 +37,7 @@ import butterknife.OnClick;
  * @Email: 429344332@qq.com
  */
 
-@Route(path = RouterHub.TEST_DAGGER.DAGGER_PAGE_1_ACTIVITY)
+@Route(path = RouterHub.TestDagger.DAGGER_PAGE_1_ACTIVITY)
 public class DaggerPage1Activity extends AppCompatActivity/*<DaggerPage1Presenter>*/ implements DaggerPage1Contract.View {
 
     @Inject
