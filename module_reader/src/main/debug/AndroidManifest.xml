@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gracefulwind.learnarms.module_reader">
+
+    <application>
+        <activity
+            android:name=".mvp.ui.activity."
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>

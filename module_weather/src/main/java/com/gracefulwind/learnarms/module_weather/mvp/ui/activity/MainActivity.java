@@ -82,11 +82,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         ArmsUtils.snackbarText(message);
     }
 
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        ArmsUtils.startActivity(intent);
-    }
+//    @Override
+//    public void launchActivity(@NonNull Intent intent) {
+//        checkNotNull(intent);
+//        ArmsUtils.startActivity(intent);
+//    }
 
     @Override
     public void killMyself() {
