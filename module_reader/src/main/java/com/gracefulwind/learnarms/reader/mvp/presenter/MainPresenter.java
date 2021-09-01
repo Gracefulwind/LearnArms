@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_reader.mvp.presenter;
+package com.gracefulwind.learnarms.reader.mvp.presenter;
 
 import android.app.Application;
 
@@ -11,7 +11,7 @@ import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 
 import javax.inject.Inject;
 
-import com.gracefulwind.learnarms.module_reader.mvp.contract.MainContract;
+import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
 
 /**
  * ================================================

@@ -44,7 +44,7 @@ public class MainFragment extends BaseLazyLoadFragment<MainPresenter> implements
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_main;
+        return R.layout.demo_fragment_main;
     }
 
     @Override

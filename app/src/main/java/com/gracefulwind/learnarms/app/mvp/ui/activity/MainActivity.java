@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.am_tv_see_novels:
                 //看小说
-//                Utils.navigation(MainActivity.this, RouterHub.WEATHER.HOME_ACTIVITY);
+                Utils.navigation(MainActivity.this, RouterHub.Reader.HOME_ACTIVITY);
                 break;
             default:
                 break;

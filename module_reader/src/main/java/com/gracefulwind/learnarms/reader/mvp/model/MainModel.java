@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_reader.mvp.model;
+package com.gracefulwind.learnarms.reader.mvp.model;
 
 import android.app.Application;
 
@@ -9,7 +9,7 @@ import com.jess.arms.di.scope.ActivityScope;
 
 import javax.inject.Inject;
 
-import com.gracefulwind.learnarms.module_reader.mvp.contract.MainContract;
+import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
 
 /**
  * ================================================

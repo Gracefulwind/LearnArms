@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_reader.mvp.contract;
+package com.gracefulwind.learnarms.reader.mvp.contract;
 
 
 import com.jess.arms.mvp.IModel;

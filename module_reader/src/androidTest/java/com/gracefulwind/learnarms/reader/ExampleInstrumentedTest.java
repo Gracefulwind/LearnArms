@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_reader;
+package com.gracefulwind.learnarms.reader;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

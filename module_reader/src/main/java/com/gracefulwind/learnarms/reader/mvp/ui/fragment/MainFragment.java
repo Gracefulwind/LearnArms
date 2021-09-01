@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.module_reader.mvp.ui.fragment;
+package com.gracefulwind.learnarms.reader.mvp.ui.fragment;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,9 +10,9 @@ import android.os.Bundle;
 import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
 import com.jess.arms.di.component.AppComponent;
 //import com.gracefulwind.learnarms.module_reader.di.component.DaggerMainComponent;
-import com.gracefulwind.learnarms.module_reader.mvp.contract.MainContract;
-import com.gracefulwind.learnarms.module_reader.mvp.presenter.MainPresenter;
-import com.gracefulwind.learnarms.module_reader.R;
+import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
+import com.gracefulwind.learnarms.reader.mvp.presenter.MainPresenter;
+import com.gracefulwind.learnarms.reader.R;
 
 /**
  * Created on 2021/08/20 11:09
@@ -20,7 +20,8 @@ import com.gracefulwind.learnarms.module_reader.R;
  * @author
  * module name is MainActivity
  */
-class MainFragment extends BaseLazyLoadFragment<MainPresenter> implements MainContract.View {
+
+public class MainFragment extends BaseLazyLoadFragment<MainPresenter> implements MainContract.View {
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -39,7 +40,7 @@ class MainFragment extends BaseLazyLoadFragment<MainPresenter> implements MainCo
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_main;
+        return R.layout.reader_fragment_main;
     }
 
     @Override

@@ -1,10 +1,10 @@
-package com.gracefulwind.learnarms.module_reader.di.module;
+package com.gracefulwind.learnarms.reader.di.module;
 
 import dagger.Binds;
 import dagger.Module;
 
-import com.gracefulwind.learnarms.module_reader.mvp.contract.MainContract;
-import com.gracefulwind.learnarms.module_reader.mvp.model.MainModel;
+import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
+import com.gracefulwind.learnarms.reader.mvp.model.MainModel;
 
 /**
  * ================================================

@@ -1,7 +1,9 @@
 package com.gracefulwind.learnarms.module_demo.di.component;
 
+import dagger.BindsInstance;
 import dagger.Component;
 
+import com.gracefulwind.learnarms.module_demo.mvp.contract.MainContract;
 import com.jess.arms.di.component.AppComponent;
 import com.gracefulwind.learnarms.module_demo.di.module.MainModule;
 
@@ -25,5 +27,11 @@ import com.gracefulwind.learnarms.module_demo.mvp.ui.activity.MainActivity;
 public interface MainComponent {
 
     void inject(MainActivity activity);
-
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        MainComponent.Builder view(MainContract.View view);
+        MainComponent.Builder appComponent(AppComponent appComponent);
+        MainComponent build();
+    }
 }
