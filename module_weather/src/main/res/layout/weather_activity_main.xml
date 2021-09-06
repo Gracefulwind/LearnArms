@@ -6,7 +6,6 @@
               android:layout_height="match_parent">
 
     <TextView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -16,7 +15,7 @@
         android:text="This is weather Main"
         />
 
-    <Button
+    <TextView
         android:id="@+id/wam_btn_click1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,6 +1,14 @@
 apply from:"../common_component_build.gradle"
 
 android {
+
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\release\\assets', 'src\\main\\assets'
+            }
+        }
+    }
     resourcePrefix "reader_" //给 Module 内的资源名增加前缀, 避免资源名冲突, 建议使用 Module 名作为前缀
 }
 
@@ -14,5 +22,6 @@ dependencies {
     implementation rootProject.ext.dependencies["support-v4"]
 //    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 //    implementation 'com.google.code.gson:gson:2.6.2'
+
 
 }
