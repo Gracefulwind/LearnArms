@@ -1,17 +1,14 @@
-package com.gracefulwind.learnarms.reader.widget;
+package com.gracefulwind.learnarms.reader.widget.smart;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextDirectionHeuristics;
 import android.text.TextPaint;
@@ -19,8 +16,6 @@ import android.text.TextUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;

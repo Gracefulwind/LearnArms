@@ -15,13 +15,17 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //因为 CommonRes 依赖了 CommonSDK, 所以如果业务模块需要公共 UI 组件就依赖 CommonRes, 如果不需要就只依赖 CommonSDK
-    api project(":CommonRes")
     api project(":CommonService")
+    api project(":CommonRes")
+
 
     implementation rootProject.ext.dependencies["FlycoTabLayout_Lib"]
-    implementation rootProject.ext.dependencies["support-v4"]
+//    implementation rootProject.ext.dependencies["support-v4"]
+//    implementation rootProject.ext.dependencies["appcompat-v7"]
 //    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 //    implementation 'com.google.code.gson:gson:2.6.2'
+//    implementation group: 'org.ccil.cowan.tagsoup', name: 'tagsoup', version: '1.2.1'
+    implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
 
 }

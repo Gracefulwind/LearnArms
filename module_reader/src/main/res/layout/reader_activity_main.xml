@@ -18,13 +18,31 @@
         android:layout_height="wrap_content"
         android:text="button2"
         />
-
-    <Button
-        android:id="@+id/ram_tv_clcik3"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="button3-添加imageSpan"
-        />
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/ram_tv_clcik3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加imageSpan"
+            />
+        <Button
+            android:id="@+id/ram_tv_clcik4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加html"
+            />
+        <Button
+            android:id="@+id/ram_tv_clcik5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="button5-test"
+            />
+    </LinearLayout>
+
 
     <EditText
         android:visibility="visible"
@@ -39,7 +57,7 @@
         android:layout_weight="1"
         android:background="#F00"
         >
-        <com.gracefulwind.learnarms.reader.widget.SmartTextView
+        <com.gracefulwind.learnarms.reader.widget.smart.SmartTextView
             android:id="@+id/ram_stv_test1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

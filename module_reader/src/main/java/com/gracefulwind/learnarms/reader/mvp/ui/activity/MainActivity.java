@@ -6,15 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
+import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.view.InflateException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,12 +21,12 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
-import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.StringUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.Utils;
+import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.di.component.DaggerMainComponent;
-import com.gracefulwind.learnarms.reader.widget.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.smart.text.SmartImageSpan;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
@@ -39,11 +38,10 @@ import com.gracefulwind.learnarms.reader.R;
 import com.jess.arms.utils.ArmsUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.xml.sax.XMLReader;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
@@ -117,16 +115,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
 //==================================================================================================
-    @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3})
+    @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3, R2.id.ram_tv_clcik4, R2.id.ram_tv_clcik5})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.ram_tv_clcik1 == id){
-            String baseText = ramEtTest0.getText().toString();
-            String targetText = ramStvTest1.getText().toString();
-            if(StringUtil.isEmpty(baseText)){
-                targetText += "testetttttttttt=========================testeeeteeteee\r\n";
+            Editable baseText = ramEtTest0.getText();
+            Editable targetText = ramStvTest1.getText();
+            if(StringUtil.isEmpty(baseText.toString())){
+                targetText.append("testetttttttttt=========================testeeeteeteee\r\n");
             }else {
-                targetText += baseText + "";
+                targetText.append(baseText);
             }
 //            targetText = "testetttttttttt=========================testeeeteeteee\r\n" +
 //                    "testetttttttttt=========================testeeeteeteee\n" +
@@ -182,36 +180,114 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             System.out.println("=========================");
         }else if (R.id.ram_tv_clcik3 == id){
             Editable editText = ramStvTest1.getText();
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                editText.append(Html.fromHtml("<img src=\"/test_span\" width=\"304\" height=\"228\">"
-//                        , Html.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
-//                            @Override
-//                            public Drawable getDrawable(String source) {
-//                                Drawable drawable = getResources().getDrawable(R.drawable.test_span);
-//                                drawable.setBounds(0,0,20, 20);
-//                                System.out.println("====");
-//                                return drawable;
-//                            }
-//                        }, null));
-//            }else {
-//                editText.append(Html.fromHtml("<img src=\"/test_span\" width=\"304\" height=\"228\">"));
-//            }
-//            addImageSpan(editText);
-            setImageWithSpan(editText);
-//            ramStvTest1.setText(Html.fromHtml(editText));
-//            ramStvTest1.setText(editText);
+            //如何区分未获取焦点时和光标在0,0处？
+            int selectionStart = Selection.getSelectionStart(editText);
+            int selectionEnd = Selection.getSelectionEnd(editText);
+            if(!ramStvTest1.hasFocus()){
+                selectionStart = selectionEnd = editText.length();
+            }
+//            setImageWithHtml(editText, selectionStart, selectionEnd);
+            setImageWithSpan(editText, selectionStart, selectionEnd);
 //            ramStvTest1.setMovementMethod(LinkMovementMethod.getInstance());
             ramStvTest1.setText(editText);
+            ramStvTest1.setSelection(selectionStart + 1);
+        }else if (R.id.ram_tv_clcik4 == id){
+            Editable editText = ramStvTest1.getText();
+            //如何区分未获取焦点时和光标在0,0处？
+            int selectionStart = Selection.getSelectionStart(editText);
+            int selectionEnd = Selection.getSelectionEnd(editText);
+            if(!ramStvTest1.hasFocus()){
+                selectionStart = selectionEnd = editText.length();
+            }
+            setImageWithHtml(editText, selectionStart, selectionEnd);
+//            setImageWithSpan(editText, selectionStart, selectionEnd);
+            ramStvTest1.setText(editText);
+            ramStvTest1.setSelection(selectionStart + 1);
+        }else if (R.id.ram_tv_clcik5 == id){
+            System.out.println("===========================");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                rebuildSpan();
+            }
+            System.out.println("===========================");
+            System.out.println("===========================");
         }
     }
 
-    private void setImageWithSpan(Editable editText) {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void rebuildSpan() {
+        Editable editText = ramStvTest1.getText();
+        String s = Html.toHtml(editText);
+        Spanned spanned = Html.fromHtml(s, Html.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
+            @Override
+            public Drawable getDrawable(String source) {
+                Drawable drawable = getResources().getDrawable(R.drawable.test_span);
+                float v = UiUtil.sp2px(15);
+                drawable.setBounds(0, 0, (int) v, (int) v);
+                System.out.println("====");
+                return drawable;
+            }
+        }, new Html.TagHandler() {
+            /**
+             * opening:标签头还是尾
+             * tag:tag,现在的问题是如何在toHtml中将自定义span转为自定义的tag？
+             * */
+            @Override
+            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+//                if (!"drawable".equalsIgnoreCase(tag) || tag == null || isFirst) {
+//                    return;
+//                }
+//                InsetDrawable insetDrawable = new InsetDrawable(mIconDrawable, 0, 0, (int) dipRight, (int) dipBottom);
+//                insetDrawable.setBounds(0, 0, textSize, textSize);
+//
+//                isFirst = true;
+                int len = output.length();
+                output.append("\uFFFC");
+                Drawable drawable = getResources().getDrawable(R.drawable.test_span);
+                float v = UiUtil.sp2px(15);
+                drawable.setBounds(0,0, (int)v, (int)v);
+                ImageSpan imageSpan = new ImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BASELINE);
+//                //设置自定义ImageSpan
+//                output.setSpan(new MyImageSpan(insetDrawable), len, output.length(),
+//                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        });
+        ramStvTest1.setText(spanned);
+    }
+
+    String testHtmlStr = "<img src=\"/test_span\" align=\"baseline\" width=\"304\" height=\"228\">";
+
+    /**
+     * 这个可能没有意义了，Html源码中也是转成imageSpan来处理，同样也存在信息丢失的问题。。。有没办法存储路径呢
+     * 三方软件用的也是“\uFFFC”来代替的，obj，那么他们是如何存储路径/唯一标识的呢？
+     * span里存在keyValue，这个怎么存储的？
+     * */
+    private void setImageWithHtml(Editable editText, int selectionStart, int selectionEnd) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            editText.replace(selectionStart, selectionEnd, Html.fromHtml(testHtmlStr
+                    , Html.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
+                        @Override
+                        public Drawable getDrawable(String source) {
+                            Drawable drawable = getResources().getDrawable(R.drawable.test_span);
+                            float v = UiUtil.sp2px(15);
+                            drawable.setBounds(0,0, (int)v, (int)v);
+                            System.out.println("====");
+                            return drawable;
+                        }
+                    }, null));
+        }else {
+            editText.replace(selectionStart, selectionEnd, Html.fromHtml(testHtmlStr));
+        }
+    }
+
+    private void setImageWithSpan(Editable editText, int selectionStart, int selectionEnd) {
         SpannableStringBuilder ssb = new SpannableStringBuilder("\uFFFC");
         Drawable drawable = getResources().getDrawable(R.drawable.test_span);
-        drawable.setBounds(0,0, 40, 40);
-        ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+        float v = UiUtil.sp2px(15);
+        drawable.setBounds(0,0, (int)v, (int)v);
+        SmartImageSpan imageSpan = new SmartImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BASELINE);
+        imageSpan.getSource();
         ssb.setSpan(imageSpan, 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        editText.append(ssb);
+        editText.replace(selectionStart, selectionEnd, ssb);
     }
 
 
