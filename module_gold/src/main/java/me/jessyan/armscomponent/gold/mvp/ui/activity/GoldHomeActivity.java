@@ -24,6 +24,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.base.DefaultAdapter;
 import com.jess.arms.di.component.AppComponent;
@@ -53,7 +54,7 @@ import timber.log.Timber;
  * ================================================
  */
 @Route(path = RouterHub.Gold.GOLD_HOMEACTIVITY)
-public class GoldHomeActivity extends BaseActivity<GoldHomePresenter> implements GoldHomeContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class GoldHomeActivity extends MyBaseActivity<GoldHomePresenter> implements GoldHomeContract.View, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R2.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R2.id.swipeRefreshLayout)

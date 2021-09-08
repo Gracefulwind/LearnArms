@@ -13,6 +13,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.Button;
@@ -20,12 +21,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.StringUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.smart.text.SmartHtml;
 import com.gracefulwind.learnarms.reader.widget.smart.text.SmartImageSpan;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -57,7 +61,9 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * @Email: 429344332@qq.com
  */
 @Route(path = RouterHub.Reader.HOME_ACTIVITY)
-public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
+public class MainActivity extends MyBaseActivity<MainPresenter> implements MainContract.View {
+    public static final String TAG = MainActivity.class.getName();
+    public static int fontSize = 14;
 
     @BindView(R2.id.ram_tv_clcik1)
     TextView ramBtnClick1;
@@ -115,7 +121,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
 //==================================================================================================
-    @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3, R2.id.ram_tv_clcik4, R2.id.ram_tv_clcik5})
+    @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3, R2.id.ram_tv_clcik4, R2.id.ram_tv_clcik5, R2.id.ram_tv_clcik6})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.ram_tv_clcik1 == id){
@@ -210,56 +216,64 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             }
             System.out.println("===========================");
             System.out.println("===========================");
+        }else if(R.id.ram_tv_clcik6 == id){
+            System.out.println("================");
+            LogUtil.d(TAG, "SmartView height = " + ramStvTest1.getHeight());
+            System.out.println("================");
+            System.out.println("================");
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void rebuildSpan() {
         Editable editText = ramStvTest1.getText();
-        String s = Html.toHtml(editText);
-        Spanned spanned = Html.fromHtml(s, Html.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
-            @Override
-            public Drawable getDrawable(String source) {
-                Drawable drawable = getResources().getDrawable(R.drawable.test_span);
-                float v = UiUtil.sp2px(15);
-                drawable.setBounds(0, 0, (int) v, (int) v);
-                System.out.println("====");
-                return drawable;
-            }
-        }, new Html.TagHandler() {
-            /**
-             * opening:标签头还是尾
-             * tag:tag,现在的问题是如何在toHtml中将自定义span转为自定义的tag？
-             * */
-            @Override
-            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-//                if (!"drawable".equalsIgnoreCase(tag) || tag == null || isFirst) {
-//                    return;
-//                }
-//                InsetDrawable insetDrawable = new InsetDrawable(mIconDrawable, 0, 0, (int) dipRight, (int) dipBottom);
-//                insetDrawable.setBounds(0, 0, textSize, textSize);
+        String s = SmartHtml.toHtml(editText, SmartHtml.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+        Spanned spanned = SmartHtml.fromHtml(s, SmartHtml.FROM_HTML_MODE_COMPACT);
+//        Spanned spanned = SmartHtml.fromHtml(s, SmartHtml.FROM_HTML_MODE_LEGACY, null, new Html.TagHandler() {
+//            /**
+//             * opening:标签头还是尾
+//             * tag:tag,现在的问题是如何在toHtml中将自定义span转为自定义的tag？
+//             * */
+//            @Override
+//            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+////                if (!"drawable".equalsIgnoreCase(tag) || tag == null || isFirst) {
+////                    return;
+////                }
+////                InsetDrawable insetDrawable = new InsetDrawable(mIconDrawable, 0, 0, (int) dipRight, (int) dipBottom);
+////                insetDrawable.setBounds(0, 0, textSize, textSize);
+////
+////                isFirst = true;
+//                if("simg".equalsIgnoreCase(tag)){
+//                    int len = output.length();
+//                    output.append("\uFFFC");
 //
-//                isFirst = true;
-                int len = output.length();
-                output.append("\uFFFC");
-                Drawable drawable = getResources().getDrawable(R.drawable.test_span);
-                float v = UiUtil.sp2px(15);
-                drawable.setBounds(0,0, (int)v, (int)v);
-                ImageSpan imageSpan = new ImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BASELINE);
-//                //设置自定义ImageSpan
-//                output.setSpan(new MyImageSpan(insetDrawable), len, output.length(),
+//                    Drawable drawable = getResources().getDrawable(R.drawable.test_span);
+//                    float v = UiUtil.sp2px(15);
+//                    drawable.setBounds(0,0, (int)v, (int)v);
+//                    SmartImageSpan imageSpan = new SmartImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BASELINE);
+//                    output.setSpan(imageSpan, len, output.length(),
 //                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        });
+//                }
+////                int len = output.length();
+////                output.append("\uFFFC");
+////                Drawable drawable = getResources().getDrawable(R.drawable.test_span);
+////                float v = UiUtil.sp2px(15);
+////                drawable.setBounds(0,0, (int)v, (int)v);
+////                ImageSpan imageSpan = new ImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BASELINE);
+////                //设置自定义ImageSpan
+////                output.setSpan(new MyImageSpan(insetDrawable), len, output.length(),
+////                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            }
+//        });
         ramStvTest1.setText(spanned);
     }
 
     String testHtmlStr = "<img src=\"/test_span\" align=\"baseline\" width=\"304\" height=\"228\">";
 
     /**
-     * 这个可能没有意义了，Html源码中也是转成imageSpan来处理，同样也存在信息丢失的问题。。。有没办法存储路径呢
-     * 三方软件用的也是“\uFFFC”来代替的，obj，那么他们是如何存储路径/唯一标识的呢？
-     * span里存在keyValue，这个怎么存储的？
+     * 这个可能没有意义了。Html源码中也是转成imageSpan来处理，只处理src为source存储
+     * 三方软件用的也是“\uFFFC”来做占位替换obj
+     * span
      * */
     private void setImageWithHtml(Editable editText, int selectionStart, int selectionEnd) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -268,7 +282,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                         @Override
                         public Drawable getDrawable(String source) {
                             Drawable drawable = getResources().getDrawable(R.drawable.test_span);
-                            float v = UiUtil.sp2px(15);
+                            float v = UiUtil.sp2px(fontSize);
                             drawable.setBounds(0,0, (int)v, (int)v);
                             System.out.println("====");
                             return drawable;
@@ -282,9 +296,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private void setImageWithSpan(Editable editText, int selectionStart, int selectionEnd) {
         SpannableStringBuilder ssb = new SpannableStringBuilder("\uFFFC");
         Drawable drawable = getResources().getDrawable(R.drawable.test_span);
-        float v = UiUtil.sp2px(15);
+        float v = UiUtil.sp2px(fontSize);
         drawable.setBounds(0,0, (int)v, (int)v);
-        SmartImageSpan imageSpan = new SmartImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BASELINE);
+        SmartImageSpan imageSpan = new SmartImageSpan(drawable, "/test_span");
+//        SmartImageSpan imageSpan = new SmartImageSpan(drawable, "/test_span", ImageSpan.ALIGN_BOTTOM );
         imageSpan.getSource();
         ssb.setSpan(imageSpan, 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         editText.replace(selectionStart, selectionEnd, ssb);

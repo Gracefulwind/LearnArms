@@ -36,7 +36,7 @@ public class MainPresenter extends BasePresenter<MainContract.Model, MainContrac
     AppManager mAppManager;
 
     @Inject
-    public MainPresenter (MainContract.Model model, MainContract.View rootView) {
+    public MainPresenter(MainContract.Model model, MainContract.View rootView) {
         super(model, rootView);
     }
 

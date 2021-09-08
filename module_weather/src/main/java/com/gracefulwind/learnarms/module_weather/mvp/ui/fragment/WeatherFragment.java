@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
+import com.gracefulwind.learnarms.commonsdk.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.TimeUtil;
 import com.gracefulwind.learnarms.commonservice.gank.service.GankInfoService;

@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
@@ -192,13 +193,13 @@ public class SmartTextView extends android.support.v7.widget.AppCompatTextView {
         int paddingLeft = getPaddingLeft();
         int paddingRight = getPaddingRight();
         LogUtil.d(TAG, "====onDraw====");
-////        int textViewLines = getTextViewLines(width);
-//        int height = getHeight();
-//        int measuredHeight = getMeasuredHeight();
-//        int lineHeight = getLineHeight();
-//        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
-            //如果我绘制的超出原来的大小，视图会变大
-        for(int x = 0; (paddingTop + paddingBottom + ((x-2) * textHeight)) < this.height; x++){
+        int width = getWidth();
+        int height = getHeight();
+        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
+//        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < height; x++){
+        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
+//            //如果我绘制的超出原来的大小，视图会变大
+//        for(int x = 0; (paddingTop + paddingBottom + ((x-2) * textHeight)) < this.height; x++){
 //        for(int x = 0; x < textViewLines; x++){
             canvas.drawLine(paddingLeft, paddingTop + x * textHeight, width - paddingRight, paddingTop + x * textHeight, paint);
         }

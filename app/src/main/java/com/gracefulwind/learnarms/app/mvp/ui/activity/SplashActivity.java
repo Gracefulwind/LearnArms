@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.app.R;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.jess.arms.base.BaseActivity;
@@ -46,7 +47,7 @@ import io.reactivex.functions.Consumer;
  * ================================================
  */
 @Route(path = RouterHub.APP_SPLASHACTIVITY)
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends MyBaseActivity {
     @BindView(R.id.as_iv_bg)
     ImageView asIvBg;
     @BindView(R.id.as_tv_jump_button)

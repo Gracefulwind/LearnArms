@@ -25,6 +25,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
@@ -46,7 +47,7 @@ import me.jessyan.armscomponent.gold.app.GoldConstants;
  * ================================================
  */
 @Route(path = RouterHub.Gold.GOLD_DETAILACTIVITY)
-public class DetailActivity extends BaseActivity {
+public class DetailActivity extends MyBaseActivity {
     @BindView(R2.id.webView)
     WebView mWebView;
     private Dialog mDialog;

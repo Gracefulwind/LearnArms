@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 
-import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
+import com.gracefulwind.learnarms.commonsdk.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.module_demo.R;
 import com.gracefulwind.learnarms.module_demo.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.module_demo.mvp.presenter.MainPresenter;

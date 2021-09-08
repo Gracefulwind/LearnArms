@@ -24,6 +24,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.base.DefaultAdapter;
 import com.jess.arms.di.component.AppComponent;
@@ -54,7 +55,7 @@ import timber.log.Timber;
  * ================================================
  */
 @Route(path = RouterHub.Gank.GANK_HOMEACTIVITY)
-public class GankHomeActivity extends BaseActivity<GankHomePresenter> implements GankHomeContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class GankHomeActivity extends MyBaseActivity<GankHomePresenter> implements GankHomeContract.View, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R2.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R2.id.swipeRefreshLayout)

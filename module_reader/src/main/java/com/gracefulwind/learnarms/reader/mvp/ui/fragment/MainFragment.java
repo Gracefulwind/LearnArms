@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 //import cn.skytech.iglobalwin.app.base.SimpleBaseFragment;
 
-import com.gracefulwind.learnarms.commonres.base.BaseLazyLoadFragment;
+import com.gracefulwind.learnarms.commonsdk.base.BaseLazyLoadFragment;
 import com.jess.arms.di.component.AppComponent;
 //import com.gracefulwind.learnarms.module_reader.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;

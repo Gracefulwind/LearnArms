@@ -1,5 +1,7 @@
 package com.gracefulwind.learnarms.commonsdk.core;
 
+import android.app.Application;
+
 import com.jess.arms.base.BaseApplication;
 
 /**
@@ -14,4 +16,16 @@ import com.jess.arms.base.BaseApplication;
  * @Email: 429344332@qq.com
  */
 public class MyApplication extends BaseApplication {
+
+    static MyApplication mApp;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mApp = this;
+    }
+
+    public static MyApplication getInstance(){
+        return mApp;
+    }
 }

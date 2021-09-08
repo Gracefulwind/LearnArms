@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 
 import android.os.Bundle;
 
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.module_demo.R;
+import com.gracefulwind.learnarms.module_demo.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.module_demo.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.module_demo.mvp.presenter.MainPresenter;
 import com.jess.arms.base.BaseActivity;
@@ -28,15 +30,15 @@ import org.jetbrains.annotations.NotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
+public class MainActivity extends MyBaseActivity<MainPresenter> implements MainContract.View {
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
-//        DaggerMainComponent //如找不到该类,请编译一下项目
-//                .builder()
-//                .appComponent(appComponent)
-//                .view(this)
-//                .build()
-//                .inject(this);
+        DaggerMainComponent //如找不到该类,请编译一下项目
+                .builder()
+                .appComponent(appComponent)
+                .view(this)
+                .build()
+                .inject(this);
     }
 
     @Override

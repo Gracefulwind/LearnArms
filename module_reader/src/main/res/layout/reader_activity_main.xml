@@ -5,19 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/ram_tv_clcik1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="button1"
-        />
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/ram_tv_clcik1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="button1"
+            />
 
-    <Button
-        android:id="@+id/ram_tv_clcik2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="button2"
-        />
+        <Button
+            android:id="@+id/ram_tv_clcik2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="button2"
+            />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +50,20 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
 
+        <Button
+            android:id="@+id/ram_tv_clcik6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="button6"
+            />
+
+    </LinearLayout>
     <EditText
         android:visibility="visible"
         android:id="@+id/ram_et_test0"
@@ -61,12 +81,12 @@
             android:id="@+id/ram_stv_test1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/public_dimen_10dp"
-            android:paddingBottom="@dimen/public_dimen_40dp"
+
             android:paddingLeft="@dimen/public_dimen_5dp"
             android:paddingRight="14dp"
             android:scrollbars="none"
             android:background="#308030"
+            android:textSize="@dimen/public_font_14sp"
             />
     </android.support.v4.widget.NestedScrollView>
 
