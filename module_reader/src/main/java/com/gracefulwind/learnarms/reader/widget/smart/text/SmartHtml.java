@@ -76,7 +76,7 @@ public class SmartHtml {
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
      */
-    public static interface ImageGetter {
+    public  interface ImageGetter {
         /**
          * This method is called when the HTML parser encounters an
          * &lt;img&gt; tag.  The <code>source</code> argument is the
@@ -86,19 +86,19 @@ public class SmartHtml {
          * setBounds() on your Drawable if it doesn't already have
          * its bounds set.
          */
-        public Drawable getDrawable(String source);
+        Drawable getDrawable(String source);
     }
 
     /**
      * Is notified when HTML tags are encountered that the parser does
      * not know how to interpret.
      */
-    public static interface TagHandler {
+    public interface TagHandler {
         /**
          * This method will be called whenn the HTML parser encounters
          * a tag that it does not know how to interpret.
          */
-        public void handleTag(boolean opening, String tag,
+        void handleTag(boolean opening, String tag,
                               Editable output, XMLReader xmlReader);
     }
 

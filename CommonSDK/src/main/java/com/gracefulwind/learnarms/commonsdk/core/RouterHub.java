@@ -140,8 +140,7 @@ public interface RouterHub {
     interface Reader {
         String BASE = READER_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
-//        String WEATHER_ACTIVITY = BASE + "/WeatherActivity";
-//        String WEATHER_FRAGMENT = BASE + "/WeatherFragment";
+        String DOODLE_ACTIVITY = BASE + "/DoodleActivity";
 
         interface Server{
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";

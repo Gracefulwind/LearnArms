@@ -23,6 +23,13 @@
             android:layout_height="wrap_content"
             android:text="button2"
             />
+
+        <Button
+            android:id="@+id/ram_tv_go_doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="转跳到涂鸦页面"
+            />
     </LinearLayout>
 
     <LinearLayout

@@ -13,25 +13,23 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.StringUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.reader.R2;
-import com.gracefulwind.learnarms.reader.di.component.DaggerMainComponent;
+import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
 import com.gracefulwind.learnarms.reader.widget.smart.text.SmartHtml;
 import com.gracefulwind.learnarms.reader.widget.smart.text.SmartImageSpan;
-import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 
@@ -42,7 +40,6 @@ import com.gracefulwind.learnarms.reader.R;
 import com.jess.arms.utils.ArmsUtils;
 
 import org.jetbrains.annotations.NotNull;
-import org.xml.sax.XMLReader;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -121,7 +118,9 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     }
 
 //==================================================================================================
-    @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3, R2.id.ram_tv_clcik4, R2.id.ram_tv_clcik5, R2.id.ram_tv_clcik6})
+    @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3,
+            R2.id.ram_tv_clcik4, R2.id.ram_tv_clcik5, R2.id.ram_tv_clcik6,
+            R2.id.ram_tv_go_doodle})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.ram_tv_clcik1 == id){
@@ -221,6 +220,8 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
             LogUtil.d(TAG, "SmartView height = " + ramStvTest1.getHeight());
             System.out.println("================");
             System.out.println("================");
+        } else if(R.id.ram_tv_go_doodle == id){
+            ARouter.getInstance().build(RouterHub.Reader.DOODLE_ACTIVITY).navigation();
         }
     }
 

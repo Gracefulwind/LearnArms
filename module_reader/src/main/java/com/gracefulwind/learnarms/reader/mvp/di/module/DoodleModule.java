@@ -1,10 +1,12 @@
-package com.gracefulwind.learnarms.reader.di.module;
+package com.gracefulwind.learnarms.reader.mvp.di.module;
+
+import com.gracefulwind.learnarms.reader.mvp.contract.DoodleContract;
+import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
+import com.gracefulwind.learnarms.reader.mvp.model.DoodleModel;
+import com.gracefulwind.learnarms.reader.mvp.model.MainModel;
 
 import dagger.Binds;
 import dagger.Module;
-
-import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
-import com.gracefulwind.learnarms.reader.mvp.model.MainModel;
 
 /**
  * ================================================
@@ -19,9 +21,9 @@ import com.gracefulwind.learnarms.reader.mvp.model.MainModel;
  * ================================================
  */
 @Module
-//构建MainModule时,将View的实现类传进来,这样就可以提供View的实现类给presenter
-public abstract class MainModule {
+//构建Module时,将View的实现类传进来,这样就可以提供View的实现类给presenter
+public abstract class DoodleModule {
 
     @Binds
-    abstract MainContract.Model bindMainModel(MainModel model);
+    abstract DoodleContract.Model bindMainModel(DoodleModel model);
 }

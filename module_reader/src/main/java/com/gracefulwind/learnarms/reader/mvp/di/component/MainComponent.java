@@ -1,11 +1,11 @@
-package com.gracefulwind.learnarms.reader.di.component;
+package com.gracefulwind.learnarms.reader.mvp.di.component;
 
 import dagger.BindsInstance;
 import dagger.Component;
 
 import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
 import com.jess.arms.di.component.AppComponent;
-import com.gracefulwind.learnarms.reader.di.module.MainModule;
+import com.gracefulwind.learnarms.reader.mvp.di.module.MainModule;
 
 import com.jess.arms.di.scope.ActivityScope;
 import com.gracefulwind.learnarms.reader.mvp.ui.activity.MainActivity;
