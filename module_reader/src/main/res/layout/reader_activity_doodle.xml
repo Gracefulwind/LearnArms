@@ -12,7 +12,9 @@
         <Button
             android:id="@+id/rad_tv_click0"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="按钮0"
+            />
     </LinearLayout>
 
     <android.support.constraint.ConstraintLayout

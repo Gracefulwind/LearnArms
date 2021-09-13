@@ -1,5 +1,8 @@
 package com.gracefulwind.learnarms.reader.widget.doodle;
 
+import android.graphics.Paint;
+import android.graphics.Path;
+
 /**
  * @ClassName: Operation
  * @Author: Gracefulwind
@@ -28,5 +31,6 @@ public class Operation {
     int paintColor;
     int paintWidth = 14;
 
-
+    Paint paint;
+    Path path;
 }

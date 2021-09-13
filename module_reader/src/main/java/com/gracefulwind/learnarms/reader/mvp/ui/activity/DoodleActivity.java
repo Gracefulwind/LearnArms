@@ -22,6 +22,7 @@ import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.reader.mvp.presenter.DoodlePresenter;
 import com.gracefulwind.learnarms.reader.mvp.presenter.MainPresenter;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
+import com.gracefulwind.learnarms.reader.widget.doodle.OperationPresenter;
 import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -92,6 +93,12 @@ public class DoodleActivity extends MyBaseActivity<DoodlePresenter> implements D
         if(R.id.rad_tv_click0 == id){
             LogUtil.e(TAG, "do some thing");
             LogUtil.e(TAG, "do some thing");
+            int editMode = radDvContainer.getEditMode();
+            if(radDvContainer.isModeDoodle()){
+                radDvContainer.setEditMode(OperationPresenter.MODE_ERASER);
+            }else {
+                radDvContainer.setEditMode(OperationPresenter.MODE_DOODLE);
+            }
         }
     }
 
