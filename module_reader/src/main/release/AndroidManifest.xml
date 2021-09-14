@@ -10,6 +10,9 @@
         <activity android:name=".mvp.ui.activity.DoodleActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".mvp.ui.activity.HandWriteActivity"
+            android:screenOrientation="portrait"
+            />
         <meta-data
             android:name="com.gracefulwind.learnarms.reader.app.GlobalConfiguration"
             android:value="ConfigModule" />

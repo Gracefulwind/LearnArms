@@ -10,6 +10,9 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
+
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 
 /**
  * @ClassName: DoodleView
@@ -61,18 +64,29 @@ public class DoodleView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //当doodleView处于编辑状态时，屏蔽父类事件
+        if(!isEnabled()){
+            return false;
+        }
+        ViewParent parent = getParent();
+        if(null != parent){
+            parent.requestDisallowInterceptTouchEvent(true);
+        }
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mPresenter.actionDown(x, y);
+                LogUtil.d("Doodle TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_MOVE:
                 mPresenter.actionMove(x, y);
+                LogUtil.d("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_UP:
                 mPresenter.actionUp(x, y);
+                LogUtil.d("Doodle TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
         }
         return true;
@@ -83,7 +97,14 @@ public class DoodleView extends View {
         super.onDraw(canvas);
         mPresenter.drawCanvas(canvas);
     }
-//====================================================================================================
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mPresenter.changeSize(w, h, oldw, oldh);
+    }
+
+    //====================================================================================================
     public void setEditMode(@EditMode int editMode){
         mPresenter.setPaintMode(editMode);
     }
@@ -140,4 +161,36 @@ public class DoodleView extends View {
         draw(canvas);
         return bmp;
     }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                LogUtil.d("Doodle TouchEvent", "dispatch down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                LogUtil.d("Doodle TouchEvent", "dispatch move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+            case MotionEvent.ACTION_UP:
+                LogUtil.d("Doodle TouchEvent", "dispatch up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+        }
+//        if(isEnabled()){
+//            return true;
+//        }else {
+//            return super.dispatchTouchEvent(event);
+//        }
+        return super.dispatchTouchEvent(event);
+    }
+
+//    @Override
+//    public void setEnabled(boolean enabled) {
+//        if(enabled){
+//            requestDisall
+//        }
+//        super.setEnabled(enabled);
+//    }
 }

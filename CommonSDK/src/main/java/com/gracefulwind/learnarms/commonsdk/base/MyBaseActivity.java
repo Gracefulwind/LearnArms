@@ -1,7 +1,14 @@
 package com.gracefulwind.learnarms.commonsdk.base;
 
+import android.support.annotation.NonNull;
+
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.mvp.IPresenter;
+import com.jess.arms.utils.ArmsUtils;
+
+import org.jetbrains.annotations.NotNull;
+
+import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 /**
  * @ClassName: MyBaseActivity
@@ -16,4 +23,8 @@ import com.jess.arms.mvp.IPresenter;
  */
 
 public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<P> {
+    public void showMessage(@NonNull @NotNull String message) {
+        checkNotNull(message);
+        ArmsUtils.snackbarText(message);
+    }
 }

@@ -283,4 +283,26 @@ public class OperationPresenter {
         doodleView.invalidate();
     }
 
+    public void changeSize(int w, int h, int oldw, int oldh) {
+        changeCacheBitmap(w, h, oldw, oldh);
+        changeHolderBitmap(w, h, oldw, oldh);
+    }
+
+    private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);//大图高宽
+        cacheCanvas = new Canvas(newBitmap);
+//        cacheCanvas.setBitmap(newBitmap);
+        cacheCanvas.drawBitmap(cacheBitmap, 0, 0, null);
+        cacheBitmap = newBitmap;
+    }
+
+    private void changeHolderBitmap(int w, int h, int oldw, int oldh) {
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);//大图高宽
+        holdCanvas = new Canvas(newBitmap);
+//        holdCanvas.setBitmap(newBitmap);
+        holdCanvas.drawBitmap(holdBitmap, 0, 0, null);
+        holdBitmap = newBitmap;
+    }
+
+
 }

@@ -17,6 +17,7 @@ import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
@@ -192,10 +193,10 @@ public class SmartTextView extends android.support.v7.widget.AppCompatTextView {
         int paddingBottom = getPaddingBottom();
         int paddingLeft = getPaddingLeft();
         int paddingRight = getPaddingRight();
-        LogUtil.d(TAG, "====onDraw====");
+//        LogUtil.d(TAG, "====onDraw====");
         int width = getWidth();
         int height = getHeight();
-        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
+//        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
 //        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < height; x++){
         for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
 //            //如果我绘制的超出原来的大小，视图会变大
@@ -268,5 +269,43 @@ public class SmartTextView extends android.support.v7.widget.AppCompatTextView {
                 getLineSpacingMultiplier(),
                 getLineSpacingExtra(), getIncludeFontPadding(), getEllipsize(),
                 width);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                LogUtil.d("Smart TouchEvent", "dispatch down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                LogUtil.d("Smart TouchEvent", "dispatch move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+            case MotionEvent.ACTION_UP:
+                LogUtil.d("Smart TouchEvent", "dispatch up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                LogUtil.d("Smart TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                LogUtil.d("Smart TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+            case MotionEvent.ACTION_UP:
+                LogUtil.d("Smart TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 }
