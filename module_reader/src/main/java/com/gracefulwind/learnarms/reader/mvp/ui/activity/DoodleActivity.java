@@ -3,11 +3,8 @@ package com.gracefulwind.learnarms.reader.mvp.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
@@ -16,14 +13,10 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.R;
 import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.mvp.contract.DoodleContract;
-import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerDoodleComponent;
-import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.reader.mvp.presenter.DoodlePresenter;
-import com.gracefulwind.learnarms.reader.mvp.presenter.MainPresenter;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.OperationPresenter;
-import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
@@ -87,7 +80,7 @@ public class DoodleActivity extends MyBaseActivity<DoodlePresenter> implements D
         ArmsUtils.snackbarText(message);
     }
 
-    @OnClick({R2.id.rad_tv_click0})
+    @OnClick({R2.id.rad_tv_click0, R2.id.rad_tv_click1, R2.id.rad_tv_click2})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.rad_tv_click0 == id){
@@ -99,6 +92,10 @@ public class DoodleActivity extends MyBaseActivity<DoodlePresenter> implements D
             }else {
                 radDvContainer.setEditMode(OperationPresenter.MODE_DOODLE);
             }
+        }else if(R.id.rad_tv_click1 == id){
+            radDvContainer.cancelLastDraw();
+        }else if(R.id.rad_tv_click2 == id){
+            radDvContainer.redoLastDraw();
         }
     }
 

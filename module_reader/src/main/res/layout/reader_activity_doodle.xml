@@ -13,14 +13,33 @@
             android:id="@+id/rad_tv_click0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="按钮0"
+            android:text="切换模式"
+            />
+        <Button
+            android:id="@+id/rad_tv_click1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="撤销"
+            />
+        <Button
+            android:id="@+id/rad_tv_click2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="反撤销"
             />
     </LinearLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
 
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#0F0"
+            />
         <com.gracefulwind.learnarms.reader.widget.doodle.DoodleView
             android:id="@+id/rad_dv_container"
             android:layout_width="@dimen/public_dimen_0dp"

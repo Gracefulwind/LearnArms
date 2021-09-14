@@ -131,47 +131,6 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
             }else {
                 targetText.append(baseText);
             }
-//            targetText = "testetttttttttt=========================testeeeteeteee\r\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\ntestetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n" +
-//                    "testetttttttttt=========================testeeeteeteee\n";
-//            ramEtTest0.setText(targetText);
             ramStvTest1.setText(targetText);
         }else if (R.id.ram_tv_clcik2 == id){
             //
@@ -222,6 +181,8 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
             System.out.println("================");
         } else if(R.id.ram_tv_go_doodle == id){
             ARouter.getInstance().build(RouterHub.Reader.DOODLE_ACTIVITY).navigation();
+        } else if(R.id.ram_tv_go_hand == id){
+            ARouter.getInstance().build(RouterHub.Reader.HAND_WRITE_ACTIVITY).navigation();
         }
     }
 

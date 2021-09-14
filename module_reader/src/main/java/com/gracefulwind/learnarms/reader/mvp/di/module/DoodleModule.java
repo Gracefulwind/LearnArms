@@ -25,5 +25,5 @@ import dagger.Module;
 public abstract class DoodleModule {
 
     @Binds
-    abstract DoodleContract.Model bindMainModel(DoodleModel model);
+    abstract DoodleContract.Model bindDoodleModel(DoodleModel model);
 }

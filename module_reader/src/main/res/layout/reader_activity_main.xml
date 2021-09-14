@@ -30,6 +30,13 @@
             android:layout_height="wrap_content"
             android:text="转跳到涂鸦页面"
             />
+
+        <Button
+            android:id="@+id/ram_tv_go_hand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="转跳到手写板"
+            />
     </LinearLayout>
 
     <LinearLayout

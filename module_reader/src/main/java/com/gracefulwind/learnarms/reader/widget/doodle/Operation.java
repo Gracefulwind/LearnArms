@@ -20,17 +20,28 @@ public class Operation {
     public static final String TAG = Operation.class.getName();
     /**
      * 操作类，用于拓展
+     * 可以删了。。。
      * */
     public static final int DOODLE = 0x00000000;
     public static final int CORP = 0x00000001;
 
 
 //== operate ============================
-    //操作类型，暂时就doodle
-    int type = DOODLE;
-    int paintColor;
-    int paintWidth = 14;
+////这几个存在paint里就可以了，不用再单独存
+//    //操作类型，暂时就doodle
+//    int type = DOODLE;
+//    int paintColor;
+//    int paintWidth = 14;
 
     Paint paint;
     Path path;
+
+    public Operation() {
+    }
+
+    public Operation(Path path, Paint paint) {
+        this.paint = paint;
+        this.path = path;
+    }
+
 }
