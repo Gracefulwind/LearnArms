@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.reader.widget.smart.text;
+package com.gracefulwind.learnarms.reader.widget.edit.text;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

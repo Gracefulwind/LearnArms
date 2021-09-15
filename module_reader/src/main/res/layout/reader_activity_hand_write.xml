@@ -51,7 +51,7 @@
             android:background="#00f"
             >
 
-            <com.gracefulwind.learnarms.reader.widget.smart.SmartTextView
+            <com.gracefulwind.learnarms.reader.widget.edit.SmartTextView
                 android:id="@+id/rahw_stv_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

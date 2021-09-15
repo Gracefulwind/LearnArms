@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.reader.widget.smart;
+package com.gracefulwind.learnarms.reader.widget.edit;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 

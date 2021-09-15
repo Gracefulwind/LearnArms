@@ -1,11 +1,8 @@
-package com.gracefulwind.learnarms.reader.widget.smart.text;
+package com.gracefulwind.learnarms.reader.widget.edit.text;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,10 +11,7 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 
 
 import io.reactivex.annotations.NonNull;

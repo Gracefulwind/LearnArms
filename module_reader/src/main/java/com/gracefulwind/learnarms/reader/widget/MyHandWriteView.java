@@ -14,7 +14,7 @@ import com.gracefulwind.learnarms.reader.R;
 import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.EditMode;
-import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.edit.SmartTextView;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -27,9 +27,9 @@ import com.gracefulwind.learnarms.commonsdk.utils.StringUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerMainComponent;
-import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
-import com.gracefulwind.learnarms.reader.widget.smart.text.SmartHtml;
-import com.gracefulwind.learnarms.reader.widget.smart.text.SmartImageSpan;
+import com.gracefulwind.learnarms.reader.widget.edit.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.edit.text.SmartHtml;
+import com.gracefulwind.learnarms.reader.widget.edit.text.SmartImageSpan;
 import com.jess.arms.di.component.AppComponent;
 
 

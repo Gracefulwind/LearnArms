@@ -91,7 +91,7 @@
         android:layout_weight="1"
         android:background="#F00"
         >
-        <com.gracefulwind.learnarms.reader.widget.smart.SmartTextView
+        <com.gracefulwind.learnarms.reader.widget.edit.SmartTextView
             android:id="@+id/ram_stv_test1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

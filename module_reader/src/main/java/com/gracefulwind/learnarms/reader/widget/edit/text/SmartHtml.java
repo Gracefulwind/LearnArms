@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.reader.widget.smart.text;
+package com.gracefulwind.learnarms.reader.widget.edit.text;
 
 import android.app.Application;
 import android.content.res.Resources;
@@ -30,12 +30,10 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-import android.widget.ImageView;
 
 import com.gracefulwind.learnarms.commonsdk.core.MyApplication;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
-import com.gracefulwind.learnarms.reader.R;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
@@ -54,7 +52,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.gracefulwind.learnarms.reader.mvp.ui.activity.MainActivity.TAG;
 import static com.gracefulwind.learnarms.reader.mvp.ui.activity.MainActivity.fontSize;
 /**
  * @ClassName: Html

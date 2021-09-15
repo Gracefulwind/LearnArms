@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
@@ -13,17 +11,13 @@ import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.reader.R;
 import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.mvp.contract.HandWriteContract;
-import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerDoodleComponent;
 import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerHandWriteComponent;
 import com.gracefulwind.learnarms.reader.mvp.presenter.HandWritePresenter;
 import com.gracefulwind.learnarms.reader.widget.MyHandWriteView;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.OperationPresenter;
-import com.gracefulwind.learnarms.reader.widget.smart.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.edit.SmartTextView;
 import com.jess.arms.di.component.AppComponent;
-import com.jess.arms.utils.ArmsUtils;
-
-import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.OnClick;
