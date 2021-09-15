@@ -121,7 +121,7 @@
 //    private StrictMode.Span mScrollStrictSpan = null;  // aka "drag"
 //    private StrictMode.Span mFlingStrictSpan = null;
 //
-//    /**
+//    /**13231
 //     * Sentinel value for no current active pointer.
 //     * Used by {@link #mActivePointerId}.
 //     */
