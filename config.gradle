@@ -3,7 +3,7 @@ ext {
     android = [
             compileSdkVersion: 28,
             buildToolsVersion: "28.0.3",
-            minSdkVersion    : 16,
+            minSdkVersion    : 21,
             targetSdkVersion : 28,
             versionCode      : VERSION_CODE as int,
             versionName      : "${VERSION_NAME}"
@@ -14,7 +14,7 @@ ext {
             retrofitSdkVersion      : "2.6.0",
             dagger2SdkVersion       : "2.23.2",
             glideSdkVersion         : "4.9.0",
-            butterknifeSdkVersion   : "9.0.0",
+            butterknifeSdkVersion   : "10.2.3",
             rxlifecycleSdkVersion   : "1.0",
             rxlifecycle2SdkVersion  : "2.2.2",
             espressoSdkVersion      : "3.0.1",
@@ -25,10 +25,10 @@ ext {
             //support
             "appcompat-v7"             : "com.android.support:appcompat-v7:${version["androidSupportSdkVersion"]}",
             "design"                   : "com.android.support:design:${version["androidSupportSdkVersion"]}",
-            "support-v4"               : "com.android.support:support-v4:${version["androidSupportSdkVersion"]}",
-            "cardview-v7"              : "com.android.support:cardview-v7:${version["androidSupportSdkVersion"]}",
+//            "support-v4"               : "com.android.support:support-v4:${version["androidSupportSdkVersion"]}",
+            "cardview"                 : 'androidx.cardview:cardview:1.0.0',
             "annotations"              : "com.android.support:support-annotations:${version["androidSupportSdkVersion"]}",
-            "recyclerview-v7"          : "com.android.support:recyclerview-v7:${version["androidSupportSdkVersion"]}",
+//            "recyclerview-v7"          : "com.android.support:recyclerview-v7:${version["androidSupportSdkVersion"]}",
             "constraintlayout"         : "com.android.support.constraint:constraint-layout:1.1.3",
             "FlexboxLayout"            : "com.google.android:flexbox:1.0.0",
 
@@ -61,6 +61,7 @@ ext {
             "FlycoTabLayout_Lib"       :'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar',
 //=============================================================================================================================================
 
+            //todo:wd 废弃了，rx1可以全删了
             //rx1
             "rxandroid"                : "io.reactivex:rxandroid:1.2.1",
             "rxjava"                   : "io.reactivex:rxjava:1.3.0",
@@ -102,7 +103,7 @@ ext {
 
             //test
             "junit"                    : "junit:junit:4.12",
-            "androidJUnitRunner"       : "android.support.test.runner.AndroidJUnitRunner",
+            "androidJUnitRunner"       : 'androidx.test.runner.AndroidJUnitRunner',
             "runner"                   : "com.android.support.test:runner:1.0.1",
             "espresso-core"            : "com.android.support.test.espresso:espresso-core:${version["espressoSdkVersion"]}",
             "espresso-contrib"         : "com.android.support.test.espresso:espresso-contrib:${version["espressoSdkVersion"]}",

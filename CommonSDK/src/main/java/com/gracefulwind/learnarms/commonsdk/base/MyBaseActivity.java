@@ -1,10 +1,11 @@
 package com.gracefulwind.learnarms.commonsdk.base;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.mvp.IPresenter;
 import com.jess.arms.utils.ArmsUtils;
+
 
 import org.jetbrains.annotations.NotNull;
 

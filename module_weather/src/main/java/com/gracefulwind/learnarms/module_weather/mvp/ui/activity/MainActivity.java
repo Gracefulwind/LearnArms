@@ -1,8 +1,8 @@
 package com.gracefulwind.learnarms.module_weather.mvp.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
@@ -15,7 +15,6 @@ import com.gracefulwind.learnarms.module_weather.R2;
 import com.gracefulwind.learnarms.module_weather.mvp.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.module_weather.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.module_weather.mvp.presenter.MainPresenter;
-import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 

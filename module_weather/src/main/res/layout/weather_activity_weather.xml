@@ -80,7 +80,7 @@
                 app:tl_tab_space_equal="false"
                 />
 
-            <android.support.v4.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/waw_vp_weather_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

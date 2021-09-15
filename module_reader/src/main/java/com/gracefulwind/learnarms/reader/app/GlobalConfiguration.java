@@ -2,8 +2,8 @@ package com.gracefulwind.learnarms.reader.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.gracefulwind.learnarms.reader.BuildConfig;
 import com.jess.arms.base.delegate.AppLifecycles;

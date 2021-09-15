@@ -1,6 +1,6 @@
 package com.gracefulwind.learnarms.commonsdk.base;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;

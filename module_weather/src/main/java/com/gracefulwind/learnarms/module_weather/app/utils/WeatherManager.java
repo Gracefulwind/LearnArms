@@ -1,6 +1,6 @@
 package com.gracefulwind.learnarms.module_weather.app.utils;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
 

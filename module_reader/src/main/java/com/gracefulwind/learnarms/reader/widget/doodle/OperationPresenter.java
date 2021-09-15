@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.widget.Toast;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;

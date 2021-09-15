@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -33,7 +33,7 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class SmartTextView extends android.support.v7.widget.AppCompatTextView {
+public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
     public static final String TAG = SmartTextView.class.getName();
 
     private final TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);

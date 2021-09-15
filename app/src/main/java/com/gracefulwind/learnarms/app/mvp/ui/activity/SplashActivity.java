@@ -16,8 +16,8 @@
 package com.gracefulwind.learnarms.app.mvp.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +27,6 @@ import com.gracefulwind.learnarms.app.R;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.Utils;
-import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 import java.util.concurrent.TimeUnit;

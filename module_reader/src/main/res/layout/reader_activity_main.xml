@@ -85,7 +85,7 @@
         android:layout_height="100dp"
         />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="@dimen/public_dimen_0dp"
         android:layout_weight="1"
@@ -102,7 +102,7 @@
             android:background="#308030"
             android:textSize="@dimen/public_font_14sp"
             />
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>

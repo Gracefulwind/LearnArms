@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Typeface;
-import android.support.v4.view.ViewCompat;
+
+import androidx.core.view.ViewCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -16,7 +16,6 @@ import com.gracefulwind.learnarms.commonsdk.utils.TypefaceUtil;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.DailyForecast;
 import com.gracefulwind.learnarms.module_weather.app.entity.weather.WeatherEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

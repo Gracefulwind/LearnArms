@@ -17,10 +17,9 @@ package com.gracefulwind.learnarms.app.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.gracefulwind.learnarms.commonsdk.BuildConfig;
-import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.utils.ArmsUtils;
 import com.jess.arms.utils.LogUtils;

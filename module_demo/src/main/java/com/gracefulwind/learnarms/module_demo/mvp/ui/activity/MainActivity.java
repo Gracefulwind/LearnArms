@@ -1,7 +1,7 @@
 package com.gracefulwind.learnarms.module_demo.mvp.ui.activity;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import android.os.Bundle;
 
@@ -10,7 +10,6 @@ import com.gracefulwind.learnarms.module_demo.R;
 import com.gracefulwind.learnarms.module_demo.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.module_demo.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.module_demo.mvp.presenter.MainPresenter;
-import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 

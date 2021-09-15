@@ -1,7 +1,7 @@
 package com.gracefulwind.learnarms.commonsdk.utils;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;

@@ -2,11 +2,11 @@ package com.gracefulwind.learnarms.reader.mvp.ui.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;

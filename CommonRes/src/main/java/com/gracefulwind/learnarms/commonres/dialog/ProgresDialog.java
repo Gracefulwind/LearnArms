@@ -17,7 +17,7 @@ package com.gracefulwind.learnarms.commonres.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.gracefulwind.learnarms.commonres.R;
 

@@ -17,8 +17,8 @@ package me.jessyan.armscomponent.gold.mvp.ui.activity;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -26,7 +26,6 @@ import android.webkit.WebViewClient;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
-import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 import butterknife.BindView;
