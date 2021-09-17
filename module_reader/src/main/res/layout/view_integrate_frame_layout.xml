@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <com.gracefulwind.learnarms.reader.widget.edit.SmartTextView
+            android:id="@+id/vmhw_stv_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+        <com.gracefulwind.learnarms.reader.widget.doodle.DoodleView
+            android:id="@+id/vmhw_dv_doodle"
+            android:layout_width="@dimen/public_dimen_0dp"
+            android:layout_height="@dimen/public_dimen_0dp"
+            app:layout_constraintLeft_toLeftOf="@id/vmhw_stv_text"
+            app:layout_constraintRight_toRightOf="@id/vmhw_stv_text"
+            app:layout_constraintTop_toTopOf="@id/vmhw_stv_text"
+            app:layout_constraintBottom_toBottomOf="@id/vmhw_stv_text"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>

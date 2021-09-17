@@ -74,7 +74,8 @@ public class HandWriteActivity extends MyBaseActivity<HandWritePresenter> implem
 //        ArmsUtils.snackbarText(message);
 //    }
 
-    @OnClick({R2.id.rahw_btn_0, R2.id.rahw_btn_1, R2.id.rahw_btn_2, R2.id.rahw_btn_3})
+    @OnClick({R2.id.rahw_btn_0, R2.id.rahw_btn_1, R2.id.rahw_btn_2, R2.id.rahw_btn_3
+            , R2.id.rahw_btn_write, R2.id.rahw_btn_doodle, R2.id.rahw_btn_scale})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.rahw_btn_0 == id){
@@ -102,6 +103,12 @@ public class HandWriteActivity extends MyBaseActivity<HandWritePresenter> implem
             rahwMhwvHandView.cancelLastDraw();
         }else if(R.id.rahw_btn_3 == id){
             rahwMhwvHandView.redoLastDraw();
+        }else if(R.id.rahw_btn_write == id){
+            rahwMhwvHandView.setViewMode(MyHandWriteView.MODE_TEXT);
+        }else if(R.id.rahw_btn_doodle == id){
+            rahwMhwvHandView.setViewMode(MyHandWriteView.MODE_DOODLE);
+        }else if(R.id.rahw_btn_scale == id){
+            rahwMhwvHandView.setViewMode(MyHandWriteView.MODE_SCALE);
         }
     }
 

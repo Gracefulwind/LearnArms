@@ -29,8 +29,9 @@ import java.util.List;
 public class OperationPresenter {
     public static final String TAG = "OperationPresenter";
 
-    public static final int MODE_DOODLE = 0x00000000;
-    public static final int MODE_ERASER = 0x00000001;
+//    public static final int MODE_SCALE = 0x00000000;
+    public static final int MODE_DOODLE = 0x00000001;
+    public static final int MODE_ERASER = 0x00000002;
 
     /**
      * 暂时还没用到，init进来的
@@ -128,6 +129,7 @@ public class OperationPresenter {
     public boolean isModeDoodle(){
         return mEditMode == MODE_DOODLE;
     }
+
 //--------------------------------------------------------------------------------------------------
 
     private void createPathAndPaint() {
@@ -161,10 +163,41 @@ public class OperationPresenter {
 
     public void actionMove(float x, float y){
         //绘制贝塞尔曲线，也就是光滑的曲线，如果此处使用 lineTo 方法滑出的曲线会有折角
+//        int height = doodleView.getHeight();
+//        int width = doodleView.getWidth();
+//        if(mPrevX > width || mPrevY > height){
+//            if(mPrevX > width){
+//                mPrevX = width;
+//            }
+//            if(mPrevY > height){
+//                mPrevY = height;
+//            }
+//            mPath.moveTo(mPrevX, mPrevY);
+//            mPath.lineTo(x, y);
+//        }else {
+//            mPath.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2, (y + mPrevY) / 2);
+//        }
+////        float mpveToX = (x + mPrevX) / 2;
+////        float mpveToY = (y + mPrevY) / 2;
         mPath.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2, (y + mPrevY) / 2);
+//        mPath.lineTo(x, y);
         mPrevX = x;
         mPrevY = y;
         doodleView.invalidate();
+    }
+
+    public void actionJump(float x, float y){
+        int height = doodleView.getHeight();
+        int width = doodleView.getWidth();
+        if(mPrevX > width){
+            mPrevX = width;
+        }
+        if(mPrevY > height){
+            mPrevY = height;
+        }
+        mPath.moveTo(mPrevX, mPrevY);
+        mPrevX = x;
+        mPrevY = y;
     }
 
     public void actionUp(float x, float y){

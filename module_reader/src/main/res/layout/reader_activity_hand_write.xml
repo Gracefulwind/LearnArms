@@ -11,6 +11,30 @@
         android:orientation="horizontal"
         >
         <Button
+            android:id="@+id/rahw_btn_write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="写入"
+            />
+        <Button
+            android:id="@+id/rahw_btn_doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="涂鸦"
+            />
+        <Button
+            android:id="@+id/rahw_btn_scale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="缩放"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
             android:id="@+id/rahw_btn_0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

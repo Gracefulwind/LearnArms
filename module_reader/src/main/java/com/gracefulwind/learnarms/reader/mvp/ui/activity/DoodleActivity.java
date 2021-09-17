@@ -88,9 +88,9 @@ public class DoodleActivity extends MyBaseActivity<DoodlePresenter> implements D
             LogUtil.e(TAG, "do some thing");
             int editMode = radDvContainer.getEditMode();
             if(radDvContainer.isModeDoodle()){
-                radDvContainer.setEditMode(OperationPresenter.MODE_ERASER);
+                radDvContainer.setPaintEditMode(OperationPresenter.MODE_ERASER);
             }else {
-                radDvContainer.setEditMode(OperationPresenter.MODE_DOODLE);
+                radDvContainer.setPaintEditMode(OperationPresenter.MODE_DOODLE);
             }
         }else if(R.id.rad_tv_click1 == id){
             radDvContainer.cancelLastDraw();

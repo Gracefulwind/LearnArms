@@ -272,39 +272,43 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                LogUtil.d("Smart TouchEvent", "dispatch down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-            case MotionEvent.ACTION_MOVE:
-                LogUtil.d("Smart TouchEvent", "dispatch move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-            case MotionEvent.ACTION_UP:
-                LogUtil.d("Smart TouchEvent", "dispatch up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-        }
+//        int action = event.getAction();
+//        float x = event.getX();
+//        float y = event.getY();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                LogUtil.d("Smart dispatchTouchEvent", "dispatch down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                LogUtil.d("Smart dispatchTouchEvent", "dispatch move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                LogUtil.d("Smart dispatchTouchEvent", "dispatch up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//        }
         return super.dispatchTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                LogUtil.d("Smart TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-            case MotionEvent.ACTION_MOVE:
-                LogUtil.d("Smart TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-            case MotionEvent.ACTION_UP:
-                LogUtil.d("Smart TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
+//        int action = event.getAction();
+//        float x = event.getX();
+//        float y = event.getY();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                LogUtil.e("Smart TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                LogUtil.e("Smart TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                LogUtil.e("Smart TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//        }
+        if(isEnabled()){
+            return super.onTouchEvent(event);
+        }else {
+            return false;
         }
-        return super.onTouchEvent(event);
     }
 }

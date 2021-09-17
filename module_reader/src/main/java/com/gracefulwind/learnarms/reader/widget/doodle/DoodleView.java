@@ -7,10 +7,11 @@ import android.graphics.Color;
 import android.os.Build;
 import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
+
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewParent;
+import android.view.ViewGroup;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 
@@ -29,6 +30,7 @@ public class DoodleView extends View {
     public static final String TAG = "DoodleView";
 
     private OperationPresenter mPresenter;
+    private ViewGroup mControlParent;
 
     public DoodleView(Context context) {
         this(context, null);
@@ -66,11 +68,22 @@ public class DoodleView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         //当doodleView处于编辑状态时，屏蔽父类事件
         if(!isEnabled()){
+//            mControlParent.requestDisallowInterceptTouchEvent(false);
+//            super.onTouchEvent(event);
             return false;
         }
-        ViewParent parent = getParent();
-        if(null != parent){
-            parent.requestDisallowInterceptTouchEvent(true);
+        int actionIndex = event.getActionIndex();
+        int tooltype = event.getToolType(actionIndex);
+//        LogUtil.e(TAG, "actionIndex = " + actionIndex);
+//        LogUtil.e(TAG, "tooltype = " + tooltype);
+//        ViewParent parent = getParent();
+        if(null != mControlParent){
+            mControlParent.requestDisallowInterceptTouchEvent(true);
+        }
+        int toolType = event.getToolType(actionIndex);
+        //非电容笔则不处理
+        if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
+            return true;
         }
         int action = event.getAction();
         float x = event.getX();
@@ -78,15 +91,21 @@ public class DoodleView extends View {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mPresenter.actionDown(x, y);
-                LogUtil.d("Doodle TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                LogUtil.e("Doodle TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_MOVE:
-                mPresenter.actionMove(x, y);
-                LogUtil.d("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                int height = getHeight();
+                int width = getWidth();
+                if ((x >= 0 && x <= width) && (y >= 0 && y <= height)) {
+                    mPresenter.actionMove(x, y);
+                }else {
+                    mPresenter.actionJump(x, y);
+                }
+                LogUtil.e("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_UP:
                 mPresenter.actionUp(x, y);
-                LogUtil.d("Doodle TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+                LogUtil.e("Doodle TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
         }
         return true;
@@ -95,6 +114,9 @@ public class DoodleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        float scaleX = getScaleX();
+        float scaleY = getScaleY();
+//        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
         mPresenter.drawCanvas(canvas);
     }
 
@@ -105,7 +127,7 @@ public class DoodleView extends View {
     }
 
     //====================================================================================================
-    public void setEditMode(@EditMode int editMode){
+    public void setPaintEditMode(@EditMode int editMode){
         mPresenter.setPaintMode(editMode);
     }
 
@@ -114,6 +136,10 @@ public class DoodleView extends View {
     }
 
     public boolean isModeDoodle(){
+        return mPresenter.isModeDoodle();
+    }
+
+    public boolean isModeScale(){
         return mPresenter.isModeDoodle();
     }
 
@@ -184,6 +210,10 @@ public class DoodleView extends View {
 //            return super.dispatchTouchEvent(event);
 //        }
         return super.dispatchTouchEvent(event);
+    }
+
+    public void setControlParent(ViewGroup viewGroup) {
+        mControlParent = viewGroup;
     }
 
 //    @Override
