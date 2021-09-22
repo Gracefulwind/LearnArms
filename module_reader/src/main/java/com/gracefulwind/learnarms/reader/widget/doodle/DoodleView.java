@@ -72,11 +72,10 @@ public class DoodleView extends View {
 //            super.onTouchEvent(event);
             return false;
         }
-        int actionIndex = event.getActionIndex();
-        int tooltype = event.getToolType(actionIndex);
         if(null != mControlParent){
             mControlParent.requestDisallowInterceptTouchEvent(true);
         }
+        int actionIndex = event.getActionIndex();
         int toolType = event.getToolType(actionIndex);
         //非电容笔则不处理
         if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
