@@ -220,83 +220,101 @@ public class SmartScrollView extends FrameLayout {
         super.requestLayout();
     }
 
-        @Override
+    @Override
+    protected void measureChild(View child, int parentWidthMeasureSpec, int parentHeightMeasureSpec) {
+//        super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec);
+        final ViewGroup.LayoutParams lp = child.getLayoutParams();
+        int paddingLeft = getPaddingLeft();
+        int paddingRight = getPaddingRight();
+        int paddingTop = getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+        final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec,
+                paddingLeft + paddingRight, lp.width);
+        final int childHeightMeasureSpec = getChildMeasureSpec(MeasureSpec.UNSPECIFIED,
+                paddingTop + paddingBottom, lp.height);
+
+        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (!mFillViewport) {//如果mFillViewport为true，则子布局充满当前可见区域，宽高即不需要重新测量。
-            return;
-        }
-
-        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.UNSPECIFIED) {
-            return;
-        }
-
-        if (getChildCount() > 0) {
-            final View child = getChildAt(0);
-            final int widthPadding;
-            final int heightPadding;
-            final int targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;
-            final FrameLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            int paddingLeft = getPaddingLeft();
-            int paddingRight = getPaddingRight();
-            int paddingTop = getPaddingTop();
-            int paddingBottom = getPaddingBottom();
-            if (targetSdkVersion >= Build.VERSION_CODES.M) {
-                widthPadding = paddingLeft + paddingRight + lp.leftMargin + lp.rightMargin;
-                heightPadding = paddingTop + paddingBottom + lp.topMargin + lp.bottomMargin;
-            } else {
-                widthPadding = paddingLeft + paddingRight;
-                heightPadding = paddingTop + paddingBottom;
-            }
-
-            final int desiredHeight = getMeasuredHeight() - heightPadding;
-            if (child.getMeasuredHeight() < desiredHeight) {
-                final int childWidthMeasureSpec = getChildMeasureSpec(
-                        widthMeasureSpec, widthPadding, lp.width);
-                final int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-                        desiredHeight, MeasureSpec.EXACTLY);
-                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-            }
-//            final int childWidthMeasureSpec = getChildMeasureSpec(
-//                    widthMeasureSpec, widthPadding, lp.width);
-//            final int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-//                    desiredHeight, MeasureSpec.EXACTLY);
-//            child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-        }
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
+//        if (!mFillViewport) {//如果mFillViewport为true，则子布局充满当前可见区域，宽高即不需要重新测量。
+//            return;
+//        }
+//
+//        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+//        if (heightMode == MeasureSpec.UNSPECIFIED) {
+//            return;
+//        }
+//
+//        if (getChildCount() > 0) {
+//            final View child = getChildAt(0);
+//            final int widthPadding;
+//            final int heightPadding;
+//            final int targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;
+//            final FrameLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
+//            int paddingLeft = getPaddingLeft();
+//            int paddingRight = getPaddingRight();
+//            int paddingTop = getPaddingTop();
+//            int paddingBottom = getPaddingBottom();
+//            if (targetSdkVersion >= Build.VERSION_CODES.M) {
+//                widthPadding = paddingLeft + paddingRight + lp.leftMargin + lp.rightMargin;
+//                heightPadding = paddingTop + paddingBottom + lp.topMargin + lp.bottomMargin;
+//            } else {
+//                widthPadding = paddingLeft + paddingRight;
+//                heightPadding = paddingTop + paddingBottom;
+//            }
+//
+//            final int desiredHeight = getMeasuredHeight() - heightPadding;
+//            if (child.getMeasuredHeight() < desiredHeight) {
+//                final int childWidthMeasureSpec = getChildMeasureSpec(
+//                        widthMeasureSpec, widthPadding, lp.width);
+//                final int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+//                        desiredHeight, MeasureSpec.EXACTLY);
+//                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+//            }
+////            final int childWidthMeasureSpec = getChildMeasureSpec(
+////                    widthMeasureSpec, widthPadding, lp.width);
+////            final int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+////                    desiredHeight, MeasureSpec.EXACTLY);
+////            child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+//        }
     }
+
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        mIsLayoutDirty = false;
-        // Give a child focus if it needs it
-        if (mChildToScrollTo != null && isViewDescendantOf(mChildToScrollTo, this)) {
-            scrollToChild(mChildToScrollTo);
-        }
-        mChildToScrollTo = null;
-        int paddingBottom = getPaddingBottom();
-        int paddingTop = getPaddingTop();
-        if (!isLaidOut()) {
-            if (mSavedState != null) {
-                mScrollY = mSavedState.scrollPosition;
-                mSavedState = null;
-            } // mScrollY default value is "0"
-
-            final int childHeight = (getChildCount() > 0) ? getChildAt(0).getMeasuredHeight() : 0;
-            final int scrollRange = Math.max(0,
-                    childHeight - (bottom - top - paddingBottom - paddingTop));
-
-            // Don't forget to clamp
-            if (mScrollY > scrollRange) {
-                mScrollY = scrollRange;
-            } else if (mScrollY < 0) {
-                mScrollY = 0;
-            }
-        }
-
-        // Calling this with the present values causes it to re-claim them
-        scrollTo(mScrollX, mScrollY);
+//        mIsLayoutDirty = false;
+//        // Give a child focus if it needs it
+//        if (mChildToScrollTo != null && isViewDescendantOf(mChildToScrollTo, this)) {
+//            scrollToChild(mChildToScrollTo);
+//        }
+//        mChildToScrollTo = null;
+//        int paddingBottom = getPaddingBottom();
+//        int paddingTop = getPaddingTop();
+//        if (!isLaidOut()) {
+//            if (mSavedState != null) {
+//                mScrollY = mSavedState.scrollPosition;
+//                mSavedState = null;
+//            } // mScrollY default value is "0"
+//
+//            final int childHeight = (getChildCount() > 0) ? getChildAt(0).getMeasuredHeight() : 0;
+//            final int scrollRange = Math.max(0,
+//                    childHeight - (bottom - top - paddingBottom - paddingTop));
+//
+//            // Don't forget to clamp
+//            if (mScrollY > scrollRange) {
+//                mScrollY = scrollRange;
+//            } else if (mScrollY < 0) {
+//                mScrollY = 0;
+//            }
+//        }
+//
+//        // Calling this with the present values causes it to re-claim them
+//        scrollTo(mScrollX, mScrollY);
     }
 
     /**
