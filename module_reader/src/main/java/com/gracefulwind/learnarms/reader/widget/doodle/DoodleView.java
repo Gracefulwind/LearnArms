@@ -74,9 +74,6 @@ public class DoodleView extends View {
         }
         int actionIndex = event.getActionIndex();
         int tooltype = event.getToolType(actionIndex);
-//        LogUtil.e(TAG, "actionIndex = " + actionIndex);
-//        LogUtil.e(TAG, "tooltype = " + tooltype);
-//        ViewParent parent = getParent();
         if(null != mControlParent){
             mControlParent.requestDisallowInterceptTouchEvent(true);
         }
@@ -91,7 +88,7 @@ public class DoodleView extends View {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mPresenter.actionDown(x, y);
-                LogUtil.e("Doodle TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                LogUtil.e("Doodle TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_MOVE:
                 int height = getHeight();
@@ -101,11 +98,11 @@ public class DoodleView extends View {
                 }else {
                     mPresenter.actionJump(x, y);
                 }
-                LogUtil.e("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                LogUtil.e("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_UP:
                 mPresenter.actionUp(x, y);
-                LogUtil.e("Doodle TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                LogUtil.e("Doodle TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
         }
         return true;
@@ -116,7 +113,7 @@ public class DoodleView extends View {
         super.onDraw(canvas);
         float scaleX = getScaleX();
         float scaleY = getScaleY();
-//        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
+        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
         mPresenter.drawCanvas(canvas);
     }
 

@@ -1,6 +1,7 @@
 package com.gracefulwind.learnarms.reader.widget.integrate;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -15,6 +16,8 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.reader.R;
 import com.gracefulwind.learnarms.reader.R2;
+import com.gracefulwind.learnarms.reader.widget.ScaleGestureDetectorApi27;
+import com.gracefulwind.learnarms.reader.widget.TouchGestureDetector;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.EditMode;
 import com.gracefulwind.learnarms.reader.widget.edit.SmartTextView;
@@ -53,6 +56,18 @@ public class IntegrateFrameLayout extends FrameLayout {
     private int mViewMode;
     private Context mContext;
 
+    private TouchGestureDetector touchGestureDetector;
+    //缩放的基准
+    public double scaleBaseRatio = 0.8;
+    //最后一次操作完成的缩放比例
+    private double lastScaleRatio = 1;
+    private double tempScaleRatio = 1;
+    //记录下的最后的单指坐标
+    private Point mSingleFingerPoint = new Point();
+    //x,y轴的偏移量
+    private float lastMovedX = 0;
+    private float lastMovedY = 0;
+
 
     public IntegrateFrameLayout(@NonNull @NotNull Context context) {
         this(context, null);
@@ -77,7 +92,107 @@ public class IntegrateFrameLayout extends FrameLayout {
         this.addView(inflate);
         Unbinder bind = ButterKnife.bind(this, inflate);
         vmhwDvDoodle.setControlParent(this);
+        initDetector();
+        initChild();
         setViewMode(MODE_TEXT);
+    }
+
+    private void initDetector() {
+//        touchGestureDetector = new TouchGestureDetector(mContext, new TouchGestureDetector.OnScaleGestureListener() {
+//            float lastScale = 1;
+//            float tempScale = 1;
+//            @Override
+//            public boolean onScale(ScaleGestureDetector detector) {
+//                Matrix mMatrix = new Matrix();
+////                    Float.isInfinite();
+//                float scale = detector.getScaleFactor();
+////                    LogUtil.e(TAG, "scale = " + scale);
+//                tempScale = scale;
+//                LogUtil.e(TAG, "onScale: " + scale);
+//                float targetScale = lastScale * tempScale;
+//                LogUtil.e(TAG, "lastScale: " + lastScale);
+//                LogUtil.e(TAG, "targetScale: " + targetScale);
+////                IntegrateFrameLayout.this.setScaleX(targetScale);
+////                IntegrateFrameLayout.this.setScaleY(targetScale);
+//                scaleChild(targetScale);
+//                mMatrix.setScale(scale, scale);
+////                    vmhwDvDoodle.setScaleX(scale);
+////                    vmhwDvDoodle.setScaleY(scale);
+////                    vmhwDvDoodle.invalidate();
+////                if (scale < 2 && scale > 0) {
+//////                        LogUtil.e(TAG, "scale return false ");
+////                    return false;
+////                } else {
+//////                        LogUtil.e(TAG, "scale return true ");
+////                    return true;
+////                }
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onScaleBegin(ScaleGestureDetector detector) {
+//                return true;
+//            }
+//
+//            @Override
+//            public void onScaleEnd(ScaleGestureDetector detector) {
+//                //这里的scale返回的一直是1.0
+//                float scale = detector.getScaleFactor();
+//                lastScale *= tempScale;
+////                LogUtil.e(TAG, "onScaleEnd: " + scale);
+//            }
+//        });
+        touchGestureDetector = new TouchGestureDetector(getContext(), new TouchGestureDetector.OnTouchGestureListener() {
+            float lastScale = 1;
+            float tempScale = 1;
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetectorApi27 detector) {
+                LogUtil.e(TAG, "onScaleBegin: ");
+                return true;
+            }
+
+            @Override
+            public boolean onScale(ScaleGestureDetectorApi27 detector) { // 双指缩放中
+                Matrix mMatrix = new Matrix();
+//                    Float.isInfinite();
+                float scale = detector.getScaleFactor();
+//                    LogUtil.e(TAG, "scale = " + scale);
+                tempScale = scale;
+                LogUtil.e(TAG, "onScale: " + scale);
+                float targetScale = lastScale * tempScale;
+                LogUtil.e(TAG, "lastScale: " + lastScale);
+                LogUtil.e(TAG, "targetScale: " + targetScale);
+//                IntegrateFrameLayout.this.setScaleX(targetScale);
+//                IntegrateFrameLayout.this.setScaleY(targetScale);
+                scaleChild(targetScale);
+                mMatrix.setScale(scale, scale);
+//                    vmhwDvDoodle.setScaleX(scale);
+//                    vmhwDvDoodle.setScaleY(scale);
+//                    vmhwDvDoodle.invalidate();
+//                if (scale < 2 && scale > 0) {
+////                        LogUtil.e(TAG, "scale return false ");
+//                    return false;
+//                } else {
+////                        LogUtil.e(TAG, "scale return true ");
+//                    return true;
+//                }
+                return true;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetectorApi27 detector) {
+                //这里的scale返回的一直是1.0
+                float scale = detector.getScaleFactor();
+                lastScale *= tempScale;
+                LogUtil.e(TAG, "onScaleEnd: " + scale);
+                LogUtil.e(TAG, "onScaleEnd: tempScale = " + tempScale);
+                LogUtil.e(TAG, "onScaleEnd: lastScale = " + lastScale);
+            }
+        });
+    }
+
+    private void initChild() {
+
     }
 
     public void setViewMode(int mode) {
@@ -131,6 +246,18 @@ public class IntegrateFrameLayout extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        return oldTest(event);
+        doGesture(event);
+//        touchGestureDetector.onTouchEvent(event);
+        //事实上，当两个子控件不消费，释放touchEvent的时候也已经是modeScale了
+        if (isModeScale()) {
+            //
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private void doGesture(MotionEvent event) {
         int actionId = event.getActionIndex();
         int actionMasked = event.getActionMasked();
         int pointerId = event.getPointerId(actionId);
@@ -149,16 +276,10 @@ public class IntegrateFrameLayout extends FrameLayout {
             default:
                 break;
         }
-        //事实上，当两个子控件不消费，释放touchEvent的时候也已经是modeScale了
-        if (isModeScale()) {
-            //
-            return true;
-        }else {
-            return super.onTouchEvent(event);
-        }
     }
 
     private void addPoint(MotionEvent event) {
+        LogUtil.e(TAG, "addPoint");
         if(mBasePointList.size() >= 2){
             return;
         }
@@ -169,30 +290,171 @@ public class IntegrateFrameLayout extends FrameLayout {
         point.x = event.getX(pointerId);
         point.y = event.getY(pointerId);
         mBasePointList.add(point);
+        if(mBasePointList.size() == 1){
+            saveSingleFingerPoint(event);
+        }
+        LogUtil.e(TAG, "addPointOk List = " + mBasePointList.toString());
     }
 
     private void movePoint(MotionEvent event){
+        LogUtil.e(TAG, "movePoint");
         int actionId = event.getActionIndex();
         int pointerId = event.getPointerId(actionId);
-        if(mBasePointList.size() != 2){
-            return;
+        //两点缩放
+        if(mBasePointList.size() == 2){
+            onScale(event, pointerId);
+        //一点平移
+        }else if(mBasePointList.size() == 1){
+            onTranslate(event, pointerId);
         }
-        //1.算出原始距离差
-        //2.算出当前距离差
-        //3.计算比例scale
-        //4.缩放图形
+
     }
 
+    /**
+     * 当有只有一个手指时，保存下当前的缩放比例
+     * */
     private void deletePoint(MotionEvent event) {
+        LogUtil.e(TAG, "deletePoint");
         int actionId = event.getActionIndex();
         int pointerId = event.getPointerId(actionId);
+        Point removedPoint = null;
         out : for(int x = 0; x < mBasePointList.size(); x++){
             Point point = mBasePointList.get(x);
             if(point.id == pointerId){
-                mBasePointList.remove(x);
+                removedPoint = mBasePointList.remove(x);
                 break out;
             }
         }
+        if(null != removedPoint && 1 == mBasePointList.size()){
+            //当一个手指放开后，不会走到movePoint方法里了，所以tempScale不会再改变
+            //只有两指变成一指时才记录
+            saveLastScaleRatio();
+            saveSingleFingerPoint(event);
+        }
+//        if(mBasePointList.size() == 0){
+//            saveSingleFingerPoint(null);
+//        }
+    }
+
+    /**
+     * 记录下最后的缩放比例
+     * */
+    private void saveLastScaleRatio() {
+        lastScaleRatio *= tempScaleRatio;
+    }
+
+    /**
+     * 记录下只剩单点时的当前坐标
+     * */
+    private void saveSingleFingerPoint(MotionEvent event) {
+//        if(null == event){
+//            mSingleFingerPoint = null;
+//        }
+        //记录下当前的一指坐标
+        Point singleFingerPoint = mBasePointList.get(0);
+//        mSingleFingerPoint = new Point();
+        mSingleFingerPoint.id = singleFingerPoint.id;
+        mSingleFingerPoint.x = event.getX(singleFingerPoint.id);
+        mSingleFingerPoint.y = event.getY(singleFingerPoint.id);
+    }
+
+    /**
+     * 缩放事件
+     * */
+    private void onScale(MotionEvent event, int pointerId) {
+        //0.确认是否是已存点
+        Point movedPoint = null;
+        Point otherPoint = null;
+        for(int x = 0; x < mBasePointList.size(); x++){
+            Point point = mBasePointList.get(x);
+            if(point.id == pointerId){
+                movedPoint = mBasePointList.get(x);
+            }else {
+                otherPoint = mBasePointList.get(x);
+            }
+        }
+        //移动事件的点不在记录中则不处理事件
+        if(null == movedPoint){
+            return;
+        }
+
+        if(null == otherPoint){
+            //理论上不可能存在的情况，必然有 两个 不同 的点，那就必然有一个
+            return;
+        }
+        //1.算出原始距离差
+        Point point0 = mBasePointList.get(0);
+        Point point1 = mBasePointList.get(1);
+        float movedX = event.getX(pointerId);
+        float movedY = event.getY(pointerId);
+        double disSquareBase = (point0.x - point1.x) * (point0.x - point1.x)
+                + (point0.y - point1.y) * (point0.y - point1.y);
+        double disSquareMoved = (otherPoint.x - movedX) * (otherPoint.x - movedX)
+                + (otherPoint.y - movedY) * (otherPoint.y - movedY);
+        //2.算出当前距离差
+        double scale = 1;
+        if(0 == disSquareMoved || disSquareBase == disSquareMoved){
+            scale = 1;
+        }else {
+            scale = Math.sqrt(disSquareMoved) / Math.sqrt(disSquareBase);
+        }
+        //3.计算比例scale
+        //缩放比例为移动比例的一半
+        if(scale > 1){
+            scale = ((scale - 1) / scaleBaseRatio) + 1;
+        }else if(scale < 1){
+            scale = 1 - ((1- scale) / scaleBaseRatio);
+        }
+//        LogUtil.e(TAG, "movePoint, scale = " + scale + ", List = " + mBasePointList.toString());
+        //4.缩放图形
+        scaleChild(scale);
+    }
+
+    private void scaleChild(double scaleRatio) {
+        tempScaleRatio = scaleRatio;
+        LogUtil.e(TAG, "scaleChild : tempScaleRatio = " + tempScaleRatio);
+        double targetScaleRatio = lastScaleRatio * scaleRatio;
+        vmhwDvDoodle.setScaleX((float) targetScaleRatio);
+        vmhwDvDoodle.setScaleY((float) targetScaleRatio);
+//        int width = vmhwDvDoodle.getWidth();
+//        int height = vmhwDvDoodle.getHeight();
+//        LogUtil.e(TAG, "vmhwDvDoodle : w = " + width + ",   h = " + height);
+        vmhwStvText.setScaleX((float) targetScaleRatio);
+        vmhwStvText.setScaleY((float) targetScaleRatio);
+    }
+
+    private void onTranslate(MotionEvent event, int pointerId) {
+        Point movedPoint = null;
+        //其实只剩一个点了，不需要遍历的写法
+        for(int x = 0; x < mBasePointList.size(); x++){
+            Point point = mBasePointList.get(x);
+            if(point.id == pointerId){
+                movedPoint = mBasePointList.get(x);
+                break;
+            }
+        }
+        if(null == movedPoint){
+            //理论上不存在。只有单指了肯定在
+            return;
+        }
+        float movedX = event.getX(pointerId);
+        float movedY = event.getY(pointerId);
+        float disX = movedX - mSingleFingerPoint.x;
+        float disY = movedY - mSingleFingerPoint.y;
+        mSingleFingerPoint.x = movedX;
+        mSingleFingerPoint.y = movedY;
+        lastMovedX += disX;
+        lastMovedY += disY;
+        float translationX = vmhwDvDoodle.getTranslationX();
+        float translationY = vmhwDvDoodle.getTranslationY();
+        LogUtil.e(TAG, "disX = " + disX + ", disY = " + disY);
+        LogUtil.e(TAG, "translationX = " + translationX + ", translationY = " + translationY);
+        vmhwDvDoodle.setTranslationX(lastMovedX);
+        vmhwDvDoodle.setTranslationY(lastMovedY);
+        vmhwStvText.setTranslationX(lastMovedX);
+        vmhwStvText.setTranslationY(lastMovedY);
+
+
     }
 
     private boolean oldTest(MotionEvent event) {
@@ -309,5 +571,13 @@ public class IntegrateFrameLayout extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        float scaleX = getScaleX();
+        float scaleY = getScaleY();
+        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
     }
 }

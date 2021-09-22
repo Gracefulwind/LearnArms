@@ -14,4 +14,13 @@ package com.gracefulwind.learnarms.reader.widget.integrate;
 public class Point {
     public float x,y;
     public int id;
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                ", id=" + id +
+                '}';
+    }
 }
