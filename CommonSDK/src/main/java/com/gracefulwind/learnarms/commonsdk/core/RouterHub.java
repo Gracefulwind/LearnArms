@@ -142,6 +142,7 @@ public interface RouterHub {
         String HOME_ACTIVITY = BASE + "/HomeActivity";
         String DOODLE_ACTIVITY = BASE + "/DoodleActivity";
         String HAND_WRITE_ACTIVITY = BASE + "/HandWriteActivity";
+        String TEST_GESTURE_ACTIVITY = BASE + "/TestGestureActivity";
 
         interface Server{
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";

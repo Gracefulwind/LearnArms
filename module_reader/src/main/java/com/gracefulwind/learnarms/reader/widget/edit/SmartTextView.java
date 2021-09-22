@@ -164,15 +164,20 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
 
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        LogUtil.d(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
+        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
                     + " }        { new w,h = " +  w + "," + h);
         this.width = w;
         this.height = h;
         int lineHeight = getLineHeight();
         float fontHeight = getFontHeight(getTextSize());
-        LogUtil.d(TAG, "lineHeight = " + lineHeight + ",  fontHeight = " + fontHeight);
+        LogUtil.e(TAG, "lineHeight = " + lineHeight + ",  fontHeight = " + fontHeight);
 //        if(h - oldh == lineHeight){
 //            ViewGroup.LayoutParams layoutParams = getLayoutParams();
 //            layoutParams.height += 2 * lineHeight;
@@ -205,7 +210,7 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
         }
         float scaleX = getScaleX();
         float scaleY = getScaleY();
-        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
+//        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
     }
 
     /**

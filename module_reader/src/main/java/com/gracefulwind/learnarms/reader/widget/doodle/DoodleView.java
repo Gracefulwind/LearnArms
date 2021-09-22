@@ -80,7 +80,7 @@ public class DoodleView extends View {
         int toolType = event.getToolType(actionIndex);
         //非电容笔则不处理
         if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
-            return true;
+            return false;
         }
         int action = event.getAction();
         float x = event.getX();
@@ -113,7 +113,7 @@ public class DoodleView extends View {
         super.onDraw(canvas);
         float scaleX = getScaleX();
         float scaleY = getScaleY();
-        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
+//        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
         mPresenter.drawCanvas(canvas);
     }
 
@@ -187,25 +187,25 @@ public class DoodleView extends View {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                LogUtil.d("Doodle TouchEvent", "dispatch down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-            case MotionEvent.ACTION_MOVE:
-                LogUtil.d("Doodle TouchEvent", "dispatch move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-            case MotionEvent.ACTION_UP:
-                LogUtil.d("Doodle TouchEvent", "dispatch up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
-                break;
-        }
-//        if(isEnabled()){
-//            return true;
-//        }else {
-//            return super.dispatchTouchEvent(event);
+//        int action = event.getAction();
+//        float x = event.getX();
+//        float y = event.getY();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                LogUtil.e("Doodle TouchEvent", "dispatch down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                LogUtil.e("Doodle TouchEvent", "dispatch move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                LogUtil.e("Doodle TouchEvent", "dispatch up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
+//                break;
 //        }
+////        if(isEnabled()){
+////            return true;
+////        }else {
+////            return super.dispatchTouchEvent(event);
+////        }
         return super.dispatchTouchEvent(event);
     }
 

@@ -45,7 +45,7 @@ public class MyHandWriteView extends FrameLayout {
 //    @BindView(R2.id.vmhw_dv_doodle)
 //    DoodleView vmhwDvDoodle;
     @BindView(R2.id.vmhw_ifl_control)
-IntegrateFrameLayout vmhwIflControl;
+    IntegrateFrameLayout vmhwIflControl;
 
 //    private int mViewMode;
     private Context mContext;
@@ -245,5 +245,9 @@ IntegrateFrameLayout vmhwIflControl;
     public void setDoodleEditMode(@EditMode int doodleEditMode){
 //        vmhwDvDoodle.setPaintEditMode(doodleEditMode);
         vmhwIflControl.setDoodleEditMode(doodleEditMode);
+    }
+
+    public void test() {
+        vmhwIflControl.test();
     }
 }

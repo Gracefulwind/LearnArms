@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
+import androidx.core.widget.NestedScrollView;
+
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.NumberUtils;
 
@@ -44,12 +46,13 @@ public class SmartScrollView1 extends ScrollView {
 
     public SmartScrollView1(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    public SmartScrollView1(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
+
+//    public SmartScrollView1(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        super(context, attrs, defStyleAttr, defStyleRes);
+//        init();
+//    }
 
     private void init() {
         //my init
@@ -57,30 +60,30 @@ public class SmartScrollView1 extends ScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-//        super.onTouchEvent(ev);
-        int eventAction = ev.getAction();
-        switch (eventAction){
-            case MotionEvent.ACTION_DOWN:
-                downX = ev.getX();
-                downY = ev.getY();
-                LogUtil.d(TAG, "ACTION_DOWN, x = " + downX + "  , y = " + downY );
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                moveX = ev.getX();
-                moveY = ev.getY();
-                mTouchAction = ACTION_MOVE;
-                invalidate();
-                LogUtil.d(TAG, "ACTION_MOVE, x = " + moveX + "  , y = " + moveY );
-                return true;
-            case MotionEvent.ACTION_UP:
-                mTouchAction = ACTION_UP;
-                moveX = ev.getX();
-                moveY = ev.getY();
-                invalidate();
-                LogUtil.d(TAG, "ACTION_UP, x = " + moveX + "  , y = " + moveY );
-                return true;
-        }
-        return false;
+        return super.onTouchEvent(ev);
+//        int eventAction = ev.getAction();
+//        switch (eventAction){
+//            case MotionEvent.ACTION_DOWN:
+//                downX = ev.getX();
+//                downY = ev.getY();
+//                LogUtil.d(TAG, "ACTION_DOWN, x = " + downX + "  , y = " + downY );
+//                return true;
+//            case MotionEvent.ACTION_MOVE:
+//                moveX = ev.getX();
+//                moveY = ev.getY();
+////                mTouchAction = ACTION_MOVE;
+////                invalidate();
+//                LogUtil.d(TAG, "ACTION_MOVE, x = " + moveX + "  , y = " + moveY );
+//                return true;
+//            case MotionEvent.ACTION_UP:
+//                mTouchAction = ACTION_UP;
+//                moveX = ev.getX();
+//                moveY = ev.getY();
+////                invalidate();
+//                LogUtil.d(TAG, "ACTION_UP, x = " + moveX + "  , y = " + moveY );
+//                return true;
+//        }
+//        return false;
     }
 
 //    @Override
@@ -93,19 +96,19 @@ public class SmartScrollView1 extends ScrollView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(isFirstInit){
-            LogUtil.d(TAG, "onDraw,firstInit, canvas = " + canvas);
-            canvas.save();
-            isFirstInit = false;
-        }
-        LogUtil.d(TAG, "onDraw, x = " + moveX + "  , y = " + moveY  + ",  action = " + mTouchAction + " , canvas = " + canvas);
-        if(NumberUtils.isAnd(mTouchAction, ACTION_MOVE | ACTION_UP)){
-            mTouchAction = 0;
-//            canvas.restore();
+//        if(isFirstInit){
+//            LogUtil.d(TAG, "onDraw,firstInit, canvas = " + canvas);
 //            canvas.save();
-            canvas.translate(moveX - downX, moveY - downY);
-            canvas.save();
-        }
+//            isFirstInit = false;
+//        }
+//        LogUtil.d(TAG, "onDraw, x = " + moveX + "  , y = " + moveY  + ",  action = " + mTouchAction + " , canvas = " + canvas);
+//        if(NumberUtils.isAnd(mTouchAction, ACTION_MOVE | ACTION_UP)){
+//            mTouchAction = 0;
+////            canvas.restore();
+////            canvas.save();
+//            canvas.translate(moveX - downX, moveY - downY);
+//            canvas.save();
+//        }
     }
 }
 

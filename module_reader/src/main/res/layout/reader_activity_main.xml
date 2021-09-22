@@ -28,7 +28,7 @@
             android:id="@+id/ram_tv_go_doodle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="转跳到涂鸦页面"
+            android:text="toTest"
             />
 
         <Button
@@ -36,6 +36,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="转跳到手写板"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/ram_btn_ges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试手势"
             />
     </LinearLayout>
 

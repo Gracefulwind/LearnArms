@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
@@ -45,8 +46,10 @@ public class DoodleActivity extends MyBaseActivity<DoodlePresenter> implements D
 
     @BindView(R2.id.rad_tv_click0)
     Button radTvClick0;
-    @BindView(R2.id.rad_dv_container)
-    DoodleView radDvContainer;
+//    @BindView(R2.id.rad_dv_container)
+//    DoodleView radDvContainer;
+    @BindView(R2.id.rad_et_test)
+    EditText testEditText;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -84,18 +87,20 @@ public class DoodleActivity extends MyBaseActivity<DoodlePresenter> implements D
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.rad_tv_click0 == id){
-            LogUtil.e(TAG, "do some thing");
-            LogUtil.e(TAG, "do some thing");
-            int editMode = radDvContainer.getEditMode();
-            if(radDvContainer.isModeDoodle()){
-                radDvContainer.setPaintEditMode(OperationPresenter.MODE_ERASER);
-            }else {
-                radDvContainer.setPaintEditMode(OperationPresenter.MODE_DOODLE);
-            }
+//            LogUtil.e(TAG, "do some thing");
+//            LogUtil.e(TAG, "do some thing");
+//            int editMode = radDvContainer.getEditMode();
+//            if(radDvContainer.isModeDoodle()){
+//                radDvContainer.setPaintEditMode(OperationPresenter.MODE_ERASER);
+//            }else {
+//                radDvContainer.setPaintEditMode(OperationPresenter.MODE_DOODLE);
+//            }
+            int height = testEditText.getHeight();
+            LogUtil.e(TAG, "test height = " + height);
         }else if(R.id.rad_tv_click1 == id){
-            radDvContainer.cancelLastDraw();
+//            radDvContainer.cancelLastDraw();
         }else if(R.id.rad_tv_click2 == id){
-            radDvContainer.redoLastDraw();
+//            radDvContainer.redoLastDraw();
         }
     }
 

@@ -162,8 +162,6 @@ public class IntegrateFrameLayout extends FrameLayout {
                 float targetScale = lastScale * tempScale;
                 LogUtil.e(TAG, "lastScale: " + lastScale);
                 LogUtil.e(TAG, "targetScale: " + targetScale);
-//                IntegrateFrameLayout.this.setScaleX(targetScale);
-//                IntegrateFrameLayout.this.setScaleY(targetScale);
                 scaleChild(targetScale);
                 mMatrix.setScale(scale, scale);
 //                    vmhwDvDoodle.setScaleX(scale);
@@ -246,14 +244,18 @@ public class IntegrateFrameLayout extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        return oldTest(event);
-        doGesture(event);
+
 //        touchGestureDetector.onTouchEvent(event);
         //事实上，当两个子控件不消费，释放touchEvent的时候也已经是modeScale了
         if (isModeScale()) {
             //
+//            doGesture(event);
+            getParent().requestDisallowInterceptTouchEvent(false);
+            boolean b = touchGestureDetector.onTouchEvent(event);
+//            return b ? true : super.onTouchEvent(event);
             return true;
         }else {
-            return false;
+            return super.onTouchEvent(event);
         }
     }
 
@@ -264,13 +266,23 @@ public class IntegrateFrameLayout extends FrameLayout {
         switch (actionMasked){
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
+                LogUtil.e(TAG, "Down: id = " + pointerId);
                 addPoint(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                movePoint(event);
+                LogUtil.e(TAG, "Move: id = " + pointerId);
+                try{
+                    movePoint(event);
+                }catch (IllegalArgumentException e){
+                    //听说这个bug是android系统的？
+                    //是不是下层控件拦截导致的？
+                    //是否需要移除list里的该点？
+                    mBasePointList.clear();
+                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
+                LogUtil.e(TAG, "Up: id = " + pointerId);
                 deletePoint(event);
                 break;
             default:
@@ -279,7 +291,7 @@ public class IntegrateFrameLayout extends FrameLayout {
     }
 
     private void addPoint(MotionEvent event) {
-        LogUtil.e(TAG, "addPoint");
+//        LogUtil.e(TAG, "addPoint");
         if(mBasePointList.size() >= 2){
             return;
         }
@@ -291,13 +303,17 @@ public class IntegrateFrameLayout extends FrameLayout {
         point.y = event.getY(pointerId);
         mBasePointList.add(point);
         if(mBasePointList.size() == 1){
-            saveSingleFingerPoint(event);
+            try{
+                saveSingleFingerPoint(event);
+            }catch (IllegalArgumentException e){
+                mBasePointList.clear();
+            }
         }
-        LogUtil.e(TAG, "addPointOk List = " + mBasePointList.toString());
+//        LogUtil.e(TAG, "addPointOk List = " + mBasePointList.toString());
     }
 
     private void movePoint(MotionEvent event){
-        LogUtil.e(TAG, "movePoint");
+//        LogUtil.e(TAG, "movePoint");
         int actionId = event.getActionIndex();
         int pointerId = event.getPointerId(actionId);
         //两点缩放
@@ -314,7 +330,7 @@ public class IntegrateFrameLayout extends FrameLayout {
      * 当有只有一个手指时，保存下当前的缩放比例
      * */
     private void deletePoint(MotionEvent event) {
-        LogUtil.e(TAG, "deletePoint");
+//        LogUtil.e(TAG, "deletePoint");
         int actionId = event.getActionIndex();
         int pointerId = event.getPointerId(actionId);
         Point removedPoint = null;
@@ -437,6 +453,7 @@ public class IntegrateFrameLayout extends FrameLayout {
             //理论上不存在。只有单指了肯定在
             return;
         }
+
         float movedX = event.getX(pointerId);
         float movedY = event.getY(pointerId);
         float disX = movedX - mSingleFingerPoint.x;
@@ -457,117 +474,6 @@ public class IntegrateFrameLayout extends FrameLayout {
 
     }
 
-    private boolean oldTest(MotionEvent event) {
-        int actionId = event.getActionIndex();
-        int actionMasked = event.getActionMasked();
-        int pointerId = event.getPointerId(actionId);
-        switch (actionMasked){
-            case MotionEvent.ACTION_DOWN:
-                pointCount++;
-                firstPointId = pointerId;
-                firstPointX = event.getX(firstPointId);
-                firstPointY = event.getY(firstPointId);
-//                LogUtil.e(TAG, "down , baseX = " + firstPointX + ", baseY = " + firstPointY);
-                LogUtil.e(TAG, "ACTION_DOWN id = " + pointerId);
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                //已经存在两点后不再处理
-                if(pointCount >= 2){
-                    break;
-                }
-                pointCount++;
-                secondPointId = pointerId;
-                secondPointX = event.getX(secondPointId);
-                secondPointY = event.getY(secondPointId);
-                baseDisSquare = (firstPointX - secondPointX) * (firstPointX - secondPointX)
-                        + (firstPointY - secondPointY) * (firstPointY - secondPointY);
-                baseDis = (float) Math.sqrt(baseDisSquare);
-//                LogUtil.e(TAG, "pointer_down , baseX = " + secondPointX + ", baseY = " + secondPointY);
-                LogUtil.e(TAG, "ACTION_POINTER_DOWN id = " + pointerId);
-                break;
-            case MotionEvent.ACTION_MOVE:
-//                if(pointCount < 2){
-//                    break;
-//                }
-//                float disX = event.getX(secondPointId) - event.getX(firstPointId);
-//                float disY = event.getY(secondPointId) - event.getY(firstPointId);
-//                float movedDisSquare = disX * disX + disY * disY;
-//                float movedDis = (float) Math.sqrt(movedDisSquare);
-//                float scale = 1;
-//                if(0 == baseDisSquare){
-//                    scale = 1;
-//                }else if(movedDisSquare > baseDisSquare){
-//                    //放大
-//                    scale = movedDis / baseDisSquare;
-//                }else if (movedDisSquare < baseDisSquare){
-//                    //缩小
-//                    scale = movedDis / baseDisSquare;
-//                }else {
-//                    scale = 1;
-//                }
-//                LogUtil.e(TAG, "move, 1X = " + event.getX(firstPointId) + ", 1Y = " + event.getY(firstPointId));
-//                LogUtil.e(TAG, "move, 2X = " + event.getX(secondPointId) + ", 2Y = " + event.getY(secondPointId));
-////                LogUtil.e(TAG, "scale == " + scale);
-                break;
-            case MotionEvent.ACTION_UP:
-                pointCount--;
-                LogUtil.e(TAG, "ACTION_UP id = " + pointerId);
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                LogUtil.e(TAG, "ACTION_POINTER_UP id = " + pointerId);
-                if(pointerId == firstPointId){
-                    pointCount--;
-                    firstPointId = 0;
-                }
-                if(pointerId == secondPointId){
-                    pointCount--;
-                    secondPointId = 0;
-                }
-                break;
-            default:
-                break;
-        }
-        int action = event.getAction();
-        if (isModeScale()) {
-            //scrollview可滑动
-//            requestDisallowInterceptTouchEvent(true);
-            ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mContext, new ScaleGestureDetector.OnScaleGestureListener() {
-                @Override
-                public boolean onScale(ScaleGestureDetector detector) {
-                    Matrix mMatrix = new Matrix();
-//                    Float.isInfinite();
-                    float scale = detector.getScaleFactor();
-//                    LogUtil.e(TAG, "scale = " + scale);
-                    mMatrix.setScale(scale, scale);
-//                    vmhwDvDoodle.setScaleX(scale);
-//                    vmhwDvDoodle.setScaleY(scale);
-//                    vmhwDvDoodle.invalidate();
-                    if (scale < 2 && scale > 0) {
-//                        LogUtil.e(TAG, "scale return false ");
-                        return false;
-                    } else {
-//                        LogUtil.e(TAG, "scale return true ");
-                        return true;
-                    }
-                }
-
-                @Override
-                public boolean onScaleBegin(ScaleGestureDetector detector) {
-                    return true;
-                }
-
-                @Override
-                public void onScaleEnd(ScaleGestureDetector detector) {
-
-                }
-            });
-            scaleGestureDetector.onTouchEvent(event);
-            return true;
-        }else {
-            return super.onTouchEvent(event);
-        }
-    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return super.onInterceptTouchEvent(ev);
@@ -579,5 +485,14 @@ public class IntegrateFrameLayout extends FrameLayout {
         float scaleX = getScaleX();
         float scaleY = getScaleY();
         LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
+    }
+
+    public void test() {
+        float x = vmhwDvDoodle.getX();
+        float y = vmhwDvDoodle.getY();
+        int height = vmhwDvDoodle.getHeight();
+        int height1 = vmhwStvText.getHeight();
+        int height2 = getHeight();
+        LogUtil.e(TAG, "test, height = " + height + ", height1 = " + height1 + ", parent height = " + height2);
     }
 }

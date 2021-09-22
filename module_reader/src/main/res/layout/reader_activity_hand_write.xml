@@ -28,6 +28,12 @@
             android:layout_height="wrap_content"
             android:text="缩放"
             />
+        <Button
+            android:id="@+id/rahw_btn_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试用"
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
