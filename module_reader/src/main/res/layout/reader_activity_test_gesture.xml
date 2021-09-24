@@ -13,7 +13,22 @@
         <Button
             android:id="@+id/ratg_btn_0"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="test0"
+            />
+        <Button
+            android:id="@+id/ratg_btn_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切换text"
+            />
+        <Button
+            android:id="@+id/ratg_btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fun2"
+            />
+
     </LinearLayout>
 
     <com.gracefulwind.learnarms.reader.widget.TestFrameLayout
@@ -23,9 +38,16 @@
         android:background="#F00"
         >
         <com.gracefulwind.learnarms.reader.widget.edit.SmartTextView
+
             android:id="@+id/ratg_et_test"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="#0f0"
             />
     </com.gracefulwind.learnarms.reader.widget.TestFrameLayout>
 

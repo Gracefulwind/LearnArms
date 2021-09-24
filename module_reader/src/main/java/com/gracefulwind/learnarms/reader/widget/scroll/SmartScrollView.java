@@ -494,6 +494,8 @@ public class SmartScrollView extends FrameLayout {
 //        mLastScroll = AnimationUtils.currentAnimationTimeMillis();
 //    }
 
+
+
     static class SavedState extends BaseSavedState {
         public int scrollPosition;
 

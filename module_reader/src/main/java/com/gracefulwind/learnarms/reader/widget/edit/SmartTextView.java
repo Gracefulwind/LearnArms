@@ -171,13 +171,13 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
-                    + " }        { new w,h = " +  w + "," + h);
+//        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
+//                    + " }        { new w,h = " +  w + "," + h);
         this.width = w;
         this.height = h;
         int lineHeight = getLineHeight();
         float fontHeight = getFontHeight(getTextSize());
-        LogUtil.e(TAG, "lineHeight = " + lineHeight + ",  fontHeight = " + fontHeight);
+//        LogUtil.e(TAG, "lineHeight = " + lineHeight + ",  fontHeight = " + fontHeight);
 //        if(h - oldh == lineHeight){
 //            ViewGroup.LayoutParams layoutParams = getLayoutParams();
 //            layoutParams.height += 2 * lineHeight;
@@ -208,8 +208,8 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
 //        for(int x = 0; x < textViewLines; x++){
             canvas.drawLine(paddingLeft, paddingTop + x * textHeight, width - paddingRight, paddingTop + x * textHeight, paint);
         }
-        float scaleX = getScaleX();
-        float scaleY = getScaleY();
+//        float scaleX = getScaleX();
+//        float scaleY = getScaleY();
 //        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
     }
 
@@ -297,9 +297,17 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         if(isEnabled()){
-            return super.onTouchEvent(event);
+            boolean b = super.onTouchEvent(event);
+            LogUtil.e(TAG, "Touch event" + event.getAction() + " , result = " + b);
+//            if(event.getAction() == MotionEvent.ACTION_DOWN){
+//                getParent().requestDisallowInterceptTouchEvent(true);
+//            }
+//            return true;
+            return b;
         }else {
+            LogUtil.e(TAG, "Touch event" + event.getAction() + " , unEnable ==");
             return false;
         }
     }
