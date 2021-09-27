@@ -160,9 +160,33 @@ public class LinesView extends View implements Smartable{
         }
     }
 
+    /**
+     * 满足在handNote中的使用，总大小是textview比例系数的需求
+     * */
+    @Override
+    public void setPivotX(float pivotX){
+        ViewParent parent = getParent();
+        if(parent instanceof SmartHandNoteView){
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentWidth = parentView.getWidth();
+            float maxScaleRate = parentView.getMaxScaleRate();
+            super.setPivotX(((maxScaleRate - 1) / 2) * parentWidth + pivotX);
+        }else {
+            super.setPivotX(pivotX);
+        }
+    }
+
     @Override
     public void smartTranslateTo(float translateX, float translateY) {
-        setTranslationX(translateX);
+        ViewParent parent = getParent();
+        if(parent instanceof SmartHandNoteView){
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentWidth = parentView.getWidth();
+            setTranslationX(-parentWidth + translateX);
+        }else {
+            setTranslationX(translateX);
+        }
+//        setTranslationX(translateX);
         setTranslationY(translateY);
     }
 
@@ -174,16 +198,11 @@ public class LinesView extends View implements Smartable{
 
     @Override
     public void smartScaleTo(float pivotX, float pivotY, float scaleX, float scaleY) {
-        ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
-            setPivotX(parentWidth + pivotX);
-        }else {
-            setPivotX(pivotX);
-        }
+        setPivotX(pivotX);
         setPivotY(pivotY);
         setScaleX(scaleX);
         setScaleY(scaleY);
     }
+
+
 }

@@ -347,11 +347,11 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
 
     @Override
     public void smartTranslateTo(float translateX, float translateY) {
-//        setTranslationX(translateX);
-//        setTranslationY(translateY);
-        this.translateX = translateX;
-        this.translateY = translateY;
-        invalidate();
+        setTranslationX(translateX);
+        setTranslationY(translateY);
+//        this.translateX = translateX;
+//        this.translateY = translateY;
+//        invalidate();
     }
 
     @Override

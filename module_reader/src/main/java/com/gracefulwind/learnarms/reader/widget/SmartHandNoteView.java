@@ -2,6 +2,7 @@ package com.gracefulwind.learnarms.reader.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -46,8 +47,13 @@ public class SmartHandNoteView extends FrameLayout {
     private DoodleView mDoodleView;
 
     private TouchGestureDetector mGestureDetector;
-    float mLastScale = 1f;
+    //最大缩放比例,最好别动
     float maxScaleRate = 3f;
+    //最小响应缩放比例,最好别动
+    float minScaleResponse = 0.05f;
+    //最小响应滑动距离(的平方)
+    float minDisResponse = 3 * 3;
+    float mLastScale = 1f;
     float mDistanceX = 0f, mDistanceY = 0f;
 //    private Matrix mMatrix = new Matrix();
 //    private float[] matrixValues = new float[9];
@@ -85,12 +91,10 @@ public class SmartHandNoteView extends FrameLayout {
         mSmartTextView = new SmartTextView(mContext);
         LayoutParams stvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         mSmartTextView.setLayoutParams(stvLayoutParams);
-        mSmartTextView.setBackgroundColor(Color.parseColor("#A003aF30"));
         //add linesView
         mLinesView = new LinesView(mContext, mSmartTextView.getLineHeight());
         LayoutParams lvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mLinesView.setLayoutParams(lvLayoutParams);
-        mLinesView.setBackgroundColor(Color.parseColor("#A0a03030"));
         //add doodleView
         mDoodleView = new DoodleView(mContext);
         LayoutParams dvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -105,6 +109,10 @@ public class SmartHandNoteView extends FrameLayout {
         addView(mLinesView);
         addView(mSmartTextView);
         addView(mDoodleView);
+        //=====test======
+        mSmartTextView.setBackgroundColor(Color.parseColor("#A003aF30"));
+        mLinesView.setBackgroundColor(Color.parseColor("#A0a03030"));
+        mDoodleView.setBackgroundColor(Color.parseColor("#083030F0"));
     }
 
     /**
@@ -136,7 +144,7 @@ public class SmartHandNoteView extends FrameLayout {
             @Override
             public boolean onScale(ScaleGestureDetectorApi27 detector) { // 双指缩放中
                 float scaleFactor = detector.getScaleFactor();
-                if(scaleFactor < 1.05f && scaleFactor > 0.95f){
+                if(scaleFactor < (1 + minScaleResponse) && scaleFactor > (1 - minScaleResponse)){
                     return false;
                 }else {
                     float tempScale = mLastScale * scaleFactor;
@@ -145,32 +153,69 @@ public class SmartHandNoteView extends FrameLayout {
                     }else if (tempScale <= 1 / maxScaleRate){
                         tempScale = 1 / maxScaleRate;
                     }
-                    doScale(0, 0, tempScale);
-//                    doScale(focusX, focusY, tempScale);
+//                    doScale(0, 0, tempScale);
+                    doScale(focusX, focusY, tempScale);
 //                    doScale(detector.getFocusX(), detector.getFocusY(), tempScale);
                     mLastScale = tempScale;
                     return true;
                 }
             }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                double squareDis =  distanceX * distanceX + distanceY * distanceY;
-                if(squareDis < 8){
-                    return false;
-                }else {
-                    mDistanceX += distanceX;
-                    mDistanceY += distanceY;
-                    doTranslate(distanceX, distanceY);
-                    return true;
-                }
-            }
-
+            //--------------------------------------------------------------------------------------
             @Override
             public void onScrollBegin(MotionEvent e) {
                 super.onScrollBegin(e);
             }
             //
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                //这里的distance是local - target的结果，所以右移得到的是负的值，需要取反
+                double squareDis =  distanceX * distanceX + distanceY * distanceY;
+                float realX = -distanceX;
+                float realY = -distanceY;
+                double responseDis = 0;
+                responseDis = responseDis >= 1 ? minDisResponse / mLastScale : minDisResponse;
+                if(squareDis < responseDis){
+                    return false;
+                }else {
+//                    LogUtil.e(TAG, "distanceX = " + realX);
+                    mDistanceX += realX;
+                    mDistanceY += realY;
+                    float width = mSmartTextView.getWidth();
+                    float height = mSmartTextView.getHeight();
+                    float noteHeight = getHeight();
+                    float px = mSmartTextView.getPivotX();
+                    float py = mSmartTextView.getPivotY();
+                    //控制左滑
+                    float maxDistanceX = (px + width) * mLastScale - px;
+                    if(mDistanceX > maxDistanceX){
+                        mDistanceX = maxDistanceX;
+                    }
+                    float minDistanceX = width - px - (2 * width - px) * mLastScale;
+                    if(mDistanceX < minDistanceX){
+                        mDistanceX = minDistanceX;
+                    }
+                    float maxDistanceY = py * mLastScale - py;
+                    if(mDistanceY > maxDistanceY){
+                        mDistanceY = maxDistanceY;
+                    }
+                    if(height * mLastScale > noteHeight){
+                        float minDistanceY = noteHeight - py - (height - py) * mLastScale;
+                        if(mDistanceY < minDistanceY){
+                            mDistanceY = minDistanceY;
+                        }
+//                        LogUtil.e(TAG, "min");
+                    }else {
+                        mDistanceY = maxDistanceY;
+                    }
+
+//                    if(mDistanceX)
+                    //两个均可，用To方法方便控制最大距离
+                    doTranslateTo(mDistanceX, mDistanceY);
+//                    doTranslateBy(realX, realY);
+                    return true;
+                }
+            }
+
             @Override
             public void onScrollEnd(MotionEvent e) {
                 super.onScrollEnd(e);
@@ -191,18 +236,21 @@ public class SmartHandNoteView extends FrameLayout {
     /**
      * 写字板，涂鸦层和背景线条的移动
      * */
-    private void doTranslate(float distanceX, float distanceY) {
+    private void doTranslateTo(float translateX, float translateY) {
         //todo:wd 添加doodleView的translate，与LineView同步
         //todo:wd 感觉LineView可以只添加Y轴的偏移，保证X轴的位置不变(和doodleView同步也可以，保证了统一性)
-//        mSmartTextView.smartTranslateTo(mSmartTextView.getTranslationX() - distanceX
-//                , mSmartTextView.getTranslationY() - distanceY);
-//        mLinesView.smartTranslateTo(mLinesView.getTranslationX() - distanceX
-//                , mLinesView.getTranslationY() - distanceY);
-//        mDoodleView.smartTranslateTo(mDoodleView.getTranslationX() - distanceX
-//                , mDoodleView.getTranslationY() - distanceY);
-        mSmartTextView.smartTranslateBy(-distanceX, -distanceY);
-        mLinesView.smartTranslateBy(-distanceX, -distanceY);
-        mDoodleView.smartTranslateBy(-distanceX, -distanceY);
+        mSmartTextView.smartTranslateTo(translateX, translateY);
+        mLinesView.smartTranslateTo(translateX, translateY);
+        mDoodleView.smartTranslateTo(translateX, translateY);
+    }
+
+    /**
+     * 写字板，涂鸦层和背景线条的移动
+     * */
+    private void doTranslateBy(float distanceX, float distanceY) {
+        mSmartTextView.smartTranslateBy(distanceX, distanceY);
+        mLinesView.smartTranslateBy(distanceX, distanceY);
+        mDoodleView.smartTranslateBy(distanceX, distanceY);
     }
 
     @Override
@@ -444,6 +492,8 @@ public class SmartHandNoteView extends FrameLayout {
     }
 
     public void test() {
+        Matrix matrix = mSmartTextView.getMatrix();
+//        Matrix matrix1 = new Matrix();
         logView(mLinesView);
         logView(mSmartTextView);
     }
@@ -452,6 +502,9 @@ public class SmartHandNoteView extends FrameLayout {
         float scaleX = v.getScaleX();
         float translationX = v.getTranslationX();
         float translationY = v.getTranslationY();
+        float pivotX = v.getPivotX();
+        float pivotY = v.getPivotY();
         LogUtil.e(TAG, v.getClass().getSimpleName() + " == scale = " + scaleX + ", translationX = " + translationX + " , translationY = " + translationY);
+        LogUtil.e(TAG, v.getClass().getSimpleName() + " pivotX = " + pivotX + ", pivotY = " + pivotY);
     }
 }
