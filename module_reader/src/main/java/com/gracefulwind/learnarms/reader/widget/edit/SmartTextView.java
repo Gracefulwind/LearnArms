@@ -3,6 +3,7 @@ package com.gracefulwind.learnarms.reader.widget.edit;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 import android.text.Editable;
@@ -17,9 +18,13 @@ import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.reader.widget.Smartable;
+import com.gracefulwind.learnarms.reader.widget.TestFrameLayout;
 
 /**
  * @ClassName: SmartTextView
@@ -33,12 +38,14 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
+public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView implements Smartable {
     public static final String TAG = SmartTextView.class.getName();
 
+    private  boolean mNeedLines = false;
     private final TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private int width;
     private int height;
+    private OnSizeChangeListener mOnSizeChangeListener;
 
     public SmartTextView(Context context) {
         this(context, null);
@@ -175,8 +182,19 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
 //                    + " }        { new w,h = " +  w + "," + h);
         this.width = w;
         this.height = h;
+        if(null != mOnSizeChangeListener){
+            mOnSizeChangeListener.onSizeChange(w, h, oldw, oldh);
+        }
         int lineHeight = getLineHeight();
         float fontHeight = getFontHeight(getTextSize());
+//        ViewParent parent = getParent();
+//        if(parent instanceof TestFrameLayout){
+//            TestFrameLayout transParent = (TestFrameLayout) parent;
+//            int parentHeight= transParent.getHeight();
+//            if(h > parentHeight){
+//                scrollBy(0, lineHeight);
+//            }
+//        }
 //        LogUtil.e(TAG, "lineHeight = " + lineHeight + ",  fontHeight = " + fontHeight);
 //        if(h - oldh == lineHeight){
 //            ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -187,6 +205,9 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if(!mNeedLines){
+            return;
+        }
         //do my works
         paint.setStyle(Paint.Style.FILL);
         //todo:wd 这里是凑巧等于-1还是系统设置的-1?
@@ -297,18 +318,60 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         if(isEnabled()){
             boolean b = super.onTouchEvent(event);
-            LogUtil.e(TAG, "Touch event" + event.getAction() + " , result = " + b);
-//            if(event.getAction() == MotionEvent.ACTION_DOWN){
-//                getParent().requestDisallowInterceptTouchEvent(true);
-//            }
-//            return true;
             return b;
         }else {
-            LogUtil.e(TAG, "Touch event" + event.getAction() + " , unEnable ==");
             return false;
         }
+    }
+
+    public void setNeedLInes(boolean needLines){
+        mNeedLines = needLines;
+    }
+
+    public boolean isNeedLines(){
+        return mNeedLines;
+    }
+
+    public void setOnSizeChangedListener(OnSizeChangeListener onSizeChangeListener){
+        mOnSizeChangeListener = onSizeChangeListener;
+    }
+
+    @Override
+    public void setViewHeightWithTextView(int textviewHeight) {
+        //smartTextView doesn't need to do anything for it self!
+    }
+
+    float translateX,translateY;
+
+    @Override
+    public void smartTranslateTo(float translateX, float translateY) {
+//        setTranslationX(translateX);
+//        setTranslationY(translateY);
+        this.translateX = translateX;
+        this.translateY = translateY;
+        invalidate();
+    }
+
+    @Override
+    public void smartTranslateBy(float dX, float dY) {
+        setTranslationX(getTranslationX() + dX);
+        setTranslationY(getTranslationY() + dY);
+//        this.translateX += dX;
+//        this.translateY += dY;
+//        invalidate();
+    }
+
+    @Override
+    public void smartScaleTo(float pivotX, float pivotY, float scaleX, float scaleY) {
+        setPivotX(pivotX);
+        setPivotY(pivotY);
+        setScaleX(scaleX);
+        setScaleY(scaleY);
+    }
+
+    public interface OnSizeChangeListener{
+        void onSizeChange(int w, int h, int oldw, int oldh);
     }
 }

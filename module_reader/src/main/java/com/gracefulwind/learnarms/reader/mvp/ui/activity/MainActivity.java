@@ -120,7 +120,7 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
 //==================================================================================================
     @OnClick({R2.id.ram_tv_clcik1, R2.id.ram_tv_clcik2, R2.id.ram_tv_clcik3,
             R2.id.ram_tv_clcik4, R2.id.ram_tv_clcik5, R2.id.ram_tv_clcik6,
-            R2.id.ram_tv_go_doodle, R2.id.ram_tv_go_hand, R2.id.ram_btn_ges})
+            R2.id.ram_tv_go_doodle, R2.id.ram_tv_go_hand, R2.id.ram_btn_ges, R2.id.ram_btn_hand_note})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.ram_tv_clcik1 == id){
@@ -185,6 +185,8 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
             ARouter.getInstance().build(RouterHub.Reader.HAND_WRITE_ACTIVITY).navigation();
         }else if(R.id.ram_btn_ges == id){
             ARouter.getInstance().build(RouterHub.Reader.TEST_GESTURE_ACTIVITY).navigation();
+        }else if(R.id.ram_btn_hand_note == id){
+            ARouter.getInstance().build(RouterHub.Reader.HAND_NOTE_ACTIVITY).navigation();
         }
     }
 

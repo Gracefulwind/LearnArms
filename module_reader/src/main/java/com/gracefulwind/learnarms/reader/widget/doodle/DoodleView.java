@@ -12,8 +12,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
+import com.gracefulwind.learnarms.reader.widget.Smartable;
 
 /**
  * @ClassName: DoodleView
@@ -26,7 +29,7 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class DoodleView extends View {
+public class DoodleView extends View implements Smartable {
     public static final String TAG = "DoodleView";
 
     private OperationPresenter mPresenter;
@@ -68,8 +71,6 @@ public class DoodleView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         //当doodleView处于编辑状态时，屏蔽父类事件
         if(!isEnabled()){
-//            mControlParent.requestDisallowInterceptTouchEvent(false);
-//            super.onTouchEvent(event);
             return false;
         }
         if(null != mControlParent){
@@ -108,6 +109,37 @@ public class DoodleView extends View {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        ViewGroup parent = (ViewGroup) getParent();
+        if (parent instanceof SmartHandNoteView) {
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentWidth = parentView.getWidth();
+            int parentHeight = parentView.getHeight();
+//            int textViewWidth = parentView.getTextViewWidth();
+            int textViewHeight = parentView.getTextViewHeight();
+            int baseWidth = getWidth();
+            int baseHeight = getHeight();
+            float maxScaleRate = parentView.getMaxScaleRate();
+            //宽
+            if ((parentWidth * maxScaleRate) != baseWidth) {
+                ViewGroup.LayoutParams layoutParams = getLayoutParams();
+                layoutParams.width = (int) (parentWidth * maxScaleRate);
+                setLayoutParams(layoutParams);
+                setTranslationX(-parentWidth);
+            }
+            //高
+            ViewGroup.LayoutParams layoutParams = getLayoutParams();
+            if (textViewHeight > parentHeight && baseHeight != textViewHeight) {
+                layoutParams.height = textViewHeight;
+            } else {
+                layoutParams.height = parentHeight;
+            }
+            setLayoutParams(layoutParams);
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         float scaleX = getScaleX();
@@ -120,6 +152,43 @@ public class DoodleView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mPresenter.changeSize(w, h, oldw, oldh);
+    }
+
+    @Override
+    public void setViewHeightWithTextView(int textviewHeight) {
+        int height = getHeight();
+        if(textviewHeight > height){
+            ViewGroup.LayoutParams layoutParams = getLayoutParams();
+            layoutParams.height = textviewHeight;
+            setLayoutParams(layoutParams);
+        }
+    }
+
+    @Override
+    public void smartTranslateTo(float translateX, float translateY) {
+        setTranslationX(translateX);
+        setTranslationY(translateY);
+    }
+
+    @Override
+    public void smartTranslateBy(float dX, float dY) {
+        setTranslationX(getTranslationX() + dX);
+        setTranslationY(getTranslationY() + dY);
+    }
+
+    @Override
+    public void smartScaleTo(float pivotX, float pivotY, float scaleX, float scaleY) {
+        ViewParent parent = getParent();
+        if(parent instanceof SmartHandNoteView){
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentWidth = parentView.getWidth();
+            setPivotX(parentWidth + pivotX);
+        }else {
+            setPivotX(pivotX);
+        }
+        setPivotY(pivotY);
+        setScaleX(scaleX);
+        setScaleY(scaleY);
     }
 
     //====================================================================================================
