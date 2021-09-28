@@ -263,7 +263,7 @@ public class DoodleView extends View implements Smartable {
         mPresenter.setPaintSize(paintSize);
     }
 
-    public int getPaintSize(){
+    public float getPaintSize(){
         return mPresenter.getPaintSize();
     }
 

@@ -55,7 +55,7 @@ public class OperationPresenter {
     /**
      * 粗细
      * */
-    private int mPaintWidth = 10;
+    private float mPaintWidth = 10;
 
     private float mPrevX;
     private float mPrevY;
@@ -219,7 +219,7 @@ public class OperationPresenter {
         this.mPaintWidth = paintSize;
     }
 
-    public int getPaintSize(){
+    public float getPaintSize(){
         return mPaintWidth;
     }
 
