@@ -12,7 +12,7 @@ package com.gracefulwind.learnarms.reader.widget;
  * @Email: 429344332@qq.com
  */
 public interface Smartable {
-    void setViewHeightWithTextView(int textviewHeight);
+    void setViewHeightWithTextView(int textViewHeight);
     void smartTranslateTo(float translateX, float translateY);
     void smartTranslateBy(float dX, float dY);
     void smartScaleTo(float pivotX, float pivotY, float scaleX, float scaleY);

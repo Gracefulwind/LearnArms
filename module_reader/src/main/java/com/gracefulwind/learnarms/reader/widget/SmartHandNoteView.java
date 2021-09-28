@@ -180,34 +180,44 @@ public class SmartHandNoteView extends FrameLayout {
 //                    LogUtil.e(TAG, "distanceX = " + realX);
                     mDistanceX += realX;
                     mDistanceY += realY;
-                    float width = mSmartTextView.getWidth();
-                    float height = mSmartTextView.getHeight();
+                    float textWidth = mSmartTextView.getWidth();
+                    float textHeight = mSmartTextView.getHeight();
+                    float lineHeight = mLinesView.getHeight();
                     float noteHeight = getHeight();
-                    float px = mSmartTextView.getPivotX();
-                    float py = mSmartTextView.getPivotY();
+                    float textPx = mSmartTextView.getPivotX();
+                    float textPy = mSmartTextView.getPivotY();
+                    float linePx = mLinesView.getPivotX();
+                    float linePy = mLinesView.getPivotY();
+//                    LogUtil.e(TAG, "textPx + textWidth = " + (textPx + textWidth) + " , linePx = " + linePx);
                     //控制左滑
-                    float maxDistanceX = (px + width) * mLastScale - px;
+                    float maxDistanceX = (textPx + textWidth) * mLastScale - textPx;
                     if(mDistanceX > maxDistanceX){
                         mDistanceX = maxDistanceX;
                     }
-                    float minDistanceX = width - px - (2 * width - px) * mLastScale;
+                    float minDistanceX = textWidth - textPx - (2 * textWidth - textPx) * mLastScale;
                     if(mDistanceX < minDistanceX){
                         mDistanceX = minDistanceX;
                     }
-                    float maxDistanceY = py * mLastScale - py;
+                    float maxDistanceY = linePy * mLastScale - linePy;
+                    float tempY = mDistanceY;
                     if(mDistanceY > maxDistanceY){
                         mDistanceY = maxDistanceY;
                     }
-                    if(height * mLastScale > noteHeight){
-                        float minDistanceY = noteHeight - py - (height - py) * mLastScale;
-                        if(mDistanceY < minDistanceY){
-                            mDistanceY = minDistanceY;
-                        }
-//                        LogUtil.e(TAG, "min");
-                    }else {
-                        mDistanceY = maxDistanceY;
+//                    if(textHeight * mLastScale > noteHeight){
+//                        float minDistanceY = noteHeight - textPy - (textHeight - textPy) * mLastScale;
+//                        if(mDistanceY < minDistanceY){
+//                            mDistanceY = minDistanceY;
+//                        }
+////                        LogUtil.e(TAG, "min");
+//                    }else {
+//                        mDistanceY = maxDistanceY;
+//                    }
+                    float minDistanceY = noteHeight - linePy - (lineHeight - linePy) * mLastScale;
+                    if(mDistanceY < minDistanceY){
+                        mDistanceY = minDistanceY;
                     }
-
+                    LogUtil.e(TAG, "maxDistanceY = " + maxDistanceY + " , minDistanceY = " + minDistanceY
+                        + " , tempY = " + tempY + " , targetY = " + mDistanceY);
 //                    if(mDistanceX)
                     //两个均可，用To方法方便控制最大距离
                     doTranslateTo(mDistanceX, mDistanceY);
@@ -295,17 +305,20 @@ public class SmartHandNoteView extends FrameLayout {
 
     /**
      *
-     * 控制光标
+     * 控制光标,这里是否可以移动光标，同时不用系统scroll?
      *
      * */
     @Override
     public boolean requestChildRectangleOnScreen(View child, Rect rectangle,
                                                  boolean immediate) {
-        // offset into coordinate space of this scroll view
-        rectangle.offset(child.getLeft() - child.getScrollX(),
-                child.getTop() - child.getScrollY());
-
-        return scrollToChildRect(rectangle, immediate);
+//        // offset into coordinate space of this scroll view
+//        rectangle.offset(child.getLeft() - child.getScrollX(),
+//                child.getTop() - child.getScrollY());
+//
+//        return scrollToChildRect(rectangle, immediate);
+        //TODO:wd 这里原来是算出Y偏移量并scroll的，现在我们不实用scroll，所以用矩阵算出translateY及scaleY的联动，然后手动translate
+//        LogUtil.e(TAG, "requestChildRectangleOnScreen == child.getScrollX() = " + child.getScrollX() + " , child.getScrollY() = " + child.getScrollY());
+        return false;
     }
 
     /**
@@ -315,6 +328,7 @@ public class SmartHandNoteView extends FrameLayout {
      * @param rect      The rectangle.
      * @param immediate True to scroll immediately without animation
      * @return true if scrolling was performed
+     * todo:wd 回头把这里的scroll替换成smartTranslateBy
      */
     private boolean scrollToChildRect(Rect rect, boolean immediate) {
         final int delta = computeScrollDeltaToGetChildRectOnScreen(rect);
@@ -479,6 +493,14 @@ public class SmartHandNoteView extends FrameLayout {
         return mSmartTextView.getHeight();
     }
 
+    public float getScaledTextViewWidth() {
+        return mSmartTextView.getWidth() * maxScaleRate;
+    }
+
+    public float getScaledTextViewHeight() {
+        return mSmartTextView.getHeight() * maxScaleRate;
+    }
+
     /**
     * 最大缩放比例的入口
     * */
@@ -493,6 +515,7 @@ public class SmartHandNoteView extends FrameLayout {
 
     public void test() {
         Matrix matrix = mSmartTextView.getMatrix();
+        Matrix matrix1 = mLinesView.getMatrix();
 //        Matrix matrix1 = new Matrix();
         logView(mLinesView);
         logView(mSmartTextView);

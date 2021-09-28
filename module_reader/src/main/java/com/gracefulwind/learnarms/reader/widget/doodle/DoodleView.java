@@ -118,10 +118,10 @@ public class DoodleView extends View implements Smartable {
             SmartHandNoteView parentView = (SmartHandNoteView) parent;
             int parentWidth = parentView.getWidth();
             int parentHeight = parentView.getHeight();
-//            int textViewWidth = parentView.getTextViewWidth();
             int textViewHeight = parentView.getTextViewHeight();
             int baseWidth = getWidth();
             int baseHeight = getHeight();
+//            LogUtil.e(TAG, "baseHeight = " + baseHeight + " , parentHeight = " + parentHeight);
             float maxScaleRate = parentView.getMaxScaleRate();
             //宽
             if ((parentWidth * maxScaleRate) != baseWidth) {
@@ -129,14 +129,13 @@ public class DoodleView extends View implements Smartable {
                 layoutParams.width = (int) (parentWidth * maxScaleRate);
                 setLayoutParams(layoutParams);
                 setTranslationX(-parentWidth);
-//                setTranslationX(-parentWidth * getScaleX());
             }
             //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if (textViewHeight > parentHeight && baseHeight != textViewHeight) {
+            if(textViewHeight > parentHeight * maxScaleRate){
                 layoutParams.height = textViewHeight;
-            } else {
-                layoutParams.height = parentHeight;
+            }else {
+                layoutParams.height = (int) (parentHeight * maxScaleRate);
             }
             setLayoutParams(layoutParams);
         }
@@ -174,11 +173,21 @@ public class DoodleView extends View implements Smartable {
     }
 
     @Override
-    public void setViewHeightWithTextView(int textviewHeight) {
+    public void setViewHeightWithTextView(int textViewHeight) {
         int height = getHeight();
-        if(textviewHeight > height){
+        ViewParent parent = getParent();
+        if (parent instanceof SmartHandNoteView) {
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentHeight = parentView.getHeight();
+            int baseHeight = getHeight();
+            float maxScaleRate = parentView.getMaxScaleRate();
+            //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            layoutParams.height = textviewHeight;
+            if(textViewHeight > parentHeight * maxScaleRate){
+                layoutParams.height = textViewHeight;
+            }else {
+                layoutParams.height = (int) (parentHeight * maxScaleRate);
+            }
             setLayoutParams(layoutParams);
         }
     }

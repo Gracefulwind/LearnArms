@@ -89,10 +89,10 @@ public class LinesView extends View implements Smartable{
             SmartHandNoteView parentView = (SmartHandNoteView) parent;
             int parentWidth = parentView.getWidth();
             int parentHeight = parentView.getHeight();
-            int textViewWidth = parentView.getTextViewWidth();
             int textViewHeight = parentView.getTextViewHeight();
             int baseWidth = getWidth();
             int baseHeight = getHeight();
+            LogUtil.e(TAG, "onLayout baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
             float maxScaleRate = parentView.getMaxScaleRate();
             //宽
             if ((parentWidth * maxScaleRate) != baseWidth) {
@@ -103,10 +103,10 @@ public class LinesView extends View implements Smartable{
             }
             //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if(textViewHeight > parentHeight && baseHeight != textViewHeight){
+            if(textViewHeight > parentHeight * maxScaleRate){
                 layoutParams.height = textViewHeight;
             }else {
-                layoutParams.height = parentHeight;
+                layoutParams.height = (int) (parentHeight * maxScaleRate);
             }
             setLayoutParams(layoutParams);
 //            ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -151,13 +151,30 @@ public class LinesView extends View implements Smartable{
     }
 
     @Override
-    public void setViewHeightWithTextView(int textviewHeight) {
+    public void setViewHeightWithTextView(int textViewHeight) {
         int height = getHeight();
-        if(textviewHeight > height){
+        ViewParent parent = getParent();
+        if (parent instanceof SmartHandNoteView) {
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentHeight = parentView.getHeight();
+            int baseHeight = getHeight();
+            float maxScaleRate = parentView.getMaxScaleRate();
+            //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            layoutParams.height = textviewHeight;
+            LogUtil.e(TAG, "setViewHeight baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
+            if(textViewHeight > parentHeight * maxScaleRate){
+                layoutParams.height = textViewHeight;
+            }else {
+                layoutParams.height = (int) (parentHeight * maxScaleRate);
+            }
             setLayoutParams(layoutParams);
         }
+//        float scaledTextHeight = textviewHeight * maxScaleRatio;
+//        if(scaledTextHeight > height){
+//            ViewGroup.LayoutParams layoutParams = getLayoutParams();
+//            layoutParams.height = (int) scaledTextHeight;
+//            setLayoutParams(layoutParams);
+//        }
     }
 
     /**

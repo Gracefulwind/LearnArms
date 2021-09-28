@@ -96,7 +96,7 @@ public class OperationPresenter {
     }
 
     public void createCacheBitmap(int width, int height) {
-        cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
         cacheCanvas = new Canvas(cacheBitmap);
     }
 
@@ -111,7 +111,7 @@ public class OperationPresenter {
     }
 
     public void createHoldBitmap(int width, int height) {
-        holdBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        holdBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
         holdCanvas = new Canvas(holdBitmap);
     }
 
@@ -322,7 +322,7 @@ public class OperationPresenter {
     }
 
     private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
-        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);//大图高宽
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);//大图高宽
         cacheCanvas = new Canvas(newBitmap);
 //        cacheCanvas.setBitmap(newBitmap);
         cacheCanvas.drawBitmap(cacheBitmap, 0, 0, null);
@@ -330,7 +330,7 @@ public class OperationPresenter {
     }
 
     private void changeHolderBitmap(int w, int h, int oldw, int oldh) {
-        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);//大图高宽
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);//大图高宽
         holdCanvas = new Canvas(newBitmap);
 //        holdCanvas.setBitmap(newBitmap);
         holdCanvas.drawBitmap(holdBitmap, 0, 0, null);
