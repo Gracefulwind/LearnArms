@@ -245,7 +245,6 @@ public class OperationPresenter {
             Operation remove = mOperationList.remove(0);
             holdCanvas.drawPath(remove.path, remove.paint);
         }
-
         cacheCanvas.drawBitmap(holdBitmap, 0f,0f,null);
         for(Operation op : mOperationList){
             cacheCanvas.drawPath(op.path, op.paint);

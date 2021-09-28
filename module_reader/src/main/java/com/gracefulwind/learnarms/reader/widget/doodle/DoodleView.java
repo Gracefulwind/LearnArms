@@ -71,7 +71,7 @@ public class DoodleView extends View implements Smartable {
     public boolean onTouchEvent(MotionEvent event) {
         //当doodleView处于编辑状态时，屏蔽父类事件
         int logE = event.getActionIndex();
-        LogUtil.e(TAG, "onTouchEvent event = " + event.getActionMasked() + " , toolType = " + event.getToolType(logE));
+//        LogUtil.e(TAG, "onTouchEvent event = " + event.getActionMasked() + " , toolType = " + event.getToolType(logE));
         if(!isEnabled()){
             return false;
         }
@@ -128,7 +128,7 @@ public class DoodleView extends View implements Smartable {
                 ViewGroup.LayoutParams layoutParams = getLayoutParams();
                 layoutParams.width = (int) (parentWidth * maxScaleRate);
                 setLayoutParams(layoutParams);
-                setTranslationX(-parentWidth);
+                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
             }
             //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -197,8 +197,9 @@ public class DoodleView extends View implements Smartable {
         ViewParent parent = getParent();
         if(parent instanceof SmartHandNoteView){
             SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
-            setTranslationX(-parentWidth + translateX);
+            float maxScaleRate = parentView.getMaxScaleRate();
+            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
+            setTranslationX(-dWidth + translateX);
         }else {
             setTranslationX(translateX);
         }

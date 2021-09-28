@@ -92,14 +92,14 @@ public class LinesView extends View implements Smartable{
             int textViewHeight = parentView.getTextViewHeight();
             int baseWidth = getWidth();
             int baseHeight = getHeight();
-            LogUtil.e(TAG, "onLayout baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
+//            LogUtil.e(TAG, "onLayout baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
             float maxScaleRate = parentView.getMaxScaleRate();
             //宽
             if ((parentWidth * maxScaleRate) != baseWidth) {
                 ViewGroup.LayoutParams layoutParams = getLayoutParams();
                 layoutParams.width = (int) (parentWidth * maxScaleRate);
                 setLayoutParams(layoutParams);
-                setTranslationX(-parentWidth);
+                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
             }
             //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -161,7 +161,7 @@ public class LinesView extends View implements Smartable{
             float maxScaleRate = parentView.getMaxScaleRate();
             //高
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            LogUtil.e(TAG, "setViewHeight baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
+//            LogUtil.e(TAG, "setViewHeight baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
             if(textViewHeight > parentHeight * maxScaleRate){
                 layoutParams.height = textViewHeight;
             }else {
@@ -198,8 +198,9 @@ public class LinesView extends View implements Smartable{
         ViewParent parent = getParent();
         if(parent instanceof SmartHandNoteView){
             SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
-            setTranslationX(-parentWidth + translateX);
+            float maxScaleRate = parentView.getMaxScaleRate();
+            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
+            setTranslationX(-dWidth + translateX);
         }else {
             setTranslationX(translateX);
         }

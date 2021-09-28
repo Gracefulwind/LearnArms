@@ -48,7 +48,7 @@ public class SmartHandNoteView extends FrameLayout {
 
     private TouchGestureDetector mGestureDetector;
     //最大缩放比例,最好别动
-    float maxScaleRate = 3f;
+    float maxScaleRate = 2f;
     //最小响应缩放比例,最好别动
     float minScaleResponse = 0.05f;
     //最小响应滑动距离(的平方)
@@ -112,7 +112,7 @@ public class SmartHandNoteView extends FrameLayout {
         //=====test======
         mSmartTextView.setBackgroundColor(Color.parseColor("#A003aF30"));
         mLinesView.setBackgroundColor(Color.parseColor("#A0a03030"));
-        mDoodleView.setBackgroundColor(Color.parseColor("#083030F0"));
+//        mDoodleView.setBackgroundColor(Color.parseColor("#083030F0"));
     }
 
     /**
@@ -131,8 +131,8 @@ public class SmartHandNoteView extends FrameLayout {
                 focusX = detector.getFocusX();
                 focusY = detector.getFocusY();
 //                LogUtil.e(TAG, "onScaleBegin: focusX = " + focusX + " , focusY " + focusY);
-                float realX = (focusX - mDistanceX) / mLastScale;
-                float realY = (focusY - mDistanceY) / mLastScale;
+//                float realX = (focusX - mDistanceX) / mLastScale;
+//                float realY = (focusY - mDistanceY) / mLastScale;
                 return true;
             }
 
@@ -181,20 +181,21 @@ public class SmartHandNoteView extends FrameLayout {
                     mDistanceX += realX;
                     mDistanceY += realY;
                     float textWidth = mSmartTextView.getWidth();
-                    float textHeight = mSmartTextView.getHeight();
+                    //基于缩放比例的左/右偏移量
+                    float realOutWidth = ((maxScaleRate - 1) / 2) * textWidth;
+//                    float textHeight = mSmartTextView.getHeight();
                     float lineHeight = mLinesView.getHeight();
                     float noteHeight = getHeight();
                     float textPx = mSmartTextView.getPivotX();
-                    float textPy = mSmartTextView.getPivotY();
-                    float linePx = mLinesView.getPivotX();
+//                    float textPy = mSmartTextView.getPivotY();
+//                    float linePx = mLinesView.getPivotX();
                     float linePy = mLinesView.getPivotY();
-//                    LogUtil.e(TAG, "textPx + textWidth = " + (textPx + textWidth) + " , linePx = " + linePx);
                     //控制左滑
-                    float maxDistanceX = (textPx + textWidth) * mLastScale - textPx;
+                    float maxDistanceX = (textPx + realOutWidth) * mLastScale - textPx;
                     if(mDistanceX > maxDistanceX){
                         mDistanceX = maxDistanceX;
                     }
-                    float minDistanceX = textWidth - textPx - (2 * textWidth - textPx) * mLastScale;
+                    float minDistanceX = (textWidth - textPx) - (textWidth - textPx + realOutWidth) * mLastScale;
                     if(mDistanceX < minDistanceX){
                         mDistanceX = minDistanceX;
                     }
@@ -216,8 +217,8 @@ public class SmartHandNoteView extends FrameLayout {
                     if(mDistanceY < minDistanceY){
                         mDistanceY = minDistanceY;
                     }
-                    LogUtil.e(TAG, "maxDistanceY = " + maxDistanceY + " , minDistanceY = " + minDistanceY
-                        + " , tempY = " + tempY + " , targetY = " + mDistanceY);
+//                    LogUtil.e(TAG, "maxDistanceY = " + maxDistanceY + " , minDistanceY = " + minDistanceY
+//                        + " , tempY = " + tempY + " , targetY = " + mDistanceY);
 //                    if(mDistanceX)
                     //两个均可，用To方法方便控制最大距离
                     doTranslateTo(mDistanceX, mDistanceY);
@@ -273,7 +274,7 @@ public class SmartHandNoteView extends FrameLayout {
 //        layoutParams.width = 3 * width;
 //        mLinesView.setLayoutParams(layoutParams);
 //        mLinesView.scrollTo(width, 0);
-        LogUtil.e(TAG, "onMeasure, width = " + width + " , height = " + height);
+//        LogUtil.e(TAG, "onMeasure, width = " + width + " , height = " + height);
     }
 
 //    @Override
@@ -514,8 +515,7 @@ public class SmartHandNoteView extends FrameLayout {
     }
 
     public void test() {
-        Matrix matrix = mSmartTextView.getMatrix();
-        Matrix matrix1 = mLinesView.getMatrix();
+//        Matrix matrix1 = mLinesView.getMatrix();
 //        Matrix matrix1 = new Matrix();
         logView(mLinesView);
         logView(mSmartTextView);
@@ -527,7 +527,11 @@ public class SmartHandNoteView extends FrameLayout {
         float translationY = v.getTranslationY();
         float pivotX = v.getPivotX();
         float pivotY = v.getPivotY();
+        int width = v.getWidth();
+        int height = v.getHeight();
+        Matrix matrix = v.getMatrix();
         LogUtil.e(TAG, v.getClass().getSimpleName() + " == scale = " + scaleX + ", translationX = " + translationX + " , translationY = " + translationY);
-        LogUtil.e(TAG, v.getClass().getSimpleName() + " pivotX = " + pivotX + ", pivotY = " + pivotY);
+        LogUtil.e(TAG, v.getClass().getSimpleName() + " pivotX = " + pivotX + ", pivotY = " + pivotY + " , width = " + width + " , height = " + height);
+        LogUtil.e(TAG, v.getClass().getSimpleName() + " matrix = " + matrix);
     }
 }
