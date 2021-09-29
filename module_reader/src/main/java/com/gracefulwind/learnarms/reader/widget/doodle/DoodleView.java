@@ -18,6 +18,8 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.reader.widget.Smartable;
 
+import java.util.List;
+
 /**
  * @ClassName: DoodleView
  * @Author: Gracefulwind
@@ -241,15 +243,15 @@ public class DoodleView extends View implements Smartable {
     /**
      * 撤销最后一笔
      * */
-    public void cancelLastDraw(){
-        mPresenter.cancelLastDraw();
+    public boolean cancelLastDraw(){
+        return mPresenter.cancelLastDraw();
     }
 
     /**
      * 撤回最后一次的撤销最后一笔
      * */
-    public void redoLastDraw(){
-        mPresenter.redoLastDraw();
+    public boolean redoLastDraw(){
+        return mPresenter.redoLastDraw();
     }
 
     public void setPaintColor(@ColorInt int paintColor){
@@ -260,7 +262,7 @@ public class DoodleView extends View implements Smartable {
         return mPresenter.getPaintColor();
     }
 
-    public void setPaintSize(int paintSize){
+    public void setPaintSize(float paintSize){
         mPresenter.setPaintSize(paintSize);
     }
 
@@ -275,10 +277,18 @@ public class DoodleView extends View implements Smartable {
         return mPresenter;
     }
 
+    public void setOnPathChangedListener(DoodleView.OnPathChangedListener listener){
+        mPresenter.setOnPathChangedListener(listener);
+    }
+
+    public DoodleView.OnPathChangedListener getOnPathChangedListener(){
+        return mPresenter.getOnPathChangedListener();
+    }
+
     public Bitmap saveAsBitmap(){
         Bitmap bmp = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bmp);
-        canvas.drawColor(Color.WHITE);
+//        canvas.drawColor(Color.WHITE);
         draw(canvas);
         return bmp;
     }
@@ -318,4 +328,8 @@ public class DoodleView extends View implements Smartable {
 //        }
 //        super.setEnabled(enabled);
 //    }
+    public interface OnPathChangedListener{
+        void onCancelListChanged(List<Operation> list);
+        void onRedoListChanged(List<Operation> list);
+    }
 }

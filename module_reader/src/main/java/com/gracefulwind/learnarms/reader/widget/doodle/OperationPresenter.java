@@ -7,8 +7,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import androidx.annotation.ColorInt;
 import android.widget.Toast;
+
+import androidx.annotation.ColorInt;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 
@@ -43,8 +44,8 @@ public class OperationPresenter {
 
     private int maxCancelTime = 20;
     private List<Operation> mOperationList = new ArrayList<>();
-    private List<Operation> mCancelList = new ArrayList<>();
-
+    private List<Operation> mRedoList = new ArrayList<>();
+    private DoodleView.OnPathChangedListener mOnPathChangedListener;
     /**
      * path
      * */
@@ -55,7 +56,7 @@ public class OperationPresenter {
     /**
      * 粗细
      * */
-    private float mPaintWidth = 10;
+    private float mPaintWidth = 10f;
 
     private float mPrevX;
     private float mPrevY;
@@ -215,7 +216,7 @@ public class OperationPresenter {
         return mPaintColor;
     }
 
-    public void setPaintSize(int paintSize){
+    public void setPaintSize(float paintSize){
         this.mPaintWidth = paintSize;
     }
 
@@ -226,6 +227,7 @@ public class OperationPresenter {
     private void saveOperation() {
         Operation operation = new Operation(mPath, mPaint);
         mOperationList.add(operation);
+        mOnPathChangedListener.onCancelListChanged(mOperationList);
     }
 
     /**
@@ -241,9 +243,14 @@ public class OperationPresenter {
         cacheCanvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
 //        cacheCanvas.drawColor(mBackgroundColor);
 //        cacheCanvas.drawColor(0xFF00f0f0);
+        boolean operationListChanged = false;
         while(mOperationList.size() > maxCancelTime){
+            operationListChanged = true;
             Operation remove = mOperationList.remove(0);
             holdCanvas.drawPath(remove.path, remove.paint);
+        }
+        if(operationListChanged && null != mOnPathChangedListener){
+            mOnPathChangedListener.onCancelListChanged(mOperationList);
         }
         cacheCanvas.drawBitmap(holdBitmap, 0f,0f,null);
         for(Operation op : mOperationList){
@@ -269,24 +276,28 @@ public class OperationPresenter {
     /**
      * 撤销最后一笔
      * */
-    public void cancelLastDraw(){
+    public boolean cancelLastDraw(){
         if(mOperationList.size() > 0){
             cancelDrawStep(mOperationList);
+            return true;
         }else {
             LogUtil.d(TAG, "can't cancelLastDraw");
             Toast.makeText(doodleView.getContext(), "无可撤销！", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
     /**
      * 撤回最后一次的撤销最后一笔
      * */
-    public void redoLastDraw(){
-        if(mCancelList.size() > 0){
-            cancelDrawStep(mCancelList);
+    public boolean redoLastDraw(){
+        if(mRedoList.size() > 0){
+            cancelDrawStep(mRedoList);
+            return true;
         }else {
             LogUtil.d(TAG, "can't redoLastDraw");
             Toast.makeText(doodleView.getContext(), "无可fan撤销！", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -294,9 +305,13 @@ public class OperationPresenter {
         if(list.size() > 0){
             Operation paint = list.remove(list.size() - 1);
             if(list == mOperationList){
-                mCancelList.add(paint);
+                mRedoList.add(paint);
             }else{
                 mOperationList.add(paint);
+            }
+            if(null != mOnPathChangedListener){
+                mOnPathChangedListener.onCancelListChanged(mOperationList);
+                mOnPathChangedListener.onRedoListChanged(mRedoList);
             }
 //            //清空缓存画板
 //            cacheCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
@@ -306,12 +321,18 @@ public class OperationPresenter {
 
 
     private void clearRedoList(){
-        mCancelList.clear();
+        mRedoList.clear();
+        mOnPathChangedListener.onRedoListChanged(mRedoList);
+    }
+
+    private void clearOperationList(){
+        mOperationList.clear();
+        mOnPathChangedListener.onCancelListChanged(mOperationList);
     }
 
     private void clearAllL(){
-        mOperationList.clear();
-        mCancelList.clear();
+        clearRedoList();
+        clearOperationList();
         doodleView.invalidate();
     }
 
@@ -336,5 +357,11 @@ public class OperationPresenter {
         holdBitmap = newBitmap;
     }
 
+    public void setOnPathChangedListener(DoodleView.OnPathChangedListener listener){
+        mOnPathChangedListener = listener;
+    }
 
+    public DoodleView.OnPathChangedListener getOnPathChangedListener(){
+        return mOnPathChangedListener;
+    }
 }

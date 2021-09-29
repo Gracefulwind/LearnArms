@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F0F030"
     >
 
 <!--    测试按钮-->
@@ -70,6 +71,8 @@
     <com.gracefulwind.learnarms.reader.widget.SmartHandNoteView
         android:id="@+id/rahn_shn_hand_note"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+
+        />
 
 </LinearLayout>
