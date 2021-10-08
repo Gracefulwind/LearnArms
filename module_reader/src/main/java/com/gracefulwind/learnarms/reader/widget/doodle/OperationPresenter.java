@@ -1,18 +1,26 @@
 package com.gracefulwind.learnarms.reader.widget.doodle;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 
+import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +105,7 @@ public class OperationPresenter {
     }
 
     public void createCacheBitmap(int width, int height) {
-        cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        cacheBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
         cacheCanvas = new Canvas(cacheBitmap);
     }
 
@@ -112,7 +120,7 @@ public class OperationPresenter {
     }
 
     public void createHoldBitmap(int width, int height) {
-        holdBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        holdBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
         holdCanvas = new Canvas(holdBitmap);
     }
 
@@ -342,7 +350,7 @@ public class OperationPresenter {
     }
 
     private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
-        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);//大图高宽
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
         cacheCanvas = new Canvas(newBitmap);
 //        cacheCanvas.setBitmap(newBitmap);
         cacheCanvas.drawBitmap(cacheBitmap, 0, 0, null);
@@ -350,7 +358,7 @@ public class OperationPresenter {
     }
 
     private void changeHolderBitmap(int w, int h, int oldw, int oldh) {
-        Bitmap newBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);//大图高宽
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
         holdCanvas = new Canvas(newBitmap);
 //        holdCanvas.setBitmap(newBitmap);
         holdCanvas.drawBitmap(holdBitmap, 0, 0, null);
@@ -363,5 +371,59 @@ public class OperationPresenter {
 
     public DoodleView.OnPathChangedListener getOnPathChangedListener(){
         return mOnPathChangedListener;
+    }
+
+    public Bitmap getBitmap() {
+//        cacheBitmap
+//        return Bitmap.createBitmap(cacheBitmap.getWidth(), cacheBitmap.getHeight(), Constants.bitmapQuality);
+        int width = doodleView.getWidth();
+        int height = doodleView.getHeight();
+
+//        int[] colors = new int[width * height];
+//        for (int i = 0; i < colors.length; i++){
+//            colors[i] = Color.parseColor("#FFFFFF");
+//        }
+//        Bitmap bitmap = Bitmap.createBitmap(colors, doodleView.getWidth(), doodleView.getHeight(), Constants.bitmapQuality);
+//        BitmapFactory.
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
+        Canvas canvas = new Canvas(bitmap);
+//        doodleView.draw(canvas);
+        canvas.drawBitmap(cacheBitmap,0f,0f,null);
+        return bitmap;
+
+
+        //===================================================
+//        try {
+//            Bitmap bitmap = cacheBitmap;
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+//            File cacheDir = null;
+//            //存在picture文件夹下,google推荐的方式怎么说呢。。。至少vivo手机的图库里拿不到
+//            cacheDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//            String bitmapName =System.currentTimeMillis() + ".jpg";
+//            byte[] buffer = bos.toByteArray();
+//            if (buffer != null) {
+//                File file = new File(cacheDir, bitmapName);
+//                if (file.exists()) {
+//                    file.delete();
+//                }
+//                OutputStream outputStream = new FileOutputStream(file);
+//                outputStream.write(buffer);
+//                outputStream.close();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        clearAllL();
+        holdBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
+        holdCanvas = new Canvas(holdBitmap);
+        holdCanvas.drawBitmap(bitmap, 0f, 0f, null);
     }
 }

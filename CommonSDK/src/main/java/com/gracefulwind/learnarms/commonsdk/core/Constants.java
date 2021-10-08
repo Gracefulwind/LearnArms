@@ -16,6 +16,7 @@
 package com.gracefulwind.learnarms.commonsdk.core;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 /**
  * ================================================
@@ -29,6 +30,8 @@ import android.app.Activity;
 public class Constants {
     //电话号码正则
     public static String PHONE_REGULAR = "^1[3-9]\\d{9}$";
+
+    public static Bitmap.Config bitmapQuality = Bitmap.Config.ARGB_4444;
 
     public interface KEY{
         String HEFENG_KEY = "94c2ffc7db1949389f228612266fc7f8";

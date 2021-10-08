@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.media.MediaScannerConnection;
+import android.os.Environment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -91,6 +93,37 @@ public class BitmapUtil {
     }
 
 
+//    /**
+//     *
+//     * 保存bitmap到手机
+//     * */
+//    public static String saveBitmap(Context context, Bitmap bitmap){
+//        String savedPath = null;
+//        LogUtil.d(TAG, "saveBitmap");
+//        File externalCacheDir = context.getExternalCacheDir();
+//        File cacheDir = null;
+//        cacheDir = externalCacheDir.exists() ? externalCacheDir : context.getCacheDir();
+//        if(!cacheDir.exists()){
+//            //throw or toast?
+//        }
+//        String bitmapName =System.currentTimeMillis() + ".jpg";
+//        File savedFile = new File(cacheDir, bitmapName);
+//        FileOutputStream output = null;
+//        try {
+//            output = new FileOutputStream(savedFile);
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+//            output.flush();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            FileUtil.closeIO(output);
+//        }
+//        savedPath = savedFile.getAbsolutePath();
+//        return savedPath;
+//    }
+
     /**
      *
      * 保存bitmap到手机
@@ -100,25 +133,34 @@ public class BitmapUtil {
         LogUtil.d(TAG, "saveBitmap");
         File externalCacheDir = context.getExternalCacheDir();
         File cacheDir = null;
-        cacheDir = externalCacheDir.exists() ? externalCacheDir : context.getCacheDir();
+        //存在picture文件夹下,google推荐的方式怎么说呢。。。至少vivo手机的图库里拿不到
+        cacheDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        cacheDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        cacheDir = externalCacheDir.exists() ? externalCacheDir : context.getCacheDir();
         if(!cacheDir.exists()){
             //throw or toast?
+            return null;
         }
-        String bitmapName =System.currentTimeMillis() + ".jpg";
+        String bitmapName =System.currentTimeMillis() + ".png";
         File savedFile = new File(cacheDir, bitmapName);
         FileOutputStream output = null;
         try {
             output = new FileOutputStream(savedFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
             output.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            //
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            //
+            return null;
         }finally {
             FileUtil.closeIO(output);
         }
         savedPath = savedFile.getAbsolutePath();
+        MediaScannerConnection.scanFile(context, new String[]{savedPath}, null, null);
         return savedPath;
     }
 

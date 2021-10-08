@@ -1,9 +1,11 @@
 package com.gracefulwind.learnarms.reader.widget;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -17,10 +19,10 @@ import android.widget.OverScroller;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.EditMode;
-import com.gracefulwind.learnarms.reader.widget.doodle.OperationPresenter;
 import com.gracefulwind.learnarms.reader.widget.edit.SmartTextView;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +53,7 @@ public class SmartHandNoteView extends FrameLayout {
     private DoodleView mDoodleView;
 
     private TouchGestureDetector mGestureDetector;
+    private TouchGestureDetector mInterceptDetector;
     //最大缩放比例,最好别动
     float maxScaleRate = 2f;
     //最小响应缩放比例,最好别动
@@ -59,6 +62,8 @@ public class SmartHandNoteView extends FrameLayout {
     float minDisResponse = 3 * 3;
     float mLastScale = 1f;
     float mDistanceX = 0f, mDistanceY = 0f;
+    private float focusX;
+    private float focusY;
 //    private Matrix mMatrix = new Matrix();
 //    private float[] matrixValues = new float[9];
 //    boolean flag = true;
@@ -123,114 +128,51 @@ public class SmartHandNoteView extends FrameLayout {
      * 初始化手势器
      * */
     private void initGesture() {
-        mGestureDetector = new TouchGestureDetector(getContext(), new TouchGestureDetector.OnTouchGestureListener() {
+        mGestureDetector = new TouchGestureDetector(getContext(), new MyTouchControl());
+        mInterceptDetector = new TouchGestureDetector(getContext(), new MyTouchControl());
+    }
 
-            private float focusX;
-            private float focusY;
+    class MyTouchControl extends TouchGestureDetector.OnTouchGestureListener {
 
-
-            @Override
-            public boolean onScaleBegin(ScaleGestureDetectorApi27 detector) {
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetectorApi27 detector) {
 //                LogUtil.e(TAG, "onScaleBegin: " + detector.getScaleFactor());
-                //准心，回头再调了
-                float parentFocusX = detector.getFocusX();
-                float parentFocusY = detector.getFocusY();
-                float textTx = mSmartTextView.getTranslationX();
-                float textTy = mSmartTextView.getTranslationY();
-                float beginScale = detector.getScaleFactor();
-                focusX = parentFocusX / beginScale - textTx;
-                focusY = parentFocusY / beginScale - textTy;
+            //准心，回头再调了
+            float parentFocusX = detector.getFocusX();
+            float parentFocusY = detector.getFocusY();
+            float textTx = mSmartTextView.getTranslationX();
+            float textTy = mSmartTextView.getTranslationY();
+            float beginScale = detector.getScaleFactor();
+            focusX = parentFocusX / beginScale - textTx;
+            focusY = parentFocusY / beginScale - textTy;
 
 //                LogUtil.e(TAG, "onScaleBegin: focusX = " + focusX + " , focusY " + focusY);
 //                float realX = (focusX - mDistanceX) / mLastScale;
 //                float realY = (focusY - mDistanceY) / mLastScale;
-                return true;
-            }
+            return true;
+        }
 
-            @Override
-            public void onScaleEnd(ScaleGestureDetectorApi27 detector) {
+        @Override
+        public void onScaleEnd(ScaleGestureDetectorApi27 detector) {
 //                LogUtil.e(TAG, "onScaleEnd: " + detector.getScaleFactor());
-                //恢复4向多余量
-                scrollBy(0, 0);
-            }
+            //恢复4向多余量
+            scrollBy(0, 0);
+        }
 
-            @Override
-            public boolean onScale(ScaleGestureDetectorApi27 detector) { // 双指缩放中
-                float scaleFactor = detector.getScaleFactor();
-                float tempScale = mLastScale * scaleFactor;
-                if(scaleFactor < (1 + minScaleResponse) && scaleFactor > (1 - minScaleResponse)){
-                    return false;
-                }else {
-                    if(tempScale >= maxScaleRate){
-                        tempScale = maxScaleRate;
-                    }else if (tempScale <= 1 / maxScaleRate){
-                        tempScale = 1 / maxScaleRate;
-                    }
-                    //-------------
-                    float scaleX = mSmartTextView.getScaleX();
-                    float textTx = mSmartTextView.getTranslationX();
-                    float textTy = mSmartTextView.getTranslationY();
-                    int lineWidth = mLinesView.getWidth();
-                    float lineTx = mLinesView.getTranslationX();
-                    float lineTy = mLinesView.getTranslationY();
-                    float linePx = mLinesView.getPivotX();
-                    float linePy = mLinesView.getPivotY();
-                    float textPx = mSmartTextView.getPivotX();
-                    float textPy = mSmartTextView.getPivotY();
-                    int textWidth = mSmartTextView.getWidth();
-                    float outWidth = ((maxScaleRate - 1) / 2) * textWidth;
-                    LogUtil.e(TAG, "textTx = " + textTx + ", textPx = " + textPx +  " , scale = " + tempScale);
-//                    //先右边界
-//                    scaleManagerRight(tempScale);
-//                    //再左边界
-//                    scaleManagerLeft(tempScale);
-//                    //先上边界
-//                    scaleManagerTop(tempScale, textTy, textPy);
-                    doScale(focusX, focusY, tempScale);
-//                    mLastScale = tempScale;
-                    return true;
+        @Override
+        public boolean onScale(ScaleGestureDetectorApi27 detector) { // 双指缩放中
+            float scaleFactor = detector.getScaleFactor();
+            float tempScale = mLastScale * scaleFactor;
+            if(scaleFactor < (1 + minScaleResponse) && scaleFactor > (1 - minScaleResponse)){
+                return false;
+            }else {
+                if(tempScale >= maxScaleRate){
+                    tempScale = maxScaleRate;
+                }else if (tempScale <= 1 / maxScaleRate){
+                    tempScale = 1 / maxScaleRate;
                 }
-            }
-
-            private void scaleManagerTop(float tempScale, float textTy, float textPy) {
-                if(tempScale == 1){
-                    //正好缩成一倍时，如果textTx > outWidth,那么必然越界，否则必然不越界，此时和缩放中心无关了
-                    LogUtil.e(TAG, "top tempScale == 1");
-                }else {
-                    if((textPy * tempScale - textPy - textTy) < 0){
-                        double newPy = textTy / (tempScale - 1d);
-                        LogUtil.e(TAG, "top 在屏幕外，新py = " + newPy);
-//                            focusY = (float) newPy;
-                        focusY = 0;
-                    }else {
-                        LogUtil.e(TAG, "top 在屏幕内");
-                    }
-                }
-            }
-
-            private void scaleManagerRight(float tempScale) {
-                float textTx = mSmartTextView.getTranslationX();
-                float textPx = mSmartTextView.getPivotX();
-                int textWidth = mSmartTextView.getWidth();
-                float outWidth = ((maxScaleRate - 1) / 2) * textWidth;
-                //右边界
-                if(tempScale == 1){
-                    //正好缩成一倍时，如果textTx > outWidth,那么必然越界，否则必然不越界，此时和缩放中心无关了
-                    LogUtil.e(TAG, "right tempScale == 1");
-                }else {
-                    float tx = Math.abs(textTx);
-                    if((textWidth + outWidth - textPx) * tempScale - (textWidth - textPx + tx) < 0){
-                        double newPx = (outWidth * tempScale + textWidth * tempScale - textWidth - tx) / (tempScale - 1d);
-                        LogUtil.e(TAG, "right 在屏幕外，新px = " + newPx);
-//                        focusX = (float) newPx;
-                        focusX = textWidth + outWidth;
-                    }else {
-                        LogUtil.e(TAG, "right 在屏幕内");
-                    }
-                }
-            }
-
-            private void scaleManagerLeft(float tempScale) {
+                //-------------
+                float scaleX = mSmartTextView.getScaleX();
                 float textTx = mSmartTextView.getTranslationX();
                 float textTy = mSmartTextView.getTranslationY();
                 int lineWidth = mLinesView.getWidth();
@@ -242,89 +184,151 @@ public class SmartHandNoteView extends FrameLayout {
                 float textPy = mSmartTextView.getPivotY();
                 int textWidth = mSmartTextView.getWidth();
                 float outWidth = ((maxScaleRate - 1) / 2) * textWidth;
-                //处理左边界
-                if(tempScale == 1){
-                    //正好缩成一倍时，如果textTx > outWidth,那么必然越界，否则必然不越界，此时和缩放中心无关了
-                    LogUtil.e(TAG, "left tempScale == 1");
+                LogUtil.e(TAG, "textTx = " + textTx + ", textPx = " + textPx +  " , scale = " + tempScale);
+//                    //先右边界
+//                    scaleManagerRight(tempScale);
+//                    //再左边界
+//                    scaleManagerLeft(tempScale);
+//                    //先上边界
+//                    scaleManagerTop(tempScale, textTy, textPy);
+                doScale(focusX, focusY, tempScale);
+//                    mLastScale = tempScale;
+                return true;
+            }
+        }
+
+        private void scaleManagerTop(float tempScale, float textTy, float textPy) {
+            if(tempScale == 1){
+                //正好缩成一倍时，如果textTx > outWidth,那么必然越界，否则必然不越界，此时和缩放中心无关了
+                LogUtil.e(TAG, "top tempScale == 1");
+            }else {
+                if((textPy * tempScale - textPy - textTy) < 0){
+                    double newPy = textTy / (tempScale - 1d);
+                    LogUtil.e(TAG, "top 在屏幕外，新py = " + newPy);
+//                            focusY = (float) newPy;
+                    focusY = 0;
                 }else {
-                    if((outWidth * tempScale + textPx * (tempScale - 1) - textTx) < 0){
-                        double newPx = (textTx - outWidth * tempScale) / (tempScale - 1d);
-                        LogUtil.e(TAG, "left 在屏幕外，新px = " + newPx);
+                    LogUtil.e(TAG, "top 在屏幕内");
+                }
+            }
+        }
+
+        private void scaleManagerRight(float tempScale) {
+            float textTx = mSmartTextView.getTranslationX();
+            float textPx = mSmartTextView.getPivotX();
+            int textWidth = mSmartTextView.getWidth();
+            float outWidth = ((maxScaleRate - 1) / 2) * textWidth;
+            //右边界
+            if(tempScale == 1){
+                //正好缩成一倍时，如果textTx > outWidth,那么必然越界，否则必然不越界，此时和缩放中心无关了
+                LogUtil.e(TAG, "right tempScale == 1");
+            }else {
+                float tx = Math.abs(textTx);
+                if((textWidth + outWidth - textPx) * tempScale - (textWidth - textPx + tx) < 0){
+                    double newPx = (outWidth * tempScale + textWidth * tempScale - textWidth - tx) / (tempScale - 1d);
+                    LogUtil.e(TAG, "right 在屏幕外，新px = " + newPx);
 //                        focusX = (float) newPx;
-                        focusX = - outWidth;
-                    }else {
-                        LogUtil.e(TAG, "left 在屏幕内");
-                    }
-                }
-            }
-
-            //--------------------------------------------------------------------------------------
-            @Override
-            public void onScrollBegin(MotionEvent e) {
-                super.onScrollBegin(e);
-            }
-            //
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                //这里的distance是local - target的结果，所以右移得到的是负的值，需要取反
-                double squareDis =  distanceX * distanceX + distanceY * distanceY;
-                float realX = -distanceX;
-                float realY = -distanceY;
-                double responseDis = 0;
-                responseDis = responseDis >= 1 ? minDisResponse / mLastScale : minDisResponse;
-                if(squareDis < responseDis){
-                    return false;
+                    focusX = textWidth + outWidth;
                 }else {
-//                    LogUtil.e(TAG, "distanceX = " + realX);
-                    scrollBy(realX, realY);
-//                    doTranslateBy(realX, realY);
-                    return true;
+                    LogUtil.e(TAG, "right 在屏幕内");
                 }
             }
+        }
 
-            private void scrollBy(float realX, float realY) {
-                mDistanceX += realX;
-                mDistanceY += realY;
-                float textWidth = mSmartTextView.getWidth();
-                //基于缩放比例的左/右偏移量
-                float realOutWidth = ((maxScaleRate - 1) / 2) * textWidth;
+        private void scaleManagerLeft(float tempScale) {
+            float textTx = mSmartTextView.getTranslationX();
+            float textTy = mSmartTextView.getTranslationY();
+            int lineWidth = mLinesView.getWidth();
+            float lineTx = mLinesView.getTranslationX();
+            float lineTy = mLinesView.getTranslationY();
+            float linePx = mLinesView.getPivotX();
+            float linePy = mLinesView.getPivotY();
+            float textPx = mSmartTextView.getPivotX();
+            float textPy = mSmartTextView.getPivotY();
+            int textWidth = mSmartTextView.getWidth();
+            float outWidth = ((maxScaleRate - 1) / 2) * textWidth;
+            //处理左边界
+            if(tempScale == 1){
+                //正好缩成一倍时，如果textTx > outWidth,那么必然越界，否则必然不越界，此时和缩放中心无关了
+                LogUtil.e(TAG, "left tempScale == 1");
+            }else {
+                if((outWidth * tempScale + textPx * (tempScale - 1) - textTx) < 0){
+                    double newPx = (textTx - outWidth * tempScale) / (tempScale - 1d);
+                    LogUtil.e(TAG, "left 在屏幕外，新px = " + newPx);
+//                        focusX = (float) newPx;
+                    focusX = - outWidth;
+                }else {
+                    LogUtil.e(TAG, "left 在屏幕内");
+                }
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        @Override
+        public void onScrollBegin(MotionEvent e) {
+            super.onScrollBegin(e);
+        }
+        //
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            //这里的distance是local - target的结果，所以右移得到的是负的值，需要取反
+            double squareDis =  distanceX * distanceX + distanceY * distanceY;
+            float realX = -distanceX;
+            float realY = -distanceY;
+            double responseDis = 0;
+            responseDis = responseDis >= 1 ? minDisResponse / mLastScale : minDisResponse;
+            if(squareDis < responseDis){
+                return false;
+            }else {
+//                    LogUtil.e(TAG, "distanceX = " + realX);
+                scrollBy(realX, realY);
+//                    doTranslateBy(realX, realY);
+                return true;
+            }
+        }
+
+        private void scrollBy(float realX, float realY) {
+            mDistanceX += realX;
+            mDistanceY += realY;
+            float textWidth = mSmartTextView.getWidth();
+            //基于缩放比例的左/右偏移量
+            float realOutWidth = ((maxScaleRate - 1) / 2) * textWidth;
 //                    float textHeight = mSmartTextView.getHeight();
-                float lineHeight = mLinesView.getHeight();
-                float noteHeight = getHeight();
-                float textPx = mSmartTextView.getPivotX();
+            float lineHeight = mLinesView.getHeight();
+            float noteHeight = getHeight();
+            float textPx = mSmartTextView.getPivotX();
 //                    float textPy = mSmartTextView.getPivotY();
 //                    float linePx = mLinesView.getPivotX();
-                float linePy = mLinesView.getPivotY();
-                //控制左滑
-                float maxDistanceX = (textPx + realOutWidth) * mLastScale - textPx;
-                if(mDistanceX > maxDistanceX){
-                    mDistanceX = maxDistanceX;
-                }
-                float minDistanceX = (textWidth - textPx) - (textWidth - textPx + realOutWidth) * mLastScale;
-                if(mDistanceX < minDistanceX){
-                    mDistanceX = minDistanceX;
-                }
-                //上划
-                float maxDistanceY = linePy * mLastScale - linePy;
-                if(mDistanceY > maxDistanceY){
-                    mDistanceY = maxDistanceY;
-                }
-                float minDistanceY = noteHeight - linePy - (lineHeight - linePy) * mLastScale;
-                if(mDistanceY < minDistanceY){
-                    mDistanceY = minDistanceY;
-                }
+            float linePy = mLinesView.getPivotY();
+            //控制左滑
+            float maxDistanceX = (textPx + realOutWidth) * mLastScale - textPx;
+            if(mDistanceX > maxDistanceX){
+                mDistanceX = maxDistanceX;
+            }
+            float minDistanceX = (textWidth - textPx) - (textWidth - textPx + realOutWidth) * mLastScale;
+            if(mDistanceX < minDistanceX){
+                mDistanceX = minDistanceX;
+            }
+            //上划
+            float maxDistanceY = linePy * mLastScale - linePy;
+            if(mDistanceY > maxDistanceY){
+                mDistanceY = maxDistanceY;
+            }
+            float minDistanceY = noteHeight - linePy - (lineHeight - linePy) * mLastScale;
+            if(mDistanceY < minDistanceY){
+                mDistanceY = minDistanceY;
+            }
 //                    LogUtil.e(TAG, "maxDistanceY = " + maxDistanceY + " , minDistanceY = " + minDistanceY
 //                        + " , tempY = " + tempY + " , targetY = " + mDistanceY);
 //                    if(mDistanceX)
-                //两个均可，用To方法方便控制最大距离
-                doTranslateTo(mDistanceX, mDistanceY);
-            }
+            //两个均可，用To方法方便控制最大距离
+            doTranslateTo(mDistanceX, mDistanceY);
+        }
 
-            @Override
-            public void onScrollEnd(MotionEvent e) {
-                super.onScrollEnd(e);
-            }
-        });
+        @Override
+        public void onScrollEnd(MotionEvent e) {
+            super.onScrollEnd(e);
+        }
     }
 
     /**
@@ -568,6 +572,10 @@ public class SmartHandNoteView extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         LogUtil.e(TAG, "onInterceptTouchEvent == " + event.toString());
+//        return super.onInterceptTouchEvent(event);
+        if(mViewMode == MODE_TEXT){
+            boolean result = mInterceptDetector.onTouchEvent(event);
+        }
         return super.onInterceptTouchEvent(event);
     }
 
@@ -712,11 +720,28 @@ public class SmartHandNoteView extends FrameLayout {
     }
 
     //=========================================
-    public void test() {
+    public void test(Bitmap viewDoodle) {
 //        Matrix matrix1 = mLinesView.getMatrix();
 //        Matrix matrix1 = new Matrix();
-        logView(mLinesView);
-        logView(mSmartTextView);
+//        logView(mLinesView);
+//        logView(mSmartTextView);
+//        mSmartTextView.setCursorVisible(!mSmartTextView.isCursorVisible());
+//        1633674156130.png
+        setText("哈哈哈\r\n\r\n 测试测试");
+        setBitmap(viewDoodle);
+//        int bitmapHeight = viewDoodle.getHeight();
+//        int doodleHeight = mDoodleView.getHeight();
+//        //高
+//        if(bitmapHeight > doodleHeight){
+//            ViewGroup.LayoutParams doodleLayoutParams = mDoodleView.getLayoutParams();
+//            doodleLayoutParams.height = bitmapHeight;
+//            mDoodleView.setLayoutParams(doodleLayoutParams);
+//            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
+//            lineLayoutParams.height = bitmapHeight;
+//            mLinesView.setLayoutParams(lineLayoutParams);
+//        }
+//        mDoodleView.setBitmap(viewDoodle);
+//        mSmartTextView.setText("哈哈哈\r\n\r\n 测试测试");
     }
 
     public void logView(View v){
@@ -731,5 +756,77 @@ public class SmartHandNoteView extends FrameLayout {
         LogUtil.e(TAG, v.getClass().getSimpleName() + " == scale = " + scaleX + ", translationX = " + translationX + " , translationY = " + translationY);
         LogUtil.e(TAG, v.getClass().getSimpleName() + " pivotX = " + pivotX + ", pivotY = " + pivotY + " , width = " + width + " , height = " + height);
         LogUtil.e(TAG, v.getClass().getSimpleName() + " matrix = " + matrix);
+    }
+
+    /**
+     * 涂鸦画板的文字
+     * */
+    public Editable getViewText() {
+        return mSmartTextView.getText();
+    }
+
+
+    public Bitmap getDoodleBitmap() {
+        return mDoodleView.getBitmap();
+    }
+
+    public Bitmap getBitmap(boolean hasLines) {
+//        if(!hasLines){
+//            mLinesView.setVisibility(INVISIBLE);
+//        }
+
+        //calculate default outLeft
+        int doodleWidth = mDoodleView.getWidth();
+        int textWidth = mSmartTextView.getWidth();
+        int leftOutWidth = (doodleWidth - textWidth) / 2;
+        //create bitmap
+        Bitmap bitmap = Bitmap.createBitmap(doodleWidth, mDoodleView.getHeight(), Constants.bitmapQuality);
+        Canvas canvas = new Canvas(bitmap);
+        //draw textView
+        boolean textEnable = mSmartTextView.isEnabled();
+        mSmartTextView.setCursorVisible(false);
+        if(!textEnable){
+            mSmartTextView.setEnabled(true);
+        }
+        Bitmap textBitmap = mSmartTextView.getBitmap();
+        //half leftWidth
+        canvas.drawBitmap(textBitmap, leftOutWidth,0f,null);
+        mSmartTextView.setEnabled(textEnable);
+        mSmartTextView.setCursorVisible(true);
+        //----
+        //draw doodleView
+        boolean doodleEnable = mDoodleView.isEnabled();
+        if(!doodleEnable){
+            mDoodleView.setEnabled(true);
+        }
+        Bitmap doodleBitmap = mDoodleView.getBitmap();
+        canvas.drawBitmap(doodleBitmap,0f,0f,null);
+        mDoodleView.setEnabled(doodleEnable);
+
+//        mLinesView.setVisibility(VISIBLE);
+
+
+        return bitmap;
+    }
+
+
+    public void setText(CharSequence text){
+        mSmartTextView.setText(text);
+    }
+
+    public void setBitmap(Bitmap bitmap){
+        int bitmapHeight = bitmap.getHeight();
+        int doodleHeight = mDoodleView.getHeight();
+        //高
+        if(bitmapHeight > doodleHeight){
+            ViewGroup.LayoutParams doodleLayoutParams = mDoodleView.getLayoutParams();
+            doodleLayoutParams.height = bitmapHeight;
+            mDoodleView.setLayoutParams(doodleLayoutParams);
+            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
+            lineLayoutParams.height = bitmapHeight;
+            mLinesView.setLayoutParams(lineLayoutParams);
+        }
+        mDoodleView.setBitmap(bitmap);
+
     }
 }

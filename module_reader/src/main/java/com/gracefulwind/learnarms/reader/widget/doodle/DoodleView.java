@@ -321,7 +321,15 @@ public class DoodleView extends View implements Smartable {
         mControlParent = viewGroup;
     }
 
-//    @Override
+    public Bitmap getBitmap() {
+        return mPresenter.getBitmap();
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mPresenter.setBitmap(bitmap);
+    }
+
+    //    @Override
 //    public void setEnabled(boolean enabled) {
 //        if(enabled){
 //            requestDisall

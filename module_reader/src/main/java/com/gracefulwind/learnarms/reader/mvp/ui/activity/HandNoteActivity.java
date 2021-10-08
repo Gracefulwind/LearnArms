@@ -1,7 +1,8 @@
 package com.gracefulwind.learnarms.reader.mvp.ui.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.BitmapUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.R;
 import com.gracefulwind.learnarms.reader.R2;
@@ -42,6 +44,7 @@ public class HandNoteActivity extends MyBaseActivity {
 
     @BindView(R2.id.rahn_shn_hand_note)
     SmartHandNoteView rahnShnHandNote;
+    private Bitmap viewDoodle;
 
 
     @Override
@@ -71,7 +74,8 @@ public class HandNoteActivity extends MyBaseActivity {
     }
 
     @OnClick({R2.id.rahn_btn_keyboard, R2.id.rahn_btn_doodle, R2.id.rahn_btn_scale, R2.id.rahn_btn_text_size
-            , R2.id.rahn_btn_text_color, R2.id.rahn_btn_cancel, R2.id.rahn_btn_uncancel, R2.id.rahn_btn_test})
+            , R2.id.rahn_btn_text_color, R2.id.rahn_btn_cancel, R2.id.rahn_btn_uncancel, R2.id.rahn_btn_test
+            , R2.id.rahn_btn_save_text, R2.id.rahn_btn_save_doodle, R2.id.rahn_btn_save_all, R2.id.rahn_btn_show_all})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.rahn_btn_keyboard == id){
@@ -91,6 +95,20 @@ public class HandNoteActivity extends MyBaseActivity {
         }else if(R.id.rahn_btn_test == id){
 //            rahnShnHandNote.test();
             rahnShnHandNote.setDoodleMode(OperationPresenter.MODE_ERASER);
+        }else if(R.id.rahn_btn_save_text == id){
+            Editable viewText = rahnShnHandNote.getViewText();
+        }else if(R.id.rahn_btn_save_doodle == id){
+            viewDoodle = rahnShnHandNote.getDoodleBitmap();
+            if(null != viewDoodle)
+                BitmapUtil.saveBitmap(this, viewDoodle);
+//            viewDoodle.recycle();
+        }else if(R.id.rahn_btn_save_all == id){
+            Bitmap viewBitmap = rahnShnHandNote.getBitmap(false);
+            if(null != viewBitmap)
+                BitmapUtil.saveBitmap(this, viewBitmap);
+//            viewBitmap.recycle();
+        }else if(R.id.rahn_btn_show_all == id){
+            rahnShnHandNote.test(viewDoodle);
         }/*else if(R.id.rahn_btn_doodle == id){
 
         }*/

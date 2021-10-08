@@ -67,6 +67,36 @@
             android:text="反撤销"
             />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/rahn_btn_save_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存文字"
+            />
+        <Button
+            android:id="@+id/rahn_btn_save_doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存涂鸦"
+            />
+        <Button
+            android:id="@+id/rahn_btn_save_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存全部"
+            />
+        <Button
+            android:id="@+id/rahn_btn_show_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="还原全部"
+            />
+    </LinearLayout>
 
     <com.gracefulwind.learnarms.reader.widget.SmartHandNoteView
         android:id="@+id/rahn_shn_hand_note"

@@ -1,6 +1,8 @@
 package com.gracefulwind.learnarms.reader.widget.edit;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -20,8 +22,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.widget.Smartable;
 import com.gracefulwind.learnarms.reader.widget.TestFrameLayout;
@@ -161,7 +165,7 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
         return TAG;
     }
 
-//    supportsAutoSizeText
+    //    supportsAutoSizeText
 
 //    @Override
 //    protected  boolean setAutoSizeTextTypeWithDefaults(){
@@ -370,6 +374,13 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
         setPivotY(pivotY);
         setScaleX(scaleX);
         setScaleY(scaleY);
+    }
+
+    public Bitmap getBitmap() {
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Constants.bitmapQuality);
+        Canvas canvas = new Canvas(bitmap);
+        this.draw(canvas);
+        return bitmap;
     }
 
     public interface OnSizeChangeListener{
