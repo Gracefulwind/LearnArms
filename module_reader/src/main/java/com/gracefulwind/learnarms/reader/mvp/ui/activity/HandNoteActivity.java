@@ -16,6 +16,7 @@ import com.gracefulwind.learnarms.reader.R2;
 import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.Operation;
+import com.gracefulwind.learnarms.reader.widget.doodle.OperationPresenter;
 import com.jess.arms.di.component.AppComponent;
 
 import org.jetbrains.annotations.NotNull;
@@ -88,7 +89,8 @@ public class HandNoteActivity extends MyBaseActivity {
         }else if(R.id.rahn_btn_uncancel == id){
             rahnShnHandNote.redoLastDraw();
         }else if(R.id.rahn_btn_test == id){
-            rahnShnHandNote.test();
+//            rahnShnHandNote.test();
+            rahnShnHandNote.setDoodleMode(OperationPresenter.MODE_ERASER);
         }/*else if(R.id.rahn_btn_doodle == id){
 
         }*/

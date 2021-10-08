@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
 
@@ -557,11 +558,17 @@ public class SmartHandNoteView extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
 //        LogUtil.e(TAG, "Touch event" + event.getAction());
         //写字板模式屏蔽缩放
-        if(mViewMode == MODE_TEXT){
-            return super.onTouchEvent(event);
-        }
+//        if(mViewMode == MODE_TEXT){
+//            return super.onTouchEvent(event);
+//        }
         boolean result = mGestureDetector.onTouchEvent(event);
         return result ? true : super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        LogUtil.e(TAG, "onInterceptTouchEvent == " + event.toString());
+        return super.onInterceptTouchEvent(event);
     }
 
 //===========================================================================
@@ -582,6 +589,7 @@ public class SmartHandNoteView extends FrameLayout {
                 mDoodleView.setEnabled(false);
                 doTranslateTo(0,0);
                 doScale(1);
+                showSoftKeyboard();
                 break;
             case MODE_DOODLE:
                 mSmartTextView.setEnabled(false);
@@ -591,6 +599,11 @@ public class SmartHandNoteView extends FrameLayout {
         mSmartTextView.invalidate();
         mLinesView.invalidate();
         mDoodleView.invalidate();
+    }
+
+    private void showSoftKeyboard() {
+        InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+        if (manager != null) manager.showSoftInput(mSmartTextView, 0);
     }
 
     public int getLineHeight() {

@@ -318,6 +318,7 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        LogUtil.e(TAG, "onTouchEvent == " + event);
         if(isEnabled()){
             boolean b = super.onTouchEvent(event);
             return b;
