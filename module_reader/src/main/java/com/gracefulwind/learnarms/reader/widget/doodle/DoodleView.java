@@ -3,7 +3,6 @@ package com.gracefulwind.learnarms.reader.widget.doodle;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Build;
 import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.reader.widget.Smartable;
 
@@ -36,6 +34,8 @@ public class DoodleView extends View implements Smartable {
 
     private OperationPresenter mPresenter;
     private ViewGroup mControlParent;
+    private int responseLineNumber = 2;
+    private int expandLineNumber = 3;
 
     public DoodleView(Context context) {
         this(context, null);
@@ -102,6 +102,15 @@ public class DoodleView extends View implements Smartable {
                 }else {
                     mPresenter.actionJump(x, y);
                 }
+                ViewParent parent = getParent();
+                if(parent instanceof  SmartHandNoteView){
+                    SmartHandNoteView parentView = (SmartHandNoteView) parent;
+                    int lineHeight = parentView.getLineHeight();
+                    if(y >= height - responseLineNumber * lineHeight){
+                        parentView.changeDoodleHeight(height + expandLineNumber * lineHeight);
+                    }
+                }
+
 //                LogUtil.e("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_UP:
@@ -174,25 +183,25 @@ public class DoodleView extends View implements Smartable {
         }
     }
 
-    @Override
-    public void setViewHeightWithTextView(int textViewHeight) {
-        int height = getHeight();
-        ViewParent parent = getParent();
-        if (parent instanceof SmartHandNoteView) {
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentHeight = parentView.getHeight();
-            int baseHeight = getHeight();
-            float maxScaleRate = parentView.getMaxScaleRate();
-            //高
-            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if(textViewHeight > parentHeight * maxScaleRate){
-                layoutParams.height = textViewHeight;
-            }else {
-                layoutParams.height = (int) (parentHeight * maxScaleRate);
-            }
-            setLayoutParams(layoutParams);
-        }
-    }
+//    @Override
+//    public void setViewHeightWithTextView(int textViewHeight) {
+//        int height = getHeight();
+//        ViewParent parent = getParent();
+//        if (parent instanceof SmartHandNoteView) {
+//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+//            int parentHeight = parentView.getHeight();
+//            int baseHeight = getHeight();
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            //高
+//            ViewGroup.LayoutParams layoutParams = getLayoutParams();
+//            if(textViewHeight > parentHeight * maxScaleRate){
+//                layoutParams.height = textViewHeight;
+//            }else {
+//                layoutParams.height = (int) (parentHeight * maxScaleRate);
+//            }
+//            setLayoutParams(layoutParams);
+//        }
+//    }
 
     @Override
     public void smartTranslateTo(float translateX, float translateY) {

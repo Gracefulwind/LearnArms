@@ -343,10 +343,10 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
         mOnSizeChangeListener = onSizeChangeListener;
     }
 
-    @Override
-    public void setViewHeightWithTextView(int textviewHeight) {
-        //smartTextView doesn't need to do anything for it self!
-    }
+//    @Override
+//    public void setViewHeightWithTextView(int textviewHeight) {
+//        //smartTextView doesn't need to do anything for it self!
+//    }
 
     float translateX,translateY;
 

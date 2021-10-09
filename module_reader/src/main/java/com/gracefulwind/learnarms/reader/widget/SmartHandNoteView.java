@@ -111,8 +111,15 @@ public class SmartHandNoteView extends FrameLayout {
         mSmartTextView.setOnSizeChangedListener(new SmartTextView.OnSizeChangeListener() {
             @Override
             public void onSizeChange(int w, int h, int oldw, int oldh) {
-                mLinesView.setViewHeightWithTextView(h);
-                mDoodleView.setViewHeightWithTextView(h);
+                int thisHeight = getHeight();
+                int doodleHeight = mDoodleView.getHeight();
+                if(h > thisHeight * maxScaleRate){
+                    changeDoodleHeight(h);
+                }else {
+                    changeDoodleHeight((int) (thisHeight * maxScaleRate));
+                }
+//                mLinesView.setViewHeightWithTextView(h);
+//                mDoodleView.setViewHeightWithTextView(h);
             }
         });
         addView(mLinesView);
@@ -816,17 +823,32 @@ public class SmartHandNoteView extends FrameLayout {
 
     public void setBitmap(Bitmap bitmap){
         int bitmapHeight = bitmap.getHeight();
-        int doodleHeight = mDoodleView.getHeight();
-        //高
-        if(bitmapHeight > doodleHeight){
-            ViewGroup.LayoutParams doodleLayoutParams = mDoodleView.getLayoutParams();
-            doodleLayoutParams.height = bitmapHeight;
-            mDoodleView.setLayoutParams(doodleLayoutParams);
-            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
-            lineLayoutParams.height = bitmapHeight;
-            mLinesView.setLayoutParams(lineLayoutParams);
-        }
+//        int doodleHeight = mDoodleView.getHeight();
+//        //高
+//        if(bitmapHeight > doodleHeight){
+//            setChildHeight(mDoodleView, bitmapHeight);
+//            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
+//            lineLayoutParams.height = bitmapHeight;
+//            mLinesView.setLayoutParams(lineLayoutParams);
+//        }
+        changeDoodleHeight(bitmapHeight);
         mDoodleView.setBitmap(bitmap);
+    }
 
+    public void changeDoodleHeight(int height) {
+        int doodleHeight = mDoodleView.getHeight();
+        if(height > doodleHeight){
+            setChildHeight(mDoodleView, height);
+            setChildHeight(mLinesView, height);
+//            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
+//            lineLayoutParams.height = height;
+//            mLinesView.setLayoutParams(lineLayoutParams);
+        }
+    }
+
+    private void setChildHeight(View targetView, int height) {
+        ViewGroup.LayoutParams doodleLayoutParams = targetView.getLayoutParams();
+        doodleLayoutParams.height = height;
+        targetView.setLayoutParams(doodleLayoutParams);
     }
 }

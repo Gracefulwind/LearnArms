@@ -150,32 +150,32 @@ public class LinesView extends View implements Smartable{
         return mLineHeight;
     }
 
-    @Override
-    public void setViewHeightWithTextView(int textViewHeight) {
-        int height = getHeight();
-        ViewParent parent = getParent();
-        if (parent instanceof SmartHandNoteView) {
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentHeight = parentView.getHeight();
-            int baseHeight = getHeight();
-            float maxScaleRate = parentView.getMaxScaleRate();
-            //高
-            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//            LogUtil.e(TAG, "setViewHeight baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
-            if(textViewHeight > parentHeight * maxScaleRate){
-                layoutParams.height = textViewHeight;
-            }else {
-                layoutParams.height = (int) (parentHeight * maxScaleRate);
-            }
-            setLayoutParams(layoutParams);
-        }
-//        float scaledTextHeight = textviewHeight * maxScaleRatio;
-//        if(scaledTextHeight > height){
+//    @Override
+//    public void setViewHeightWithTextView(int textViewHeight) {
+//        int height = getHeight();
+//        ViewParent parent = getParent();
+//        if (parent instanceof SmartHandNoteView) {
+//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+//            int parentHeight = parentView.getHeight();
+//            int baseHeight = getHeight();
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            //高
 //            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//            layoutParams.height = (int) scaledTextHeight;
+////            LogUtil.e(TAG, "setViewHeight baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
+//            if(textViewHeight > parentHeight * maxScaleRate){
+//                layoutParams.height = textViewHeight;
+//            }else {
+//                layoutParams.height = (int) (parentHeight * maxScaleRate);
+//            }
 //            setLayoutParams(layoutParams);
 //        }
-    }
+////        float scaledTextHeight = textviewHeight * maxScaleRatio;
+////        if(scaledTextHeight > height){
+////            ViewGroup.LayoutParams layoutParams = getLayoutParams();
+////            layoutParams.height = (int) scaledTextHeight;
+////            setLayoutParams(layoutParams);
+////        }
+//    }
 
     /**
      * 满足在handNote中的使用，总大小是textview比例系数的需求
