@@ -83,7 +83,7 @@ public class HandNoteActivity extends MyBaseActivity {
         }else if(R.id.rahn_btn_doodle == id){
             rahnShnHandNote.setViewMode(SmartHandNoteView.MODE_DOODLE);
         }else if(R.id.rahn_btn_scale == id){
-            rahnShnHandNote.setViewMode(SmartHandNoteView.MODE_SCALE);
+            rahnShnHandNote.setDoodleMode(OperationPresenter.MODE_ERASER);
         }else if(R.id.rahn_btn_text_size == id){
             rahnShnHandNote.setTextViewSize(12);
         }else if(R.id.rahn_btn_text_color == id){

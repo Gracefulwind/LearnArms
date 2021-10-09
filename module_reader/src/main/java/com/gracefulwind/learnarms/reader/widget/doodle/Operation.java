@@ -24,6 +24,7 @@ public class Operation {
      * */
     public static final int DOODLE = 0x00000000;
     public static final int CORP = 0x00000001;
+    public static final int ERASER = 0x00000002;
 
 
 //== operate ============================
@@ -35,6 +36,8 @@ public class Operation {
 
     Paint paint;
     Path path;
+    int operationType = DOODLE;
+    boolean isFinished = false;
 
     public Operation() {
     }
@@ -43,5 +46,7 @@ public class Operation {
         this.paint = paint;
         this.path = path;
     }
+
+
 
 }

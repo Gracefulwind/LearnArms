@@ -1,14 +1,12 @@
 package com.gracefulwind.learnarms.reader.widget.doodle;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -16,11 +14,6 @@ import androidx.annotation.ColorInt;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +52,11 @@ public class OperationPresenter {
      * */
     private Path mPath;
     private Paint mPaint;
+    private Operation mOperation;
+
     private @ColorInt int mBackgroundColor = 0xFF00f0f0;
     private @ColorInt int mPaintColor = Color.BLACK;
+    private @ColorInt int mEraserColor = Color.WHITE;
     /**
      * 粗细
      * */
@@ -80,6 +76,7 @@ public class OperationPresenter {
 
     private boolean isFirstInit = true;
 
+
     public OperationPresenter(DoodleView doodleView) {
         this.doodleView = doodleView;
 //        //初始化画笔和path
@@ -91,7 +88,7 @@ public class OperationPresenter {
 ////        BlurMaskFilter PaintBGBlur = new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID);
 ////        mPaint.setMaskFilter(PaintBGBlur);
 //        mPaint.setStrokeWidth(10);
-        createPathAndPaint();
+//        createPathAndPaint();
     }
 
     public boolean hasCacheBitmap(){
@@ -155,16 +152,16 @@ public class OperationPresenter {
             mPaint.setXfermode(null);
             mPaint.setColor(mPaintColor);
         }else {
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-            mPaint.setColor(mBackgroundColor);
+            mPaint.setXfermode(null);
+            mPaint.setColor(mEraserColor);
         }
+        saveOperation();
     }
 
     public void actionDown(float x, float y){
         mPrevX = x;
         mPrevY = y;
         createPathAndPaint();
-        saveOperation();
         //将 Path 起始坐标设为手指按下屏幕的坐标
         mPath.moveTo(x, y);
         doodleView.invalidate();
@@ -212,6 +209,13 @@ public class OperationPresenter {
     public void actionUp(float x, float y){
         //保存放到down里，不然move时没路径
 //        saveOperation();
+        mOperation.isFinished = true;
+        if(mOperation.operationType == Operation.ERASER){
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            mPaint.setColor(mBackgroundColor);
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            mPaint.setStrokeJoin(Paint.Join.ROUND);
+        }
         clearRedoList();
         doodleView.invalidate();
     }
@@ -233,8 +237,13 @@ public class OperationPresenter {
     }
 
     private void saveOperation() {
-        Operation operation = new Operation(mPath, mPaint);
-        mOperationList.add(operation);
+        mOperation = new Operation(mPath, mPaint);
+        if(mEditMode == MODE_DOODLE){
+            mOperation.operationType = Operation.DOODLE;
+        }else {
+            mOperation.operationType = Operation.ERASER;
+        }
+        mOperationList.add(mOperation);
         if(null != mOnPathChangedListener){
             mOnPathChangedListener.onCancelListChanged(mOperationList);
         }
