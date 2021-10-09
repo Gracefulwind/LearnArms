@@ -235,7 +235,9 @@ public class OperationPresenter {
     private void saveOperation() {
         Operation operation = new Operation(mPath, mPaint);
         mOperationList.add(operation);
-        mOnPathChangedListener.onCancelListChanged(mOperationList);
+        if(null != mOnPathChangedListener){
+            mOnPathChangedListener.onCancelListChanged(mOperationList);
+        }
     }
 
     /**
@@ -330,12 +332,17 @@ public class OperationPresenter {
 
     private void clearRedoList(){
         mRedoList.clear();
-        mOnPathChangedListener.onRedoListChanged(mRedoList);
+        if(null != mOnPathChangedListener){
+            mOnPathChangedListener.onRedoListChanged(mRedoList);
+        }
     }
 
     private void clearOperationList(){
         mOperationList.clear();
-        mOnPathChangedListener.onCancelListChanged(mOperationList);
+        if(null != mOnPathChangedListener){
+            mOnPathChangedListener.onCancelListChanged(mOperationList);
+        }
+
     }
 
     private void clearAllL(){
