@@ -19,6 +19,10 @@
         <activity android:name=".mvp.ui.activity.HandNoteActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".mvp.ui.activity.TestTextActivity"
+            android:screenOrientation="portrait"
+            />
+<!--        ============================================-->
         <meta-data
             android:name="com.gracefulwind.learnarms.reader.app.GlobalConfiguration"
             android:value="ConfigModule" />

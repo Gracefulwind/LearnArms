@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/ratt_btn0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试按钮0"
+            />
+        <Button
+            android:id="@+id/ratt_btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试按钮1"
+            />
+        <Button
+            android:id="@+id/ratt_btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试按钮2"
+            />
+        <Button
+            android:id="@+id/ratt_btn3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试按钮3"
+            />
+    </LinearLayout>
+
+    <com.gracefulwind.learnarms.reader.widget.TestTextView
+        android:id="@+id/ratt_ttv_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        />
+
+    <com.gracefulwind.learnarms.reader.widget.edit.SmartTextView
+        android:id="@+id/ratt_stv_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+
+    <EditText
+        android:id="@+id/ratt_tv_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+</LinearLayout>

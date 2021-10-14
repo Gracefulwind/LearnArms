@@ -3,6 +3,7 @@ package com.gracefulwind.learnarms.reader.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,29 +34,29 @@ public class LinesView extends View implements Smartable{
     private int height;
 
     private int mLineHeight;
+    private SmartTextView mSmartTextview;
 
 
+//    public LinesView(Context context) {
+//        this(context, null);
+//    }
 
-    public LinesView(Context context) {
-        this(context, null);
+    public LinesView(Context context, SmartTextView bindTextview) {
+        this(context, bindTextview, null);
     }
 
-    public LinesView(Context context, int lineHeight) {
-        this(context);
-        mLineHeight = lineHeight;
+    public LinesView(Context context, SmartTextView bindTextview, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
+        this(context, bindTextview, attrs, 0);
     }
 
-    public LinesView(Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public LinesView(Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
+    public LinesView(Context context, SmartTextView bindTextview, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context, attrs, defStyleAttr);
+        initView(context, bindTextview, attrs, defStyleAttr);
     }
 
-    private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
-
+    private void initView(Context context, SmartTextView bindTextview, AttributeSet attrs, int defStyleAttr) {
+        mSmartTextview = bindTextview;
+        mLineHeight = bindTextview.getLineHeight();
     }
 
     @Override
@@ -119,6 +120,13 @@ public class LinesView extends View implements Smartable{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         paint.setStyle(Paint.Style.FILL);
+        if(null == mSmartTextview){
+            if(!tryToInit()){
+                //获取不到smartView直接退出好么
+                return;
+            }
+        }
+        int lineCount = mSmartTextview.getLineCount();
         float textHeight = getLineHeight();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
@@ -126,14 +134,41 @@ public class LinesView extends View implements Smartable{
         int paddingRight = getPaddingRight();
         int width = getWidth();
         int height = getHeight();
-//        LogUtil.e(TAG, "====onDraw====  , height = " + height + " , width = " + width + ", textHeight = " + textHeight);
-//        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
-//        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < height; x++){
-        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
-//            //如果我绘制的超出原来的大小，视图会变大
-//        for(int x = 0; (paddingTop + paddingBottom + ((x-2) * textHeight)) < this.height; x++){
-//        for(int x = 0; x < textViewLines; x++){
-            canvas.drawLine(paddingLeft, paddingTop + x * textHeight, width - paddingRight, paddingTop + x * textHeight, paint);
+        int totalHeight = paddingTop;
+        //base Line
+        canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
+        Rect rect = new Rect();
+        for(int x = 0; x <= lineCount - 1; x++){
+            mSmartTextview.getLineBounds(x, rect);
+            totalHeight = rect.bottom;
+//            totalHeight = mSmartTextview.getLineBounds(x, rect);
+            canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
+        }
+        while (totalHeight <= height - textHeight){
+            totalHeight += textHeight;
+            canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
+        }
+
+////        LogUtil.e(TAG, "====onDraw====  , height = " + height + " , width = " + width + ", textHeight = " + textHeight);
+////        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
+////        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < height; x++){
+//        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
+////            //如果我绘制的超出原来的大小，视图会变大
+////        for(int x = 0; (paddingTop + paddingBottom + ((x-2) * textHeight)) < this.height; x++){
+////        for(int x = 0; x < textViewLines; x++){
+//            canvas.drawLine(paddingLeft, paddingTop + x * textHeight, width - paddingRight, paddingTop + x * textHeight, paint);
+//        }
+    }
+
+    private boolean tryToInit() {
+        ViewParent parent = getParent();
+        if(parent instanceof SmartHandNoteView){
+            SmartHandNoteView tempParent = (SmartHandNoteView) parent;
+            mSmartTextview = tempParent.getTextView();
+            mLineHeight = mSmartTextview.getLineHeight();
+            return true;
+        }else {
+            return false;
         }
     }
 

@@ -56,6 +56,12 @@
             android:layout_height="wrap_content"
             android:text="混合view"
             />
+        <Button
+            android:id="@+id/ram_btn_line_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试行间距"
+            />
     </LinearLayout>
 
     <LinearLayout

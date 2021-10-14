@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
@@ -16,17 +17,22 @@ import android.text.StaticLayout;
 import android.text.TextDirectionHeuristics;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.reader.widget.Smartable;
 import com.gracefulwind.learnarms.reader.widget.TestFrameLayout;
 
@@ -42,27 +48,68 @@ import com.gracefulwind.learnarms.reader.widget.TestFrameLayout;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView implements Smartable {
+public class SmartTextView extends TextView implements Smartable {
     public static final String TAG = SmartTextView.class.getName();
 
-    private  boolean mNeedLines = false;
-    private final TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+    private  boolean mNeedLines = true;
+    private TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private int width;
     private int height;
     private OnSizeChangeListener mOnSizeChangeListener;
 
     public SmartTextView(Context context) {
-        this(context, null);
+//        this(context, null);
+        super(context);
+        initView();
+
     }
 
     public SmartTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, 16842884);
-
+        super(context, attrs);
+        initView();
     }
 
     public SmartTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView();
+    }
+
+    private void initView() {
         setFocusableInTouchMode(true);
+        //android9和10的行高问题的解决暂时解决方案
+        //会造成开销，最好还是想办法把中英文的行高固定下来(降低中文行高)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//        if (Build.VERSION.SDK_INT >= 30) {
+            soluteLineHeight();
+        }
+
+    }
+
+    private void soluteLineHeight() {
+        this.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //...
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //...
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //...
+                removeTextChangedListener(this);
+
+                int selectionStart = getSelectionStart();
+                int selectionEnd = getSelectionEnd();
+                setText(s);
+                setSelection(selectionStart, selectionEnd);
+
+                addTextChangedListener(this);
+            }
+        });
     }
 
     @Override
@@ -162,11 +209,22 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
     public CharSequence getAccessibilityClassName() {
 //        //define in view
 //        super.getAccessibilityClassName();
-        return TAG;
+//        return TAG;
+        return EditText.class.getName();
     }
 
-    //    supportsAutoSizeText
-
+//    /** @hide */
+//    protected boolean supportsAutoSizeText() {
+//        return false;
+//    }
+//
+//    /** @hide */
+//    public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo info) {
+////        super.onInitializeAccessibilityNodeInfoInternal(info);
+//        if (isEnabled()) {
+//            info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SET_TEXT);
+//        }
+//    }
 //    @Override
 //    protected  boolean setAutoSizeTextTypeWithDefaults(){
 //        super.setAutoSizeTextTypeWithDefaults();
@@ -182,8 +240,8 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-//        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
-//                    + " }        { new w,h = " +  w + "," + h);
+        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
+                    + " }        { new w,h = " +  w + "," + h);
         this.width = w;
         this.height = h;
         if(null != mOnSizeChangeListener){
@@ -208,36 +266,98 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
 
     @Override
     protected void onDraw(Canvas canvas) {
+//        LogUtil.e(TAG, "onDraw");
         super.onDraw(canvas);
         if(!mNeedLines){
             return;
         }
         //do my works
         paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.parseColor("#FF0000"));
         //todo:wd 这里是凑巧等于-1还是系统设置的-1?
 //        float textSize = getTextSize();
 //        float textHeight = getFontHeight(textSize) - 1;
+        ViewParent parent = getParent();
+        int lineCount = getLineCount();
         float textHeight = getLineHeight();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
         int paddingLeft = getPaddingLeft();
         int paddingRight = getPaddingRight();
-//        LogUtil.d(TAG, "====onDraw====");
         int width = getWidth();
-        int height = getHeight();
-//        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
-//        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < height; x++){
-        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
-//            //如果我绘制的超出原来的大小，视图会变大
-//        for(int x = 0; (paddingTop + paddingBottom + ((x-2) * textHeight)) < this.height; x++){
-//        for(int x = 0; x < textViewLines; x++){
-            canvas.drawLine(paddingLeft, paddingTop + x * textHeight, width - paddingRight, paddingTop + x * textHeight, paint);
+        int height = 0;
+        if(parent instanceof ViewGroup){
+            ViewGroup tempParent = (ViewGroup) parent;
+            height = tempParent.getHeight();
         }
-//        float scaleX = getScaleX();
-//        float scaleY = getScaleY();
-//        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
-    }
 
+        int totalHeight = paddingTop;
+        //base Line
+        canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
+        Rect rect = new Rect();
+        Layout layout = getLayout();
+        for(int x = 0; x <= lineCount - 1; x++){
+            getLineBounds(x, rect);
+            totalHeight = rect.bottom;
+//            totalHeight = mSmartTextview.getLineBounds(x, rect);
+            canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
+        }
+        while (totalHeight <= height - textHeight){
+            totalHeight += textHeight;
+            canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
+        }
+
+        if(parent instanceof SmartHandNoteView){
+            SmartHandNoteView tempParent = (SmartHandNoteView) parent;
+            tempParent.refreshLineView();
+        }
+    }
+    
+//    public int getLineBounds(int line, Rect bounds) {
+//        Layout mLayout = getLayout();
+//        if (mLayout == null) {
+//            if (bounds != null) {
+//                bounds.set(0, 0, 0, 0);
+//            }
+//            return 0;
+//        } else {
+//            int baseline = mLayout.getLineBounds(line, bounds);
+//
+//            int voffset = getExtendedPaddingTop();
+//            if ((mGravity & Gravity.VERTICAL_GRAVITY_MASK) != Gravity.TOP) {
+//                voffset += getVerticalOffset(true);
+//            }
+//            if (bounds != null) {
+//                bounds.offset(getCompoundPaddingLeft(), voffset);
+//            }
+//            return baseline + voffset;
+//        }
+//    }
+//
+//    int getVerticalOffset(boolean forceNormal) {
+//        int voffset = 0;
+//        final int gravity = mGravity & Gravity.VERTICAL_GRAVITY_MASK;
+//
+//        Layout l = mLayout;
+//        if (!forceNormal && mText.length() == 0 && mHintLayout != null) {
+//            l = mHintLayout;
+//        }
+//
+//        if (gravity != Gravity.TOP) {
+//            int boxht = getBoxHeight(l);
+//            int textht = l.getHeight();
+//
+//            if (textht < boxht) {
+//                if (gravity == Gravity.BOTTOM) {
+//                    voffset = boxht - textht;
+//                } else { // (gravity == Gravity.CENTER_VERTICAL)
+//                    voffset = (boxht - textht) >> 1;
+//                }
+//            }
+//        }
+//        return voffset;
+//    }
+    
     /**
      * 这里获取的是文字高度，和行高度有偏差
      * */
@@ -249,57 +369,43 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
     }
 
 
-    public int getTextViewLines(int textViewWidth) {
-        int width = textViewWidth - getCompoundPaddingLeft() - getCompoundPaddingRight();
-        StaticLayout staticLayout;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            staticLayout = getStaticLayout23(width);
-        } else {
-            staticLayout = getStaticLayout(width);
-        }
-        int lines = staticLayout.getLineCount();
-        int maxLines = getMaxLines();
-        if (maxLines > lines) {
-            return lines;
-        }
-        return maxLines;
-    }
+    
 
     /**
      * sdk>=23
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private StaticLayout getStaticLayout23(int width) {
-        StaticLayout.Builder builder = StaticLayout.Builder.obtain(getText(),
-                0, getText().length(), getPaint(), width)
-                .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-                .setTextDirection(TextDirectionHeuristics.FIRSTSTRONG_LTR)
-                .setLineSpacing(getLineSpacingExtra(), getLineSpacingMultiplier())
-                .setIncludePad(getIncludeFontPadding())
-                .setBreakStrategy(getBreakStrategy())
-                .setHyphenationFrequency(getHyphenationFrequency())
-                .setMaxLines(getMaxLines() == -1 ? Integer.MAX_VALUE : getMaxLines());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setJustificationMode(getJustificationMode());
-        }
-        if (getEllipsize() != null && getKeyListener() == null) {
-            builder.setEllipsize(getEllipsize())
-                    .setEllipsizedWidth(width);
-        }
-        return builder.build();
-    }
-
-    /**
-     * sdk<23
-     */
-    private StaticLayout getStaticLayout(int width) {
-        return new StaticLayout(getText(),
-                0, getText().length(),
-                getPaint(), width, Layout.Alignment.ALIGN_NORMAL,
-                getLineSpacingMultiplier(),
-                getLineSpacingExtra(), getIncludeFontPadding(), getEllipsize(),
-                width);
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.M)
+//    private StaticLayout getStaticLayout23(int width) {
+//        StaticLayout.Builder builder = StaticLayout.Builder.obtain(getText(),
+//                0, getText().length(), getPaint(), width)
+//                .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+//                .setTextDirection(TextDirectionHeuristics.FIRSTSTRONG_LTR)
+//                .setLineSpacing(getLineSpacingExtra(), getLineSpacingMultiplier())
+//                .setIncludePad(getIncludeFontPadding())
+//                .setBreakStrategy(getBreakStrategy())
+//                .setHyphenationFrequency(getHyphenationFrequency())
+//                .setMaxLines(getMaxLines() == -1 ? Integer.MAX_VALUE : getMaxLines());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            builder.setJustificationMode(getJustificationMode());
+//        }
+//        if (getEllipsize() != null && getKeyListener() == null) {
+//            builder.setEllipsize(getEllipsize())
+//                    .setEllipsizedWidth(width);
+//        }
+//        return builder.build();
+//    }
+//
+//    /**
+//     * sdk<23
+//     */
+//    private StaticLayout getStaticLayout(int width) {
+//        return new StaticLayout(getText(),
+//                0, getText().length(),
+//                getPaint(), width, Layout.Alignment.ALIGN_NORMAL,
+//                getLineSpacingMultiplier(),
+//                getLineSpacingExtra(), getIncludeFontPadding(), getEllipsize(),
+//                width);
+//    }
 
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent event) {
@@ -330,6 +436,22 @@ public class SmartTextView extends androidx.appcompat.widget.AppCompatTextView i
             return false;
         }
     }
+
+//    public int getTextViewLines(int textViewWidth) {
+//        int width = textViewWidth - getCompoundPaddingLeft() - getCompoundPaddingRight();
+//        StaticLayout staticLayout;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            staticLayout = getStaticLayout23(width);
+//        } else {
+//            staticLayout = getStaticLayout(width);
+//        }
+//        int lines = staticLayout.getLineCount();
+//        int maxLines = getMaxLines();
+//        if (maxLines > lines) {
+//            return lines;
+//        }
+//        return maxLines;
+//    }
 
     public void setNeedLInes(boolean needLines){
         mNeedLines = needLines;

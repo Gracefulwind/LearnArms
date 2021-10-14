@@ -3,6 +3,7 @@ package com.gracefulwind.learnarms.reader.widget;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.text.Editable;
@@ -101,13 +102,14 @@ public class SmartHandNoteView extends FrameLayout {
         LayoutParams stvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         mSmartTextView.setLayoutParams(stvLayoutParams);
         //add linesView
-        mLinesView = new LinesView(mContext, mSmartTextView.getLineHeight());
+        mLinesView = new LinesView(mContext, mSmartTextView);
         LayoutParams lvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mLinesView.setLayoutParams(lvLayoutParams);
         //add doodleView
         mDoodleView = new DoodleView(mContext);
         LayoutParams dvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mDoodleView.setLayoutParams(dvLayoutParams);
+//        mSmartTextView.getLineHeight()
         mSmartTextView.setOnSizeChangedListener(new SmartTextView.OnSizeChangeListener() {
             @Override
             public void onSizeChange(int w, int h, int oldw, int oldh) {
@@ -125,8 +127,9 @@ public class SmartHandNoteView extends FrameLayout {
         addView(mLinesView);
         addView(mSmartTextView);
         addView(mDoodleView);
+//        mLinesView.setVisibility(GONE);
         //=====test======
-//        mSmartTextView.setBackgroundColor(Color.parseColor("#A003aF30"));
+        mSmartTextView.setBackgroundColor(Color.parseColor("#A003aF30"));
 //        mLinesView.setBackgroundColor(Color.parseColor("#A0a03030"));
 ////        mDoodleView.setBackgroundColor(Color.parseColor("#083030F0"));
     }
@@ -137,6 +140,10 @@ public class SmartHandNoteView extends FrameLayout {
     private void initGesture() {
         mGestureDetector = new TouchGestureDetector(getContext(), new MyTouchControl());
         mInterceptDetector = new TouchGestureDetector(getContext(), new MyTouchControl());
+    }
+
+    public void refreshLineView() {
+        mLinesView.invalidate();
     }
 
     class MyTouchControl extends TouchGestureDetector.OnTouchGestureListener {
@@ -621,6 +628,10 @@ public class SmartHandNoteView extends FrameLayout {
         if (manager != null) manager.showSoftInput(mSmartTextView, 0);
     }
 
+    public SmartTextView getTextView() {
+        return mSmartTextView;
+    }
+
     public int getLineHeight() {
         return mSmartTextView.getLineHeight();
     }
@@ -727,28 +738,13 @@ public class SmartHandNoteView extends FrameLayout {
     }
 
     //=========================================
+    int lineNum = 0;
     public void test(Bitmap viewDoodle) {
-//        Matrix matrix1 = mLinesView.getMatrix();
-//        Matrix matrix1 = new Matrix();
-//        logView(mLinesView);
-//        logView(mSmartTextView);
-//        mSmartTextView.setCursorVisible(!mSmartTextView.isCursorVisible());
-//        1633674156130.png
-        setText("哈哈哈\r\n\r\n 测试测试");
-        setBitmap(viewDoodle);
-//        int bitmapHeight = viewDoodle.getHeight();
-//        int doodleHeight = mDoodleView.getHeight();
-//        //高
-//        if(bitmapHeight > doodleHeight){
-//            ViewGroup.LayoutParams doodleLayoutParams = mDoodleView.getLayoutParams();
-//            doodleLayoutParams.height = bitmapHeight;
-//            mDoodleView.setLayoutParams(doodleLayoutParams);
-//            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
-//            lineLayoutParams.height = bitmapHeight;
-//            mLinesView.setLayoutParams(lineLayoutParams);
-//        }
-//        mDoodleView.setBitmap(viewDoodle);
-//        mSmartTextView.setText("哈哈哈\r\n\r\n 测试测试");
+        Rect rect = new Rect();
+//        LogUtil.e(TAG, "rect = " + rect);
+        System.out.println("========");
+        int lineBounds = mSmartTextView.getLineBounds(lineNum, rect);
+        LogUtil.e(TAG, "result rect = " + rect + " , lineBounds = " + lineBounds + " , viewHeight = " + mSmartTextView.getHeight());
     }
 
     public void logView(View v){
