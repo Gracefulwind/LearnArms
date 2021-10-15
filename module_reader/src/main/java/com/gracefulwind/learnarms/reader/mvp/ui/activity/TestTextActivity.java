@@ -92,6 +92,7 @@ public class TestTextActivity extends MyBaseActivity {
 ////                rattTtvContainer.requestLayout();
 //            }
 //        });
+//        rattTtvContainer.setFallbackLineSpacing(false);
     }
 
     boolean flag = true;

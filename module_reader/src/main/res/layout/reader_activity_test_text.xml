@@ -39,14 +39,14 @@
         android:id="@+id/ratt_ttv_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:visibility="gone"
         />
 
     <com.gracefulwind.learnarms.reader.widget.edit.SmartTextView
         android:id="@+id/ratt_stv_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+
         />
 
     <EditText

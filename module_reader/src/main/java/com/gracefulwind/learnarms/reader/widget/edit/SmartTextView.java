@@ -1,32 +1,25 @@
 package com.gracefulwind.learnarms.reader.widget.edit;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
-import androidx.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.StaticLayout;
-import android.text.TextDirectionHeuristics;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.accessibility.AccessibilityNodeInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,7 +27,6 @@ import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.reader.widget.Smartable;
-import com.gracefulwind.learnarms.reader.widget.TestFrameLayout;
 
 /**
  * @ClassName: SmartTextView
@@ -79,13 +71,17 @@ public class SmartTextView extends TextView implements Smartable {
         //android9和10的行高问题的解决暂时解决方案
         //会造成开销，最好还是想办法把中英文的行高固定下来(降低中文行高)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//        if (Build.VERSION.SDK_INT >= 30) {
-            soluteLineHeight();
+            soluteLineHeightMethod1();
+//            soluteLineHeightMethod2();
         }
 
     }
 
-    private void soluteLineHeight() {
+    private void soluteLineHeightMethod1() {
+        setFallbackLineSpacing(false);
+    }
+
+    private void soluteLineHeightMethod2() {
         this.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -100,6 +96,9 @@ public class SmartTextView extends TextView implements Smartable {
             @Override
             public void afterTextChanged(Editable s) {
                 //...
+                if(!isFallbackLineSpacing()){
+                    return;
+                }
                 removeTextChangedListener(this);
 
                 int selectionStart = getSelectionStart();

@@ -154,9 +154,9 @@ public class DailyForecastView extends View {
                 tmpMaxPath.moveTo(0, yMax[i]);
                 tmpMinPath.moveTo(0, yMin[i]);
             }
-            tmpMaxPath.cubicTo(x[i]-1, yMax[i],x[i], yMax[i], midX, midYMax);
+            tmpMaxPath.cubicTo(x[i]-1, yMax[i], x[i], yMax[i], midX, midYMax);
 //			tmpMaxPath.quadTo(x[i], yMax[i], midX, midYMax);
-            tmpMinPath.cubicTo(x[i]-1, yMin[i],x[i], yMin[i], midX, midYMin);
+            tmpMinPath.cubicTo(x[i]-1, yMin[i], x[i], yMin[i], midX, midYMin);
 //			tmpMinPath.quadTo(x[i], yMin[i], midX, midYMin);
 
             if(i == (length - 2)){
