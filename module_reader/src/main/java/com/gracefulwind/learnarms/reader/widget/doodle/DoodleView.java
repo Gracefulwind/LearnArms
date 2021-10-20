@@ -133,21 +133,23 @@ public class DoodleView extends View implements Smartable {
             int baseWidth = getWidth();
             int baseHeight = getHeight();
 //            LogUtil.e(TAG, "baseHeight = " + baseHeight + " , parentHeight = " + parentHeight);
-            float maxScaleRate = parentView.getMaxScaleRate();
-            //宽
-            if ((parentWidth * maxScaleRate) != baseWidth) {
-                ViewGroup.LayoutParams layoutParams = getLayoutParams();
-                layoutParams.width = (int) (parentWidth * maxScaleRate);
-                setLayoutParams(layoutParams);
-                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
-            }
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            //宽
+//            if ((parentWidth * maxScaleRate) != baseWidth) {
+//                ViewGroup.LayoutParams layoutParams = getLayoutParams();
+//                layoutParams.width = (int) (parentWidth * maxScaleRate);
+//                setLayoutParams(layoutParams);
+//                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
+//            }
             //高
+            int myHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if(textViewHeight > parentHeight * maxScaleRate){
-                layoutParams.height = textViewHeight;
-            }else {
-                layoutParams.height = (int) (parentHeight * maxScaleRate);
-            }
+//            if(textViewHeight >= parentHeight){
+//                layoutParams.height = textViewHeight;
+//            }else {
+//                layoutParams.height = (int) (parentHeight);
+//            }
+            layoutParams.height = myHeight;
             setLayoutParams(layoutParams);
         }
     }
@@ -172,15 +174,16 @@ public class DoodleView extends View implements Smartable {
      * */
     @Override
     public void setPivotX(float pivotX){
-        ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
-            float maxScaleRate = parentView.getMaxScaleRate();
-            super.setPivotX(((maxScaleRate - 1) / 2) * parentWidth + pivotX);
-        }else {
-            super.setPivotX(pivotX);
-        }
+//        ViewParent parent = getParent();
+//        if(parent instanceof SmartHandNoteView){
+//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+//            int parentWidth = parentView.getWidth();
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            super.setPivotX(((maxScaleRate - 1) / 2) * parentWidth + pivotX);
+//        }else {
+//            super.setPivotX(pivotX);
+//        }
+        super.setPivotX(pivotX);
     }
 
 //    @Override
@@ -205,16 +208,16 @@ public class DoodleView extends View implements Smartable {
 
     @Override
     public void smartTranslateTo(float translateX, float translateY) {
-        ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            float maxScaleRate = parentView.getMaxScaleRate();
-            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
-            setTranslationX(-dWidth + translateX);
-        }else {
-            setTranslationX(translateX);
-        }
-//        setTranslationX(translateX);
+//        ViewParent parent = getParent();
+//        if(parent instanceof SmartHandNoteView){
+//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
+//            setTranslationX(-dWidth + translateX);
+//        }else {
+//            setTranslationX(translateX);
+//        }
+        setTranslationX(translateX);
         setTranslationY(translateY);
     }
 

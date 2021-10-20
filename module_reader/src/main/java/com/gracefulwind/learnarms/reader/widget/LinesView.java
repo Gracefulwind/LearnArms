@@ -94,21 +94,23 @@ public class LinesView extends View implements Smartable{
             int baseWidth = getWidth();
             int baseHeight = getHeight();
 //            LogUtil.e(TAG, "onLayout baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
-            float maxScaleRate = parentView.getMaxScaleRate();
-            //宽
-            if ((parentWidth * maxScaleRate) != baseWidth) {
-                ViewGroup.LayoutParams layoutParams = getLayoutParams();
-                layoutParams.width = (int) (parentWidth * maxScaleRate);
-                setLayoutParams(layoutParams);
-                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
-            }
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            //宽
+//            if ((parentWidth * maxScaleRate) != baseWidth) {
+//                ViewGroup.LayoutParams layoutParams = getLayoutParams();
+//                layoutParams.width = (int) (parentWidth * maxScaleRate);
+//                setLayoutParams(layoutParams);
+//                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
+//            }
             //高
+            int myHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if(textViewHeight > parentHeight * maxScaleRate){
-                layoutParams.height = textViewHeight;
-            }else {
-                layoutParams.height = (int) (parentHeight * maxScaleRate);
-            }
+//            if(textViewHeight >= parentHeight){
+//                layoutParams.height = textViewHeight;
+//            }else {
+//                layoutParams.height = (int) (parentHeight);
+//            }
+            layoutParams.height = myHeight;
             setLayoutParams(layoutParams);
 //            ViewGroup.LayoutParams layoutParams = getLayoutParams();
 //            LogUtil.e(TAG, "onLayout, parentwidth = " + parentWidth + " , parentheight = " + parentHeight
@@ -185,61 +187,36 @@ public class LinesView extends View implements Smartable{
         return mLineHeight;
     }
 
-//    @Override
-//    public void setViewHeightWithTextView(int textViewHeight) {
-//        int height = getHeight();
-//        ViewParent parent = getParent();
-//        if (parent instanceof SmartHandNoteView) {
-//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-//            int parentHeight = parentView.getHeight();
-//            int baseHeight = getHeight();
-//            float maxScaleRate = parentView.getMaxScaleRate();
-//            //高
-//            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-////            LogUtil.e(TAG, "setViewHeight baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
-//            if(textViewHeight > parentHeight * maxScaleRate){
-//                layoutParams.height = textViewHeight;
-//            }else {
-//                layoutParams.height = (int) (parentHeight * maxScaleRate);
-//            }
-//            setLayoutParams(layoutParams);
-//        }
-////        float scaledTextHeight = textviewHeight * maxScaleRatio;
-////        if(scaledTextHeight > height){
-////            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-////            layoutParams.height = (int) scaledTextHeight;
-////            setLayoutParams(layoutParams);
-////        }
-//    }
 
     /**
      * 满足在handNote中的使用，总大小是textview比例系数的需求
      * */
     @Override
     public void setPivotX(float pivotX){
-        ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
-            float maxScaleRate = parentView.getMaxScaleRate();
-            super.setPivotX(((maxScaleRate - 1) / 2) * parentWidth + pivotX);
-        }else {
-            super.setPivotX(pivotX);
-        }
+//        ViewParent parent = getParent();
+//        if(parent instanceof SmartHandNoteView){
+//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+//            int parentWidth = parentView.getWidth();
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            super.setPivotX(((maxScaleRate - 1) / 2) * parentWidth + pivotX);
+//        }else {
+//            super.setPivotX(pivotX);
+//        }
+        super.setPivotX(pivotX);
     }
 
     @Override
     public void smartTranslateTo(float translateX, float translateY) {
-        ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            float maxScaleRate = parentView.getMaxScaleRate();
-            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
-            setTranslationX(-dWidth + translateX);
-        }else {
-            setTranslationX(translateX);
-        }
-//        setTranslationX(translateX);
+//        ViewParent parent = getParent();
+//        if(parent instanceof SmartHandNoteView){
+//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+//            float maxScaleRate = parentView.getMaxScaleRate();
+//            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
+//            setTranslationX(-dWidth + translateX);
+//        }else {
+//            setTranslationX(translateX);
+//        }
+        setTranslationX(translateX);
         setTranslationY(translateY);
     }
 
