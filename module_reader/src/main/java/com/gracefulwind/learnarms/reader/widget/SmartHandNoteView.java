@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +27,12 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.reader.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.reader.widget.doodle.EditMode;
 import com.gracefulwind.learnarms.reader.widget.edit.SmartTextView;
+import com.gracefulwind.learnarms.reader.widget.textbox.TextBoxContainer;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: SmartHandNoteView
@@ -44,19 +50,29 @@ public class SmartHandNoteView extends FrameLayout {
     public static final int MODE_SCALE = 0x00000000;
     public static final int MODE_TEXT = 0x00000001;
     public static final int MODE_DOODLE = 0x00000002;
+    public static final int MODE_TEXT_BOX = 0x00000003;
+
+
+    public static final int TYPE_TOUCH = 0x00010001;
+    public static final int TYPE_INTERCEPT = 0x00010002;
+
 
     static final int ANIMATED_SCROLL_GAP = 250;
 
     private Context mContext;
     private int mViewMode;
+    private List<Smartable> smartViewList = new ArrayList<>();
     private LinesView mLinesView;
     private SmartTextView mSmartTextView;
     private DoodleView mDoodleView;
+//    private TextBoxView mTextBoxView;
+    private TextBoxContainer mTextBoxContainer;
 
     private TouchGestureDetector mGestureDetector;
     private TouchGestureDetector mInterceptDetector;
     //最大缩放比例,最好别动
-    float maxScaleRate = 2f;
+//    float maxScaleRate = 2f;
+    float maxScaleRate = 1f;
     //最小响应缩放比例,最好别动
     float minScaleResponse = 0.1f;
     //最小响应滑动距离(的平方)
@@ -109,28 +125,38 @@ public class SmartHandNoteView extends FrameLayout {
         mDoodleView = new DoodleView(mContext);
         LayoutParams dvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mDoodleView.setLayoutParams(dvLayoutParams);
+        //add textBoxView
+//        mTextBoxView = new TextBoxView(mContext, this);
+        mTextBoxContainer = new TextBoxContainer(mContext, this);
 //        mSmartTextView.getLineHeight()
         mSmartTextView.setOnSizeChangedListener(new SmartTextView.OnSizeChangeListener() {
             @Override
             public void onSizeChange(int w, int h, int oldw, int oldh) {
                 int thisHeight = getHeight();
-                int doodleHeight = mDoodleView.getHeight();
                 if(h > thisHeight){
-                    changeDoodleHeight(h);
+                    changeBackgroundHeight(h);
                 }else {
-                    changeDoodleHeight((int) (thisHeight));
+                    changeBackgroundHeight((int) (thisHeight));
                 }
 //                mLinesView.setViewHeightWithTextView(h);
 //                mDoodleView.setViewHeightWithTextView(h);
             }
         });
+        smartViewList.add(mLinesView);
         addView(mLinesView);
+        smartViewList.add(mSmartTextView);
         addView(mSmartTextView);
+        smartViewList.add(mDoodleView);
         addView(mDoodleView);
+//        smartViewList.add(mTextBoxView);
+//        addView(mTextBoxView);
+        smartViewList.add(mTextBoxContainer);
+        addView(mTextBoxContainer);
 //        mLinesView.setVisibility(GONE);
         //=====test======
         mSmartTextView.setBackgroundColor(Color.parseColor("#A003aF30"));
 //        mLinesView.setBackgroundColor(Color.parseColor("#A0a03030"));
+////        mDoodleView.setBackgroundColor(Color.parseColor("#083030F0"));
 ////        mDoodleView.setBackgroundColor(Color.parseColor("#083030F0"));
     }
 
@@ -138,15 +164,35 @@ public class SmartHandNoteView extends FrameLayout {
      * 初始化手势器
      * */
     private void initGesture() {
-        mGestureDetector = new TouchGestureDetector(getContext(), new MyTouchControl());
-        mInterceptDetector = new TouchGestureDetector(getContext(), new MyTouchControl());
+        mGestureDetector = new TouchGestureDetector(getContext(), new MyTouchControl(TYPE_TOUCH));
+        mInterceptDetector = new TouchGestureDetector(getContext(), new MyTouchControl(TYPE_INTERCEPT));
     }
 
     public void refreshLineView() {
         mLinesView.invalidate();
     }
 
+//    public void addTextBox(float mPrevX, float mPrevY, float mMovedX, float mMovedY) {
+//        EditText editText = new EditText(mContext);
+//        float startX = Math.min(mPrevX, mMovedX);
+//        float startY = Math.min(mPrevY, mMovedY);
+//        float width = Math.abs(mPrevX - mMovedX);
+//        LayoutParams layoutParams = new LayoutParams((int) width, LayoutParams.WRAP_CONTENT);
+//        editText.setLayoutParams(layoutParams);
+//        layoutParams.leftMargin = (int) startX;
+//        layoutParams.topMargin = (int) startY;
+//        mEditViewList.add(editText);
+//        addView(editText);
+//    }
+
     class MyTouchControl extends TouchGestureDetector.OnTouchGestureListener {
+
+        int mType;
+
+        public MyTouchControl(int type) {
+            super();
+            mType = type;
+        }
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetectorApi27 detector) {
@@ -175,6 +221,9 @@ public class SmartHandNoteView extends FrameLayout {
 
         @Override
         public boolean onScale(ScaleGestureDetectorApi27 detector) { // 双指缩放中
+            if(mViewMode == MODE_TEXT_BOX && mType == TYPE_INTERCEPT){
+                return false;
+            }
             float scaleFactor = detector.getScaleFactor();
             float tempScale = mLastScale * scaleFactor;
             if(scaleFactor < (1 + minScaleResponse) && scaleFactor > (1 - minScaleResponse)){
@@ -284,6 +333,9 @@ public class SmartHandNoteView extends FrameLayout {
         //
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if(mViewMode == MODE_TEXT_BOX && mType == TYPE_INTERCEPT){
+                return false;
+            }
             //这里的distance是local - target的结果，所以右移得到的是负的值，需要取反
             double squareDis =  distanceX * distanceX + distanceY * distanceY;
             float realX = -distanceX;
@@ -353,17 +405,33 @@ public class SmartHandNoteView extends FrameLayout {
     private void doScale(float focusX, float focusY, float tempScale) {
 //        LogUtil.e(TAG, "focusX = " + focusX + ", focusY = " + focusY);
         mLastScale = tempScale;
-        mSmartTextView.smartScaleTo(focusX, focusY, tempScale, tempScale);
-        mLinesView.smartScaleTo(focusX, focusY, tempScale, tempScale);
-        mDoodleView.smartScaleTo(focusX, focusY, tempScale, tempScale);
+        for (Smartable smartView : smartViewList) {
+            smartView.smartScaleTo(focusX, focusY, tempScale, tempScale);
+        }
+//        mSmartTextView.smartScaleTo(focusX, focusY, tempScale, tempScale);
+//        mLinesView.smartScaleTo(focusX, focusY, tempScale, tempScale);
+//        mDoodleView.smartScaleTo(focusX, focusY, tempScale, tempScale);
+//        mTextBoxView.smartScaleTo(focusX, focusY, tempScale, tempScale);
+//        textBoxContainer.smartScaleTo(focusX, focusY, tempScale, tempScale);
     }
 
     private void doScale(float tempScale) {
 //        LogUtil.e(TAG, "focusX = " + focusX + ", focusY = " + focusY);
         mLastScale = tempScale;
-        mSmartTextView.smartScaleTo(mSmartTextView.getPivotX(), mSmartTextView.getPivotY(), tempScale, tempScale);
-        mLinesView.smartScaleTo(mSmartTextView.getPivotX(), mSmartTextView.getPivotY(), tempScale, tempScale);
-        mDoodleView.smartScaleTo(mSmartTextView.getPivotX(), mSmartTextView.getPivotY(), tempScale, tempScale);
+        float pivotX = mSmartTextView.getPivotX();
+        float pivotY = mSmartTextView.getPivotY();
+        for (Smartable smartView : smartViewList) {
+            smartView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
+        }
+//        mSmartTextView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
+//        mLinesView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
+//        mDoodleView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
+//        mTextBoxView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
+//        textBoxContainer.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
+    }
+
+    public float getScaleRate(){
+        return mLastScale;
     }
 
     /**
@@ -374,9 +442,14 @@ public class SmartHandNoteView extends FrameLayout {
         //todo:wd 感觉LineView可以只添加Y轴的偏移，保证X轴的位置不变(和doodleView同步也可以，保证了统一性)
         mDistanceX = translateX;
         mDistanceY = translateY;
-        mSmartTextView.smartTranslateTo(translateX, translateY);
-        mLinesView.smartTranslateTo(translateX, translateY);
-        mDoodleView.smartTranslateTo(translateX, translateY);
+        for (Smartable smartView : smartViewList) {
+            smartView.smartTranslateTo(translateX, translateY);
+        }
+//        mSmartTextView.smartTranslateTo(translateX, translateY);
+//        mLinesView.smartTranslateTo(translateX, translateY);
+//        mDoodleView.smartTranslateTo(translateX, translateY);
+//        mTextBoxView.smartTranslateTo(translateX, translateY);
+//        textBoxContainer.smartTranslateTo(translateX, translateY);
     }
 
     /**
@@ -385,9 +458,14 @@ public class SmartHandNoteView extends FrameLayout {
      * */
     @Deprecated
     private void doTranslateBy(float distanceX, float distanceY) {
-        mSmartTextView.smartTranslateBy(distanceX, distanceY);
-        mLinesView.smartTranslateBy(distanceX, distanceY);
-        mDoodleView.smartTranslateBy(distanceX, distanceY);
+        for (Smartable smartView : smartViewList) {
+            smartView.smartTranslateBy(distanceX, distanceY);
+        }
+//        mSmartTextView.smartTranslateBy(distanceX, distanceY);
+//        mLinesView.smartTranslateBy(distanceX, distanceY);
+//        mDoodleView.smartTranslateBy(distanceX, distanceY);
+//        mTextBoxView.smartTranslateBy(distanceX, distanceY);
+//        textBoxContainer.smartTranslateBy(distanceX, distanceY);
     }
 
     @Override
@@ -581,18 +659,28 @@ public class SmartHandNoteView extends FrameLayout {
 //        if(mViewMode == MODE_TEXT){
 //            return super.onTouchEvent(event);
 //        }
+        //处于EDIT MODE时，已屏蔽tetview，所以理论上事件都是走TouchEvent
+//        if(mViewMode == MODE_TEXT_BOX){
+//            return doTextBoxTouchEvent(event);
+//        }
         boolean result = mGestureDetector.onTouchEvent(event);
         return result ? true : super.onTouchEvent(event);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        LogUtil.e(TAG, "onInterceptTouchEvent == " + event.toString());
+//        LogUtil.e(TAG, "onInterceptTouchEvent == " + event.toString());
 //        return super.onInterceptTouchEvent(event);
+        //处理但不拦截
         if(mViewMode == MODE_TEXT){
             boolean result = mInterceptDetector.onTouchEvent(event);
         }
         return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 
 //===========================================================================
@@ -606,11 +694,15 @@ public class SmartHandNoteView extends FrameLayout {
             case MODE_SCALE:
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
+//                setTextBoxEnable(false);
                 break;
             case MODE_TEXT:
                 mSmartTextView.setEnabled(true);
                 mSmartTextView.requestFocus();
                 mDoodleView.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
+//                setTextBoxEnable(false);
                 doTranslateTo(0,0);
                 doScale(1);
                 showSoftKeyboard();
@@ -618,12 +710,45 @@ public class SmartHandNoteView extends FrameLayout {
             case MODE_DOODLE:
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(true);
+                mTextBoxContainer.setEnabled(false);
+//                setTextBoxEnable(false);
+                break;
+            case MODE_TEXT_BOX:
+                //设置文本框可编辑模式
+                mSmartTextView.setEnabled(false);
+                mDoodleView.setEnabled(false);
+                mTextBoxContainer.setEnabled(true);
+//                setTextBoxEnable(true);
+                break;
+            default:
+                mSmartTextView.setEnabled(false);
+                mDoodleView.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
+//                setTextBoxEnable(false);
                 break;
         }
-        mSmartTextView.invalidate();
-        mLinesView.invalidate();
-        mDoodleView.invalidate();
+        for (Smartable smartView : smartViewList) {
+            View view = (View) smartView;
+            view.invalidate();
+        }
+//        mSmartTextView.invalidate();
+//        mLinesView.invalidate();
+//        mDoodleView.invalidate();
+//        mTextBoxView.invalidate();
+//        mTextBoxContainer.invalidate();
     }
+
+//    private void setTextBoxEnable(boolean enable) {
+//        mTextBoxView.setEnabled(enable);
+//        enableEditText(enable);
+//    }
+//
+//    @Deprecated
+//    private void enableEditText(boolean enable) {
+//        for (TextView tv : mEditViewList){
+//            tv.setEnabled(enable);
+//        }
+//    }
 
     private void showSoftKeyboard() {
         InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -734,7 +859,7 @@ public class SmartHandNoteView extends FrameLayout {
 
     //=========================================
     int lineNum = 0;
-    public void test(Bitmap viewDoodle) {
+    public void test() {
         Rect rect = new Rect();
 //        LogUtil.e(TAG, "rect = " + rect);
 //        System.out.println("========");
@@ -744,15 +869,21 @@ public class SmartHandNoteView extends FrameLayout {
         System.out.println("==============");
         System.out.println("==============");
         System.out.println("==============");
+        mTextBoxContainer.test();
     }
 
     public void setChildPivot(float pivotX, float pivotY){
-        mLinesView.setPivotX(pivotX);
-        mLinesView.setPivotY(pivotY);
-        mDoodleView.setPivotX(pivotX);
-        mDoodleView.setPivotY(pivotY);
-        mSmartTextView.setPivotX(pivotX);
-        mSmartTextView.setPivotY(pivotY);
+        for (Smartable smartView : smartViewList) {
+            View view = (View) smartView;
+            view.setPivotX(pivotX);
+            view.setPivotY(pivotY);
+        }
+//        mLinesView.setPivotX(pivotX);
+//        mLinesView.setPivotY(pivotY);
+//        mDoodleView.setPivotX(pivotX);
+//        mDoodleView.setPivotY(pivotY);
+//        mSmartTextView.setPivotX(pivotX);
+//        mSmartTextView.setPivotY(pivotY);
     }
 
     public void logView(View v){
@@ -812,6 +943,15 @@ public class SmartHandNoteView extends FrameLayout {
         Bitmap doodleBitmap = mDoodleView.getBitmap();
         canvas.drawBitmap(doodleBitmap,0f,0f,null);
         mDoodleView.setEnabled(doodleEnable);
+        //draw textBox
+        boolean textBoxEnable = mTextBoxContainer.isEnabled();
+        if(textBoxEnable){
+            mTextBoxContainer.setEnabled(false);
+        }
+        Bitmap textBoxBitmap = mTextBoxContainer.getBitmap();
+        canvas.drawBitmap(textBoxBitmap,0f,0f,null);
+        mTextBoxContainer.setEnabled(textBoxEnable);
+        //==========
 //        mLinesView.setVisibility(VISIBLE);
         return bitmap;
     }
@@ -831,18 +971,23 @@ public class SmartHandNoteView extends FrameLayout {
 //            lineLayoutParams.height = bitmapHeight;
 //            mLinesView.setLayoutParams(lineLayoutParams);
 //        }
-        changeDoodleHeight(bitmapHeight);
+        changeBackgroundHeight(bitmapHeight);
         mDoodleView.setBitmap(bitmap);
     }
 
-    public void changeDoodleHeight(int height) {
+    public void changeBackgroundHeight(int height) {
         int doodleHeight = mDoodleView.getHeight();
         if(height > doodleHeight){
-            setChildHeight(mDoodleView, height);
-            setChildHeight(mLinesView, height);
-//            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
-//            lineLayoutParams.height = height;
-//            mLinesView.setLayoutParams(lineLayoutParams);
+            for(Smartable smartView : smartViewList){
+                if(smartView instanceof SmartTextView){
+                    continue;
+                }else {
+                    View view = (View) smartView;
+                    setChildHeight(view, height);
+                }
+            }
+//            setChildHeight(mDoodleView, height);
+//            setChildHeight(mLinesView, height);
         }
     }
 

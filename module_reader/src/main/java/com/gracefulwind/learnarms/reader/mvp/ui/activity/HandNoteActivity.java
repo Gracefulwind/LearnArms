@@ -93,8 +93,7 @@ public class HandNoteActivity extends MyBaseActivity {
         }else if(R.id.rahn_btn_uncancel == id){
             rahnShnHandNote.redoLastDraw();
         }else if(R.id.rahn_btn_test == id){
-//            rahnShnHandNote.test();
-            rahnShnHandNote.setDoodleMode(OperationPresenter.MODE_ERASER);
+            rahnShnHandNote.test();
         }else if(R.id.rahn_btn_save_text == id){
             Editable viewText = rahnShnHandNote.getViewText();
         }else if(R.id.rahn_btn_save_doodle == id){
@@ -108,7 +107,8 @@ public class HandNoteActivity extends MyBaseActivity {
                 BitmapUtil.saveBitmap(this, viewBitmap);
 //            viewBitmap.recycle();
         }else if(R.id.rahn_btn_show_all == id){
-            rahnShnHandNote.test(viewDoodle);
+//            rahnShnHandNote.test(viewDoodle);
+            rahnShnHandNote.setViewMode(SmartHandNoteView.MODE_TEXT_BOX);
         }/*else if(R.id.rahn_btn_doodle == id){
 
         }*/

@@ -43,7 +43,7 @@ import com.gracefulwind.learnarms.reader.widget.Smartable;
 public class SmartTextView extends TextView implements Smartable {
     public static final String TAG = SmartTextView.class.getName();
 
-    private  boolean mNeedLines = true;
+    private  boolean mNeedLines = false;
     private TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private int width;
     private int height;
@@ -74,7 +74,6 @@ public class SmartTextView extends TextView implements Smartable {
             soluteLineHeightMethod1();
 //            soluteLineHeightMethod2();
         }
-
     }
 
     private void soluteLineHeightMethod1() {

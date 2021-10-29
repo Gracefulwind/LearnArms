@@ -107,7 +107,7 @@ public class DoodleView extends View implements Smartable {
                     SmartHandNoteView parentView = (SmartHandNoteView) parent;
                     int lineHeight = parentView.getLineHeight();
                     if(y >= height - responseLineNumber * lineHeight){
-                        parentView.changeDoodleHeight(height + expandLineNumber * lineHeight);
+                        parentView.changeBackgroundHeight(height + expandLineNumber * lineHeight);
                     }
                 }
 
