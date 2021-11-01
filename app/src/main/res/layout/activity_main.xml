@@ -85,7 +85,8 @@
             style="@style/style_common_text_button"
             />
         <TextView
-            android:text="美食"
+            android:id="@+id/am_tv_smart_write"
+            android:text="智能手写"
             style="@style/style_common_text_button"
             />
 
@@ -111,7 +112,7 @@
             style="@style/style_common_text_button"
             />
         <TextView
-            android:text="谈写作"
+            android:text="美食"
             style="@style/style_common_text_button"
             />
         <TextView
@@ -128,7 +129,11 @@
             app:layout_order="2"
             style="@style/style_common_text_button"
             />
-
+        <TextView
+            android:id="@+id/am_tv_copy"
+            android:text="Copy组件"
+            style="@style/style_common_text_button"
+            />
     </com.google.android.flexbox.FlexboxLayout>
 
 </LinearLayout>

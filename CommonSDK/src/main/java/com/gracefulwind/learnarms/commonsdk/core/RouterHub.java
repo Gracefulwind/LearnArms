@@ -43,12 +43,14 @@ public interface RouterHub {
      * 组名
      */
     String APP_HOME = "/app";//宿主 App 组件
+    String COPY = "/copy";//copy组件
     String ZHIHU_HOME = "/zhihu";//知乎组件
     String GANK_HOME = "/gank";//干货集中营组件
     String GOLD_HOME = "/gold";//稀土掘金组件
     String TEST_DAGGER_HOME = "/test_dagger";//测试dagger组件
     String WEATHER_HOME = "/weather";//天气组件
     String READER_HOME = "/novels";//小说组件
+    String WRITE_HOME = "/smart_write";//智能手写组件
 
     /**
      * 服务组件, 用于给每个组件暴露特有的服务
@@ -62,6 +64,14 @@ public interface RouterHub {
     String APP_SPLASHACTIVITY = APP_HOME + "/SplashActivity";
     String APP_MAINACTIVITY = APP_HOME + "/MainActivity";
 
+//====================================================================
+    /**
+     * copy组件
+     * */
+    interface Copy{
+        String BASE = COPY;
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
+    }
 
 //====================================================================================================
     /**
@@ -150,6 +160,14 @@ public interface RouterHub {
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";
         }
 
+    }
+//====================================================================
+    /**
+     * 智能手写组件
+     * */
+    interface SmartWrite{
+        String BASE = WRITE_HOME;
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
     }
 
 }

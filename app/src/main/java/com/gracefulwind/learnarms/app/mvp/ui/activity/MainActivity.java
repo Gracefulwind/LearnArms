@@ -142,7 +142,8 @@ public class MainActivity extends BaseActivity {
      *
      * @param view
      */
-    @OnClick({R.id.bt_zhihu, R.id.bt_gank, R.id.bt_gold, R.id.am_tv_click1, R.id.am_tv_weather_report, R.id.am_tv_see_novels})
+    @OnClick({R.id.bt_zhihu, R.id.bt_gank, R.id.bt_gold, R.id.am_tv_click1, R.id.am_tv_weather_report
+            , R.id.am_tv_see_novels, R.id.am_tv_smart_write, R.id.am_tv_copy})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_zhihu:
@@ -165,6 +166,14 @@ public class MainActivity extends BaseActivity {
             case R.id.am_tv_see_novels:
                 //看小说
                 Utils.navigation(MainActivity.this, RouterHub.Reader.HOME_ACTIVITY);
+                break;
+            case R.id.am_tv_smart_write:
+                //手写板
+                Utils.navigation(MainActivity.this, RouterHub.SmartWrite.HOME_ACTIVITY);
+                break;
+            case R.id.am_tv_copy:
+                //拷贝组件
+                Utils.navigation(MainActivity.this, RouterHub.Copy.HOME_ACTIVITY);
                 break;
             default:
                 break;

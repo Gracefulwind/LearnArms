@@ -98,6 +98,8 @@ dependencies {
         runtimeOnly project(":module_weather")
         runtimeOnly project(":module_reader")
         runtimeOnly project(":module_test_dagger")
+        runtimeOnly project(":copy")
+        runtimeOnly project(":module_write")
     }
     implementation project(":CommonRes")//因为 CommonRes 依赖了 CommonSDK, 所以如果业务模块需要公共 UI 组件就依赖 CommonRes, 如果不需要就只依赖 CommonSDK
     implementation project(":CommonService")
