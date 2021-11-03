@@ -5,7 +5,8 @@
     <application>
         <activity
             android:name="com.gracefulwind.learnarms.write.mvp.ui.activity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape"
+            />
     </application>
 
 </manifest>

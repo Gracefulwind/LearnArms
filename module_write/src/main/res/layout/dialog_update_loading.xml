@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="446dp"
+        android:layout_height="182dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/shape_corner_12_white"
+        >
+
+        <TextView
+            android:id="@+id/dul_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="33dp"
+            android:text="提交中，请等待"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/dul_ll_status"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginBottom="@dimen/public_dimen_10dp"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:id="@+id/dul_iv_indicator"
+                android:layout_width="@dimen/public_dimen_32dp"
+                android:layout_height="@dimen/public_dimen_32dp"
+                android:scaleType="fitCenter"
+                />
+            <View
+                android:id="@+id/dul_v"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="#0000F0"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dul_ll_status"
+            android:layout_width="@dimen/public_dimen_0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginBottom="32dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商机"
+                />
+            <androidx.legacy.widget.Space
+                android:layout_width="@dimen/public_dimen_0dp"
+                android:layout_height="@dimen/public_dimen_0dp"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="预设问题"
+                />
+            <androidx.legacy.widget.Space
+                android:layout_width="@dimen/public_dimen_0dp"
+                android:layout_height="@dimen/public_dimen_0dp"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="记事本"
+                />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
