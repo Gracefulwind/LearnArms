@@ -78,13 +78,19 @@
     <dimen name="public_dimen_10dp">10dp</dimen>
     <dimen name="public_dimen_12dp">12dp</dimen>
     <dimen name="public_dimen_15dp">15dp</dimen>
+    <dimen name="public_dimen_16dp">16dp</dimen>
+    <dimen name="public_dimen_18dp">18dp</dimen>
     <dimen name="public_dimen_20dp">20dp</dimen>
     <dimen name="public_dimen_27dp">27dp</dimen>
     <dimen name="public_dimen_30dp">30dp</dimen>
     <dimen name="public_dimen_32dp">32dp</dimen>
+    <dimen name="public_dimen_35dp">35dp</dimen>
     <dimen name="public_dimen_40dp">40dp</dimen>
+    <dimen name="public_dimen_42dp">42dp</dimen>
+    <dimen name="public_dimen_48dp">48dp</dimen>
     <dimen name="public_dimen_60dp">60dp</dimen>
     <dimen name="public_dimen_80dp">80dp</dimen>
+    <dimen name="public_dimen_172dp">172dp</dimen>
 
 
 

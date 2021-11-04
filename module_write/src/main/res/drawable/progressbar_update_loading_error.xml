@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--  设置进度条背景色-->
+    <item android:id="@android:id/background"
+        android:drawable="@color/public_color_EDEDED">
+    </item>
+
+    <!--  设置进度条颜色  -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <solid android:color="#F65A5A" />
+<!--                <gradient-->
+<!--                    android:endColor="#fff000"-->
+<!--                    android:startColor="#fff000" />-->
+            </shape>
+        </clip>
+    </item>
+</layer-list>

@@ -74,13 +74,15 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
         ArmsUtils.snackbarText(message);
     }
 
+
+
     @OnClick({R2.id.wam_tv_write, R2.id.wam_tv_dialog, R2.id.wam_tv_test1, R2.id.wam_tv_test2})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(id == R.id.wam_tv_write){
 
         }else if(id == R.id.wam_tv_dialog){
-            new UpdateLoadingDialog.Builder(this).build().show();
+            setUpdateDialog();
         }else if(id == R.id.wam_tv_test1){
             WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
             DisplayMetrics dm = new DisplayMetrics();
@@ -100,6 +102,30 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
         }else if(id == R.id.wam_tv_dialog){
 
         }
+    }
+
+    public void setUpdateDialog() {
+        UpdateLoadingDialog updateDialog = new UpdateLoadingDialog.Builder(this)
+            .setIndicator(R.drawable.gif_uld_hxb_default, R.drawable.gif_uld_fox)
+            .setStep1Callback(new UpdateLoadingDialog.OnStepSuccessCallback() {
+                @Override
+                public void onSuccess() {
+
+                }
+            }, new UpdateLoadingDialog.OnStepErrorCallback() {
+                @Override
+                public void onCancelClicked() {
+
+                }
+
+                @Override
+                public void onRetryClicked() {
+
+                }
+            })
+            .build();
+        updateDialog.show();
+
     }
 
 }
