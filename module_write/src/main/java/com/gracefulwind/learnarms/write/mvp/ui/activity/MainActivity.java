@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.RxTimerUtil;
 import com.gracefulwind.learnarms.write.R2;
 import com.gracefulwind.learnarms.write.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.write.mvp.di.component.DaggerMainComponent;
@@ -25,6 +27,8 @@ import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 import butterknife.OnClick;
 
@@ -43,6 +47,9 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  */
 @Route(path = RouterHub.SmartWrite.HOME_ACTIVITY)
 public class MainActivity extends MyBaseActivity<MainPresenter> implements MainContract.View {
+
+    private UpdateLoadingDialog updateDialog;
+
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerMainComponent //如找不到该类,请编译一下项目
@@ -105,27 +112,126 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     }
 
     public void setUpdateDialog() {
-        UpdateLoadingDialog updateDialog = new UpdateLoadingDialog.Builder(this)
-            .setIndicator(R.drawable.gif_uld_hxb_default, R.drawable.gif_uld_fox)
+//        RxTimerUtil.cancel();
+//        RxTimerUtil.timer(5000, new RxTimerUtil.IRxNext() {
+//            @Override
+//            public void doNext(long number) {
+//                setStep2Success(true);
+//                RxTimerUtil.cancel();
+//                RxTimerUtil.timer(5000, new RxTimerUtil.IRxNext() {
+//                    @Override
+//                    public void doNext(long number) {
+//                        setStep3Success(false);
+//
+//                    }
+//                });
+//            }
+//        });
+
+        updateDialog = new UpdateLoadingDialog.Builder(this)
+            .setIndicator(UpdateLoadingDialog.Builder.TYPE_FOX)
             .setStep1Callback(new UpdateLoadingDialog.OnStepSuccessCallback() {
                 @Override
                 public void onSuccess() {
-
+                    test1DialogStep2();
                 }
             }, new UpdateLoadingDialog.OnStepErrorCallback() {
                 @Override
                 public void onCancelClicked() {
-
+                    updateDialog.cancel();
                 }
 
                 @Override
                 public void onRetryClicked() {
-
+                    test1DialogStep1();
                 }
-            })
+            }).setStep2Callback(new UpdateLoadingDialog.OnStepSuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        test1DialogStep3();
+                    }
+                }, new UpdateLoadingDialog.OnStepErrorCallback() {
+                    @Override
+                    public void onCancelClicked() {
+                        Toast.makeText(MainActivity.this, "step2 clicked", Toast.LENGTH_SHORT).show();
+                        updateDialog.cancel();
+                    }
+
+                    @Override
+                    public void onRetryClicked() {
+                        test1DialogStep2();
+                    }
+                }).setStep3Callback(new UpdateLoadingDialog.OnStepSuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        updateDialog.cancel();
+                    }
+                }, new UpdateLoadingDialog.OnStepErrorCallback() {
+                    @Override
+                    public void onCancelClicked() {
+                        Toast.makeText(MainActivity.this, "step3 clicked", Toast.LENGTH_SHORT).show();
+                        updateDialog.cancel();
+                    }
+
+                    @Override
+                    public void onRetryClicked() {
+                        test1DialogStep3();
+                    }
+                })
             .build();
         updateDialog.show();
+        test1DialogStep1();
+    }
 
+    public void test1DialogStep1() {
+        updateDialog.startStep1();
+        RxTimerUtil.cancel();
+        RxTimerUtil.timer(500, new RxTimerUtil.IRxNext() {
+            @Override
+            public void doNext(long number) {
+                int i = new Random().nextInt(10);
+                LogUtil.e(TAG, "test1DialogStep1  == " + (i > 2));
+                if(i > 2){
+                    updateDialog.setStep1Result(true);
+                }else {
+                    updateDialog.setStep1Result(false);
+                }
+            }
+        });
+    }
+
+    public void test1DialogStep2() {
+        updateDialog.startStep2();
+        RxTimerUtil.cancel();
+        RxTimerUtil.timer(200, new RxTimerUtil.IRxNext() {
+            @Override
+            public void doNext(long number) {
+                int i = new Random().nextInt(10);
+                LogUtil.e(TAG, "test1DialogStep2  == " + (i > 8));
+                if(i > 4){
+                    updateDialog.setStep2Result(true);
+                }else {
+                    updateDialog.setStep2Result(false);
+                }
+            }
+        });
+    }
+
+    public void test1DialogStep3() {
+        updateDialog.startStep3();
+        RxTimerUtil.cancel();
+        RxTimerUtil.timer(4000, new RxTimerUtil.IRxNext() {
+            @Override
+            public void doNext(long number) {
+                int i = new Random().nextInt(10);
+                LogUtil.e(TAG, "test1DialogStep3  == " + (i > 8));
+                if(i > 8){
+                    updateDialog.setStep3Result(true);
+                }else {
+                    updateDialog.setStep3Result(false);
+                }
+            }
+        });
     }
 
 }

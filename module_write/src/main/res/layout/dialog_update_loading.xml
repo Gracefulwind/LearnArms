@@ -41,6 +41,34 @@
             android:orientation="vertical"
             >
 
+<!--            <LinearLayout-->
+<!--                android:id="@+id/dul_ll_indicator_container"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+
+<!--                >-->
+<!--                <androidx.legacy.widget.Space-->
+<!--                    android:id="@+id/dul_indicator_space_0"-->
+<!--                    android:layout_width="@dimen/public_dimen_0dp"-->
+<!--                    android:layout_height="@dimen/public_dimen_0dp"-->
+<!--                    android:layout_weight="0"-->
+<!--                    />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/dul_iv_indicator"-->
+<!--                    android:layout_width="@dimen/public_dimen_32dp"-->
+<!--                    android:layout_height="@dimen/public_dimen_32dp"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    />-->
+
+<!--                <androidx.legacy.widget.Space-->
+<!--                    android:id="@+id/dul_indicator_space_1"-->
+<!--                    android:layout_width="@dimen/public_dimen_0dp"-->
+<!--                    android:layout_height="@dimen/public_dimen_0dp"-->
+<!--                    android:layout_weight="100"-->
+<!--                    />-->
+<!--            </LinearLayout>-->
             <ImageView
                 android:id="@+id/dul_iv_indicator"
                 android:layout_width="@dimen/public_dimen_32dp"

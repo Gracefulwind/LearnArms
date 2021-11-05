@@ -1,41 +1,34 @@
 package com.gracefulwind.learnarms.write.widget.dialog;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.RxTimerUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.GlideUtil;
 import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.R2;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.gracefulwind.learnarms.commonsdk.utils.GlideUtil.loadBitmap;
+import static com.gracefulwind.learnarms.commonsdk.utils.GlideUtil.loadGifOneTime;
 
 /**
  * @ClassName: UpdateLoadingDialog
@@ -52,9 +45,21 @@ public class UpdateLoadingDialog extends Dialog {
     public static final String TAG = "UpdateLoadingDialog";
 
     private Context mContext;
+
+    float loadFakeProgress = 0.85f;
+    float loadFakeProgress2 = 0.95f;
+
+
     @DrawableRes int mSuccessIndicator;
     @DrawableRes int mErrorIndicator;
+
     StatusEnum status;
+
+    private ObjectAnimator oaIndicator1To2;
+    private ObjectAnimator oaProgress1To2;
+    private ObjectAnimator oaIndicator2To3;
+    private ObjectAnimator oaProgress2To3;
+
     enum StatusEnum{
         STEP1,
         STEP2,
@@ -72,6 +77,8 @@ public class UpdateLoadingDialog extends Dialog {
 
     @BindView(R2.id.dul_tv_title)
     TextView dulTvTitle;
+    @BindView(R2.id.dul_ll_progress_container)
+    LinearLayout dulLlProgressContainer;
     @BindView(R2.id.dul_iv_indicator)
     ImageView dulIvIndicator;
     @BindView(R2.id.dul_iv_step1)
@@ -131,153 +138,305 @@ public class UpdateLoadingDialog extends Dialog {
         step3ErrorCallback = errorCallback;
     }
 
-    @OnClick({R2.id.dul_iv_indicator, R2.id.dul_ll_status})
+    @OnClick({R2.id.dul_iv_indicator, R2.id.dul_tv_cancel, R2.id.dul_tv_retry})
     public void onViewClicked(View view){
         int id = view.getId();
         if(R.id.dul_iv_indicator == id){
-            this.cancel();
-        }else if(R.id.dul_ll_status == id){
-
+            System.out.println("==============");
+            System.out.println("=====test======");
+            System.out.println("==============");
+        }else if(R.id.dul_tv_cancel == id){
+            switch (status){
+                case STEP1:
+                    if(null != step1ErrorCallback){
+                        step1ErrorCallback.onCancelClicked();
+                    }
+                    break;
+                case STEP2:
+                    if(null != step2ErrorCallback){
+                        step2ErrorCallback.onCancelClicked();
+                    }
+                    break;
+                case STEP3:
+                    if(null != step3ErrorCallback){
+                        step3ErrorCallback.onCancelClicked();
+                    }
+                    break;
+            }
+        }else if(R.id.dul_tv_retry == id){
+            dulRlErrorButtons.setVisibility(View.GONE);
+            switch (status){
+                case STEP1:
+                    if(null != step1ErrorCallback){
+                        step1ErrorCallback.onRetryClicked();
+                    }
+                    break;
+                case STEP2:
+                    if(null != step2ErrorCallback){
+                        step2ErrorCallback.onRetryClicked();
+                    }
+                    break;
+                case STEP3:
+                    if(null != step3ErrorCallback){
+                        step3ErrorCallback.onRetryClicked();
+                    }
+                    break;
+            }
         }else if(R.id.dul_ll_status == id){
 
         }
     }
 
     public void show(){
-//        Glide.with(mContext).asGif().load(R.drawable.gif_uld_upload_ing).into(dulIvStep1);
+        loadGif(mContext, mSuccessIndicator, dulIvIndicator);
         loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep1);
         super.show();
-        RxTimerUtil.timer(2000, new RxTimerUtil.IRxNext() {
-            @Override
-            public void doNext(long number) {
-                setStep1Success(true);
-                RxTimerUtil.timer(3000, new RxTimerUtil.IRxNext() {
-                    @Override
-                    public void doNext(long number) {
-                        setStep2Success(false);
-                    }
-                });
-            }
-        });
-
     }
 
-    public void setStep1Success(boolean isSuccess){
+    boolean step1Result, step2Result, step3Result = false;
+    boolean step1Flag,step2Flag,step3Flag = false;
+
+    public void setStep1Result(boolean isSuccess){
+        step1Result = isSuccess;
+        step1Flag = true;
         if(isSuccess){
             dulRlErrorButtons.setVisibility(View.GONE);
-            loadOneTimeGif(mContext, R.drawable.gif_uld_upload_success, dulIvStep1, new GifListener() {
+            if(null != step1SuccessCallback){
+                step1SuccessCallback.onSuccess();
+            }
+            loadGif(mContext, mSuccessIndicator, dulIvIndicator);
+            loadGifOneTime(mContext, R.drawable.gif_uld_upload_success, dulIvStep1, new GlideUtil.GifListener() {
                 @Override
                 public void gifPlayComplete() {
-                    Toast.makeText(mContext, "Gif播放完成", Toast.LENGTH_SHORT).show();
+                    setStep1ResultIcon();
                 }
             });
-//            Glide.with(mContext).asGif().load(R.drawable.gif_uld_upload_ing).into(dulIvStep1);
-            loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep2);
         }else {
+            status = StatusEnum.STEP1;
             dulRlErrorButtons.setVisibility(View.VISIBLE);
-            loadOneTimeGif(mContext, R.drawable.gif_uld_upload_error, dulIvStep1, new GifListener() {
+            loadGif(mContext, mErrorIndicator, dulIvIndicator);
+            loadGifOneTime(mContext, R.drawable.gif_uld_upload_error, dulIvStep1, new GlideUtil.GifListener() {
                 @Override
                 public void gifPlayComplete() {
-                    Toast.makeText(mContext, "Gif播放完成", Toast.LENGTH_SHORT).show();
+                    setStep1ResultIcon();
                 }
             });
         }
     }
 
-    public void setStep2Success(boolean isSuccess){
-        dulPbStep1To2.setProgress(100);
+    public void setStep2Result(boolean isSuccess){
+        step2Result = isSuccess;
+        step2Flag = true;
+        setStep2Finished();
         if(isSuccess){
             dulRlErrorButtons.setVisibility(View.GONE);
-            dulPbStep1To2.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
-            loadOneTimeGif(mContext, R.drawable.gif_uld_upload_success, dulIvStep2, new GifListener() {
+            if(null != step2SuccessCallback){
+                step2SuccessCallback.onSuccess();
+            }
+            loadGif(mContext, mSuccessIndicator, dulIvIndicator);
+            dulPbStep2To3.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
+            loadGifOneTime(mContext, R.drawable.gif_uld_upload_success, dulIvStep2, new GlideUtil.GifListener() {
                 @Override
                 public void gifPlayComplete() {
-                    Toast.makeText(mContext, "Gif播放完成", Toast.LENGTH_SHORT).show();
+                    setStep2ResultIcon();
                 }
             });
         }else {
+            status = StatusEnum.STEP2;
             dulRlErrorButtons.setVisibility(View.VISIBLE);
             dulPbStep1To2.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_error));
-            loadOneTimeGif(mContext, R.drawable.gif_uld_upload_error, dulIvStep2, new GifListener() {
+            loadGif(mContext, mErrorIndicator, dulIvIndicator);
+            loadGifOneTime(mContext, R.drawable.gif_uld_upload_error, dulIvStep2, new GlideUtil.GifListener() {
                 @Override
                 public void gifPlayComplete() {
-                    Toast.makeText(mContext, "Gif播放完成", Toast.LENGTH_SHORT).show();
+                    setStep2ResultIcon();
                 }
             });
         }
-//        dulPbStep1To2.setProgress(100);
+    }
+
+    public void setStep3Result(boolean isSuccess){
+        step3Result = isSuccess;
+        step3Flag = true;
+        setStep2To3Finished();
+        if(isSuccess){
+            dulRlErrorButtons.setVisibility(View.GONE);
+            if(null != step3SuccessCallback){
+                step3SuccessCallback.onSuccess();
+            }
+            loadGif(mContext, mSuccessIndicator, dulIvIndicator);
+            loadGifOneTime(mContext, R.drawable.gif_uld_upload_success, dulIvStep3, new GlideUtil.GifListener() {
+                @Override
+                public void gifPlayComplete() {
+                    setStep3ResultIcon();
+                }
+            });
+        }else {
+            status = StatusEnum.STEP3;
+            dulRlErrorButtons.setVisibility(View.VISIBLE);
+            dulPbStep2To3.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_error));
+            loadGif(mContext, mErrorIndicator, dulIvIndicator);
+            loadGifOneTime(mContext, R.drawable.gif_uld_upload_error, dulIvStep3, new GlideUtil.GifListener() {
+                @Override
+                public void gifPlayComplete() {
+                    setStep3ResultIcon();
+                }
+            });
+        }
+    }
+
+    public void setStep1ResultIcon() {
+        if(!step1Flag){
+            loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep1);
+            return;
+        }
+        if (step1Result) {
+            loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep1);
+        } else {
+            loadBitmap(mContext, R.drawable.icon_uld_upload_error, dulIvStep1);
+        }
+    }
+
+    public void setStep2ResultIcon() {
+        if(!step2Flag){
+            loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep2);
+            return;
+        }
+        if (step2Result) {
+            loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep2);
+        } else {
+            loadBitmap(mContext, R.drawable.icon_uld_upload_error, dulIvStep2);
+        }
+    }
+
+    public void setStep3ResultIcon() {
+        if(!step3Flag){
+            loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep3);
+            return;
+        }
+        if (step3Result) {
+            loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep3);
+        } else {
+            loadBitmap(mContext, R.drawable.icon_uld_upload_error, dulIvStep3);
+        }
+    }
+
+    public void startStep1() {
+        step1Flag = false;
+        loadGif(mContext, mSuccessIndicator, dulIvIndicator);
+        loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep1);
+    }
+
+    public void step1Finished() {
+        int containerWidth = dulLlProgressContainer.getWidth();
+        int indicatorWidth = dulIvIndicator.getWidth();
+        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
+        dulPbStep1To2.setProgress(100);
+        dulIvIndicator.setTranslationX(oneStepWidth);
+    }
+
+    public void startStep2() {
+        step2Flag = false;
+        loadGif(mContext, mSuccessIndicator, dulIvIndicator);
+        loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep2);
+        dulPbStep1To2.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
+        int containerWidth = dulLlProgressContainer.getWidth();
+        int indicatorWidth = dulIvIndicator.getWidth();
+        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
+        if(null == oaIndicator1To2){
+            oaIndicator1To2 = ObjectAnimator.ofFloat(dulIvIndicator, "translationX"
+                    , 0f, oneStepWidth * loadFakeProgress, oneStepWidth * loadFakeProgress2);
+            oaIndicator1To2.setDuration(2000);
+        }else {
+            oaIndicator1To2.cancel();
+        }
+        oaIndicator1To2.start();
+        if(null == oaProgress1To2){
+            oaProgress1To2 = ObjectAnimator.ofInt(dulPbStep1To2, "progress"
+                    , 0, (int) (100 * loadFakeProgress), (int) (100 * loadFakeProgress2));
+            oaProgress1To2.setDuration(2000);
+        }else {
+            oaProgress1To2.cancel();
+        }
+        oaProgress1To2.start();
+    }
+
+    public void setStep2Finished() {
+        int containerWidth = dulLlProgressContainer.getWidth();
+        int indicatorWidth = dulIvIndicator.getWidth();
+        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
+        if(null != oaIndicator1To2){
+            oaIndicator1To2.cancel();
+        }
+        if(null != oaProgress1To2){
+            oaProgress1To2.cancel();
+        }
+        dulPbStep1To2.setProgress(100);
+        dulIvIndicator.setTranslationX(oneStepWidth);
+    }
+
+    public void startStep3() {
+        step3Flag = false;
+        loadGif(mContext, mSuccessIndicator, dulIvIndicator);
+        loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep3);
+        dulPbStep1To2.setProgress(100);
+        dulPbStep2To3.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
+        int containerWidth = dulLlProgressContainer.getWidth();
+        int indicatorWidth = dulIvIndicator.getWidth();
+        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
+        if(null == oaIndicator2To3){
+            oaIndicator2To3 = ObjectAnimator.ofFloat(dulIvIndicator, "translationX"
+                    , oneStepWidth, oneStepWidth + oneStepWidth * loadFakeProgress
+                    , oneStepWidth + oneStepWidth * loadFakeProgress2);
+            oaIndicator2To3.setDuration(2000);
+        }else {
+            oaIndicator2To3.cancel();
+        }
+        oaIndicator2To3.start();
+        if(null == oaProgress2To3){
+            oaProgress2To3 = ObjectAnimator.ofInt(dulPbStep2To3, "progress"
+                    , 0, (int) (100 * loadFakeProgress), (int) (100 * loadFakeProgress2));
+            oaProgress2To3.setDuration(2000);
+        }else {
+            oaProgress2To3.cancel();
+        }
+        oaProgress2To3.start();
+//        ObjectAnimator oaIndicator = ObjectAnimator.ofFloat(dulIvIndicator, "translationX", oneStepWidth, oneStepWidth + oneStepWidth * loadFakeProgress);
+//        oaIndicator.setDuration(2000);
+//        oaIndicator.start();
+//        ObjectAnimator oaProgress = ObjectAnimator.ofInt(dulPbStep2To3, "progress", 0, (int) (100 * loadFakeProgress));
+//        oaProgress.setDuration(2000);
+//        oaProgress.start();
+    }
+
+    public void setStep2To3Finished() {
+        int containerWidth = dulLlProgressContainer.getWidth();
+        int indicatorWidth = dulIvIndicator.getWidth();
+        float twoStepWidth = (containerWidth - indicatorWidth);
+        if(null != oaIndicator2To3){
+            oaIndicator1To2.cancel();
+        }
+        if(null != oaProgress2To3){
+            oaProgress2To3.cancel();
+        }
+        dulPbStep2To3.setProgress(100);
+        dulIvIndicator.setTranslationX(twoStepWidth);
     }
 
     public static void loadGif(Context context, Object model, final ImageView imageView){
         Glide.with(context).asGif().load(model).into(imageView);
     }
 
-    public static void loadOneTimeGif(Context context, Object model, final ImageView imageView, final GifListener gifListener) {
-        Glide.with(context).asGif().load(model).listener(new RequestListener<GifDrawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
-                return false;
-            }
 
-            @Override
-            public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
-                try {
-                    Field gifStateField = GifDrawable.class.getDeclaredField("state");
-                    gifStateField.setAccessible(true);
-                    Class gifStateClass = Class.forName("com.bumptech.glide.load.resource.gif.GifDrawable$GifState");
-                    Field gifFrameLoaderField = gifStateClass.getDeclaredField("frameLoader");
-                    gifFrameLoaderField.setAccessible(true);
-                    Class gifFrameLoaderClass = Class.forName("com.bumptech.glide.load.resource.gif.GifFrameLoader");
-                    Field gifDecoderField = gifFrameLoaderClass.getDeclaredField("gifDecoder");
-                    gifDecoderField.setAccessible(true);
-                    Class gifDecoderClass = Class.forName("com.bumptech.glide.gifdecoder.GifDecoder");
-                    Object gifDecoder = gifDecoderField.get(gifFrameLoaderField.get(gifStateField.get(resource)));
-                    Method getDelayMethod = gifDecoderClass.getDeclaredMethod("getDelay", int.class);
-                    getDelayMethod.setAccessible(true);
-                    //设置只播放一次
-                    resource.setLoopCount(1);
-                    //获得总帧数
-                    int count = resource.getFrameCount();
-                    int delay = 0;
-                    for (int i = 0; i < count; i++) {
-                        //计算每一帧所需要的时间进行累加
-                        delay += (int) getDelayMethod.invoke(gifDecoder, i);
-                    }
-                    imageView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (gifListener != null) {
-                                gifListener.gifPlayComplete();
-                            }
-                        }
-                    }, delay);
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-                return false;
-            }
-        }).into(imageView);
-    }
-
-    /**
-     * Gif播放完毕回调
-     */
-    public interface GifListener {
-        void gifPlayComplete();
-    }
 
 //==================================================================================================
     public static class Builder{
+        public static final int TYPE_FOX = 0x00000001;
+        public static final int TYPE_TIGER = 0x00000002;
+        public static final int TYPE_XIAOBAO = 0x00000003;
 
         private Activity mContext;
+        int mIndicatorType;
         @DrawableRes int mSuccessIndicator;
         @DrawableRes int mErrorIndicator;
         //step 1
@@ -295,9 +454,8 @@ public class UpdateLoadingDialog extends Dialog {
             mContext = context;
         }
 
-        public Builder setIndicator(@DrawableRes int successIndicator, @DrawableRes int errorIndicator){
-            mSuccessIndicator = successIndicator;
-            mErrorIndicator = errorIndicator;
+        public Builder setIndicator(int indicatorType){
+            mIndicatorType = indicatorType;
             return this;
         }
 
@@ -323,8 +481,30 @@ public class UpdateLoadingDialog extends Dialog {
             UpdateLoadingDialog dialog = new UpdateLoadingDialog(mContext);
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
-            dialog.setIndicator(mSuccessIndicator, mErrorIndicator);
+            setIndicatorGif(dialog);
+            dialog.setStep1Callback(step1SuccessCallback, step1ErrorCallback);
+            dialog.setStep2Callback(step2SuccessCallback, step2ErrorCallback);
+            dialog.setStep3Callback(step3SuccessCallback, step3ErrorCallback);
             return dialog;
+        }
+
+        private void setIndicatorGif(UpdateLoadingDialog dialog) {
+            switch (mIndicatorType){
+                case TYPE_FOX:
+                    mSuccessIndicator = R.drawable.gif_uld_fox;
+                    mErrorIndicator = R.drawable.gif_uld_fox;
+                    break;
+                case TYPE_TIGER:
+                    mSuccessIndicator = R.drawable.gif_uld_tiger;
+                    mErrorIndicator = R.drawable.gif_uld_tiger;
+                    break;
+                case TYPE_XIAOBAO:
+                default:
+                    mSuccessIndicator = R.drawable.gif_uld_hxb_default;
+                    mErrorIndicator = R.drawable.gif_uld_hxb_error;
+                    break;
+            }
+            dialog.setIndicator(mSuccessIndicator, mErrorIndicator);
         }
     }
 
