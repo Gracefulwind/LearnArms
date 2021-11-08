@@ -158,4 +158,10 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
         this.draw(canvas);
         return bitmap;
     }
+
+    @Override
+    public void clearFocus(){
+        super.clearFocus();
+        mTextBoxManager.clearFocus();
+    }
 }

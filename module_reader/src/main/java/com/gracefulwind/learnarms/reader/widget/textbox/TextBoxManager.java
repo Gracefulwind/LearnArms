@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.reader.widget.SmartHandNoteView;
 
@@ -44,13 +45,20 @@ public class TextBoxManager {
         TextBoxView editText = new TextBoxView(mContext, mParent, this);
         float startX = Math.min(prevX, movedX);
         float startY = Math.min(prevY, movedY);
+        if((movedX - prevX) * (movedX - prevX) + (movedY - prevY) * (movedY - prevY) < 400){
+            return;
+        }
         float width = Math.abs(prevX - movedX);
+        int parentWidth = mParent.getWidth();
         float minWidth = TextBoxView.minWidth;
         if(width < minWidth){
             width = minWidth;
         }
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) width, FrameLayout.LayoutParams.WRAP_CONTENT);
         editText.setLayoutParams(layoutParams);
+        if(startX + width > parentWidth){
+            startX = parentWidth - width;
+        }
         layoutParams.leftMargin = (int) startX;
         layoutParams.topMargin = (int) startY;
         mEditViewList.add(editText);
@@ -90,5 +98,9 @@ public class TextBoxManager {
 //        }
         mEditViewList.remove(textBox);
         mContainer.removeView(textBox);
+    }
+
+    public void clearFocus() {
+        KeyboardUtil.hideSoftKeyboard(mContext, mEditViewList);
     }
 }

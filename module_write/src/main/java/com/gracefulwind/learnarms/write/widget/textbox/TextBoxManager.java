@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.FrameLayout;
 
 
+import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class TextBoxManager {
     private TextBoxSupportView mSupportView;
     //可编辑文本框集合
     private List<TextBoxView> mEditViewList = new ArrayList<>();
+    private static float minDisSquare = 400;
 
     public TextBoxManager(Context context, TextBoxContainer container, SmartHandNoteView parent, TextBoxSupportView supportView){
         mContext = context;
@@ -41,10 +43,17 @@ public class TextBoxManager {
         TextBoxView editText = new TextBoxView(mContext, mParent, this);
         float startX = Math.min(prevX, movedX);
         float startY = Math.min(prevY, movedY);
+        if((movedX - prevX) * (movedX - prevX) + (movedY - prevY) * (movedY - prevY) < minDisSquare){
+            return;
+        }
         float width = Math.abs(prevX - movedX);
+        int parentWidth = mParent.getWidth();
         float minWidth = TextBoxView.minWidth;
         if(width < minWidth){
             width = minWidth;
+        }
+        if(startX + width > parentWidth){
+            startX = parentWidth - width;
         }
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) width, FrameLayout.LayoutParams.WRAP_CONTENT);
         editText.setLayoutParams(layoutParams);
@@ -87,5 +96,9 @@ public class TextBoxManager {
 //        }
         mEditViewList.remove(textBox);
         mContainer.removeView(textBox);
+    }
+
+    public void clearFocus() {
+        KeyboardUtil.hideSoftKeyboard(mContext, mEditViewList);
     }
 }
