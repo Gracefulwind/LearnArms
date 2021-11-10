@@ -2,6 +2,7 @@ package com.gracefulwind.learnarms.write.widget.textbox;
 
 import android.content.Context;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 
 import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
@@ -29,7 +30,7 @@ public class TextBoxManager {
     private TextBoxSupportView mSupportView;
     //可编辑文本框集合
     private List<TextBoxView> mEditViewList = new ArrayList<>();
-    private static float minDisSquare = 400;
+    private static float minDisSquare = 40 * 40;
 
     public TextBoxManager(Context context, TextBoxContainer container, SmartHandNoteView parent, TextBoxSupportView supportView){
         mContext = context;
@@ -39,13 +40,12 @@ public class TextBoxManager {
     }
 
     public void addTextBox(float prevX, float prevY, float movedX, float movedY) {
-//        EditText editText = new EditText(mContext);
-        TextBoxView editText = new TextBoxView(mContext, mParent, this);
-        float startX = Math.min(prevX, movedX);
-        float startY = Math.min(prevY, movedY);
         if((movedX - prevX) * (movedX - prevX) + (movedY - prevY) * (movedY - prevY) < minDisSquare){
             return;
         }
+        TextBoxView editText = new TextBoxView(mContext, mParent, this);
+        float startX = Math.min(prevX, movedX);
+        float startY = Math.min(prevY, movedY);
         float width = Math.abs(prevX - movedX);
         int parentWidth = mParent.getWidth();
         float minWidth = TextBoxView.minWidth;
@@ -59,6 +59,12 @@ public class TextBoxManager {
         editText.setLayoutParams(layoutParams);
         layoutParams.leftMargin = (int) startX;
         layoutParams.topMargin = (int) startY;
+        //todo:wd find out why it doesn't work
+//        editText.setMinimumHeight(0);
+//        editText.setMinimumHeight(600);
+//        editText.setMinHeight(600);
+//        TextView textView = new TextView();
+//        textView.setMinHeight();
         mEditViewList.add(editText);
         mContainer.addView(editText);
     }

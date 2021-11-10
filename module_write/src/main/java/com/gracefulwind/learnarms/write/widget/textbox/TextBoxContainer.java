@@ -63,14 +63,6 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         textBoxView.setLayoutParams(layoutParams);
         addView(textBoxView);
-//        //todo:wd for test, delete after all
-//        EditText textView = new EditText(mContext);
-//        LayoutParams layoutParams1 = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//        layoutParams1.leftMargin = 200;
-//        layoutParams1.topMargin = 100;
-//        textView.setLayoutParams(layoutParams1);
-//        textView.setText("testtest");
-//        addView(textView);
         mTextBoxManager = new TextBoxManager(mContext, this, mParent, textBoxView);
     }
 

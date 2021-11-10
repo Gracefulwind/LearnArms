@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -81,8 +82,9 @@ public class TextBoxSupportView extends View implements Smartable {
             case MotionEvent.ACTION_DOWN:
                 mPrevX = x;
                 mPrevY = y;
-//                LogUtil.e(TAG, "ACTION_DOWN");
-                invalidate();
+//                LogUtil.e(TAG, "ACTION_DOWN  x = " + x + " , y = " + y);
+                mParent.clearFocus();
+//                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 drawTextLine = true;
@@ -101,18 +103,20 @@ public class TextBoxSupportView extends View implements Smartable {
                 if(y < 0){
                     y = 0;
                 }
-//                LogUtil.e(TAG, "ACTION_MOVE , width = " + width + " , x = " + x);
+//                LogUtil.e(TAG, "ACTION_MOVE  x = " + x + " , y = " + y);
                 mMovedX = x;
                 mMovedY = y;
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 //todo:wd 1.clear图形; 2.添加editText
+                mMovedX = x;
+                mMovedY = y;
                 drawTextLine = false;
                 if(null != mParent){
                     mParent.addTextBox(mPrevX, mPrevY, mMovedX, mMovedY);
                 }
-//                LogUtil.e(TAG, "ACTION_UP");
+//                LogUtil.e(TAG, "ACTION_UP  x = " + x + " , y = " + y);
                 invalidate();
                 break;
         }

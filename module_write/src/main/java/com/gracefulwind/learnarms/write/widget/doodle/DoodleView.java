@@ -59,7 +59,7 @@ public class DoodleView extends View implements Smartable {
 //---------------------
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        mPresenter = new OperationPresenter(this);
+        mPresenter = new OperationPresenter(context, this);
     }
 
 //==================================================================================================
@@ -93,7 +93,6 @@ public class DoodleView extends View implements Smartable {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mPresenter.actionDown(x, y);
-//                LogUtil.e("Doodle TouchEvent", "down x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_MOVE:
                 int height = getHeight();
@@ -111,12 +110,9 @@ public class DoodleView extends View implements Smartable {
                         parentView.changeBackgroundHeight(height + expandLineNumber * lineHeight);
                     }
                 }
-
-//                LogUtil.e("Doodle TouchEvent", "move x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
             case MotionEvent.ACTION_UP:
                 mPresenter.actionUp(x, y);
-//                LogUtil.e("Doodle TouchEvent", "up x = " + x + ",  y = " + y + "w = " + getWidth() + " , h = " + getHeight());
                 break;
         }
         return true;
@@ -128,28 +124,12 @@ public class DoodleView extends View implements Smartable {
         ViewGroup parent = (ViewGroup) getParent();
         if (parent instanceof SmartHandNoteView) {
             SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
             int parentHeight = parentView.getHeight();
             int textViewHeight = parentView.getTextViewHeight();
-            int baseWidth = getWidth();
             int baseHeight = getHeight();
-//            LogUtil.e(TAG, "baseHeight = " + baseHeight + " , parentHeight = " + parentHeight);
-//            float maxScaleRate = parentView.getMaxScaleRate();
-//            //宽
-//            if ((parentWidth * maxScaleRate) != baseWidth) {
-//                ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//                layoutParams.width = (int) (parentWidth * maxScaleRate);
-//                setLayoutParams(layoutParams);
-//                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
-//            }
             //高
             int myHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//            if(textViewHeight >= parentHeight){
-//                layoutParams.height = textViewHeight;
-//            }else {
-//                layoutParams.height = (int) (parentHeight);
-//            }
             layoutParams.height = myHeight;
             setLayoutParams(layoutParams);
         }
@@ -158,9 +138,6 @@ public class DoodleView extends View implements Smartable {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float scaleX = getScaleX();
-        float scaleY = getScaleY();
-//        LogUtil.e(TAG, "onDraw, scaleX = " + scaleX + ", scaleY = " + scaleY);
         mPresenter.drawCanvas(canvas);
     }
 
@@ -175,15 +152,6 @@ public class DoodleView extends View implements Smartable {
      * */
     @Override
     public void setPivotX(float pivotX){
-//        ViewParent parent = getParent();
-//        if(parent instanceof SmartHandNoteView){
-//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-//            int parentWidth = parentView.getWidth();
-//            float maxScaleRate = parentView.getMaxScaleRate();
-//            super.setPivotX(((maxScaleRate - 1) / 2) * parentWidth + pivotX);
-//        }else {
-//            super.setPivotX(pivotX);
-//        }
         super.setPivotX(pivotX);
     }
 
@@ -209,15 +177,6 @@ public class DoodleView extends View implements Smartable {
 
     @Override
     public void smartTranslateTo(float translateX, float translateY) {
-//        ViewParent parent = getParent();
-//        if(parent instanceof SmartHandNoteView){
-//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-//            float maxScaleRate = parentView.getMaxScaleRate();
-//            float dWidth = parentView.getWidth() * ((maxScaleRate - 1) / 2);
-//            setTranslationX(-dWidth + translateX);
-//        }else {
-//            setTranslationX(translateX);
-//        }
         setTranslationX(translateX);
         setTranslationY(translateY);
     }

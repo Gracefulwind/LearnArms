@@ -168,6 +168,7 @@ public interface RouterHub {
     interface SmartWrite{
         String BASE = WRITE_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
+        String SMART_HAND_NOTE_ACTIVITY = BASE + "/SmartHandNoteActivity";
     }
 
 }

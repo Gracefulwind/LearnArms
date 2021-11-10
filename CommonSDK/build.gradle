@@ -57,7 +57,6 @@ dependencies {
     //IO
     api rootProject.ext.dependencies["retrofit"]
     api rootProject.ext.dependencies["retrofit-converter-gson"]
-    api rootProject.ext.dependencies["retrofit-converter-gson"]
     api rootProject.ext.dependencies["retrofit-adapter-rxjava2"]
 
 

@@ -74,7 +74,8 @@ public class TextBoxView extends FrameLayout {
         addView(mRootView);
         ButterKnife.bind(this, mRootView);
         //似乎没用欸
-        setMinimumWidth((int)minWidth);
+//        setMinimumWidth((int)minWidth);
+//        vtbEtEdit.setMinHeight(400);
         vtbEtEdit.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -250,6 +251,11 @@ public class TextBoxView extends FrameLayout {
         }else {
             vtbEtEdit.setBackground(null);
         }
+    }
+
+    public void setMinHeight(int i) {
+
+        vtbEtEdit.setMinimumHeight(i);
     }
 
 //    @OnClick({R2.id.vtb_iv_left_top_button, R2.id.vtb_iv_right_top_button, R2.id.vtb_iv_right_bottom_button})

@@ -1,5 +1,6 @@
 package com.gracefulwind.learnarms.write.widget.doodle;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import androidx.annotation.ColorInt;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.write.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,12 @@ public class OperationPresenter {
     public static final int MODE_DOODLE = 0x00000001;
     public static final int MODE_ERASER = 0x00000002;
 
+
     /**
      * 暂时还没用到，init进来的
      * */
     private DoodleView doodleView;
+    private Context mContext;
     //默认模式为涂鸦
     @EditMode
     private int mEditMode = MODE_DOODLE;
@@ -77,8 +81,10 @@ public class OperationPresenter {
     private boolean isFirstInit = true;
 
 
-    public OperationPresenter(DoodleView doodleView) {
+    public OperationPresenter(Context context, DoodleView doodleView) {
+        mContext = context;
         this.doodleView = doodleView;
+        mPaintWidth = mContext.getResources().getDimensionPixelSize(R.dimen.public_dimen_2dp);
 //        //初始化画笔和path
 //        mPath = new Path();
 //        mPaint = new Paint();

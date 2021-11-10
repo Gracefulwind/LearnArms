@@ -7,6 +7,10 @@
             android:name="com.gracefulwind.learnarms.write.mvp.ui.activity.MainActivity"
             android:screenOrientation="landscape"
             />
+
+        <activity android:name=".mvp.ui.activity.SmartHandNoteActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

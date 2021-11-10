@@ -17,6 +17,7 @@ import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.RxTimerUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.write.R2;
 import com.gracefulwind.learnarms.write.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.write.mvp.di.component.DaggerMainComponent;
@@ -87,7 +88,7 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     public void onViewClicked(View view) {
         int id = view.getId();
         if(id == R.id.wam_tv_write){
-
+            Utils.navigation(MainActivity.this, RouterHub.SmartWrite.SMART_HAND_NOTE_ACTIVITY);
         }else if(id == R.id.wam_tv_dialog){
             setUpdateDialog();
         }else if(id == R.id.wam_tv_test1){

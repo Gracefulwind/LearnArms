@@ -83,7 +83,7 @@ public class TextBoxSupportView extends View implements Smartable {
                 mPrevY = y;
 //                LogUtil.e(TAG, "ACTION_DOWN");
                 mParent.clearFocus();
-                invalidate();
+//                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 drawTextLine = true;
