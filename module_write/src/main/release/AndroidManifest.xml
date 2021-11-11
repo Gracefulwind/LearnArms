@@ -9,7 +9,7 @@
             />
 
         <activity android:name=".mvp.ui.activity.SmartHandNoteActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             />
     </application>
 

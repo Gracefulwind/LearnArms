@@ -269,6 +269,7 @@ public class OperationPresenter {
 //        cacheCanvas.drawColor(mBackgroundColor);
 //        cacheCanvas.drawColor(0xFF00f0f0);
         boolean operationListChanged = false;
+        //固化了的
         while(mOperationList.size() > maxCancelTime){
             operationListChanged = true;
             Operation remove = mOperationList.remove(0);
@@ -282,20 +283,6 @@ public class OperationPresenter {
             cacheCanvas.drawPath(op.path, op.paint);
         }
         canvas.drawBitmap(cacheBitmap,0f,0f,null);
-
-//        //mode.clear方法的颜色无所谓，反正都是clear了的
-//        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-//        canvas.drawColor(0xFF00f0f0);
-//        //持久层
-//        while(mOperationList.size() > maxCancelTime){
-//            Operation remove = mOperationList.remove(0);
-//            holdCanvas.drawPath(remove.path, remove.paint);
-//        }
-//        canvas.drawBitmap(holdBitmap, 0f,0f,null);
-//        //绘制剩余笔画
-//        for(Operation op : mOperationList){
-//            canvas.drawPath(op.path, op.paint);
-//        }
     }
 
     /**
@@ -373,18 +360,22 @@ public class OperationPresenter {
 
     private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
         Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
+        Bitmap tempBitmap = cacheBitmap;
         cacheCanvas = new Canvas(newBitmap);
 //        cacheCanvas.setBitmap(newBitmap);
         cacheCanvas.drawBitmap(cacheBitmap, 0, 0, null);
         cacheBitmap = newBitmap;
+        tempBitmap.recycle();
     }
 
     private void changeHolderBitmap(int w, int h, int oldw, int oldh) {
         Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
+        Bitmap tempBitmap = holdBitmap;
         holdCanvas = new Canvas(newBitmap);
 //        holdCanvas.setBitmap(newBitmap);
         holdCanvas.drawBitmap(holdBitmap, 0, 0, null);
         holdBitmap = newBitmap;
+        tempBitmap.recycle();
     }
 
     public void setOnPathChangedListener(DoodleView.OnPathChangedListener listener){
@@ -396,48 +387,12 @@ public class OperationPresenter {
     }
 
     public Bitmap getBitmap() {
-//        cacheBitmap
-//        return Bitmap.createBitmap(cacheBitmap.getWidth(), cacheBitmap.getHeight(), Constants.bitmapQuality);
         int width = doodleView.getWidth();
         int height = doodleView.getHeight();
-
-//        int[] colors = new int[width * height];
-//        for (int i = 0; i < colors.length; i++){
-//            colors[i] = Color.parseColor("#FFFFFF");
-//        }
-//        Bitmap bitmap = Bitmap.createBitmap(colors, doodleView.getWidth(), doodleView.getHeight(), Constants.bitmapQuality);
-//        BitmapFactory.
         Bitmap bitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
         Canvas canvas = new Canvas(bitmap);
-//        doodleView.draw(canvas);
         canvas.drawBitmap(cacheBitmap,0f,0f,null);
         return bitmap;
-
-
-        //===================================================
-//        try {
-//            Bitmap bitmap = cacheBitmap;
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-//            File cacheDir = null;
-//            //存在picture文件夹下,google推荐的方式怎么说呢。。。至少vivo手机的图库里拿不到
-//            cacheDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//            String bitmapName =System.currentTimeMillis() + ".jpg";
-//            byte[] buffer = bos.toByteArray();
-//            if (buffer != null) {
-//                File file = new File(cacheDir, bitmapName);
-//                if (file.exists()) {
-//                    file.delete();
-//                }
-//                OutputStream outputStream = new FileOutputStream(file);
-//                outputStream.write(buffer);
-//                outputStream.close();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
     }
 
     public void setBitmap(Bitmap bitmap) {
