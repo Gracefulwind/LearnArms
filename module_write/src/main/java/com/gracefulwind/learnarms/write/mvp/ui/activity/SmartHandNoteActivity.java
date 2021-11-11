@@ -84,9 +84,9 @@ public class SmartHandNoteActivity extends MyBaseActivity<SmartHandNotePresenter
         }else if(R.id.washn_btn_text_box == id){
             washnShnHandNote.setViewMode(SmartHandNoteView.MODE_TEXT_BOX);
         }else if(R.id.washn_btn_test1 == id){
-
+            washnShnHandNote.getDoodleBitmap();
         }else if(R.id.washn_btn_test2 == id){
-
+            System.out.println("=======================");
         }else if(R.id.washn_btn_cancel == id){
             washnShnHandNote.cancelLastDraw();
         }else if(R.id.washn_btn_uncancel == id){

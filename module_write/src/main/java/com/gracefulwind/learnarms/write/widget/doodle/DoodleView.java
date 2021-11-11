@@ -66,7 +66,6 @@ public class DoodleView extends View implements Smartable {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mPresenter.createCacheBitmapIfNull(getMeasuredWidth(), getMeasuredHeight());
         mPresenter.createHoldBitmapIfNull(getMeasuredWidth(), getMeasuredHeight());
     }
 
