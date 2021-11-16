@@ -33,13 +33,27 @@
         android:id="@+id/wawt_tv_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="结果"
+        android:text="测试surfaceView"
         />
-    <com.gracefulwind.learnarms.write.widget.doodle.SurfaceDoodleView
-        android:id="@+id/wawt_sdv_doodle"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
 
-        />
-<!--    android:background="@color/public_color_FF06CB7E"-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
+<!--        android:background="@color/public_color_2878FA"-->
+
+        <com.gracefulwind.learnarms.write.widget.doodle.SurfaceDoodleView
+            android:id="@+id/wawt_sdv_doodle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <!--    android:background="@color/public_color_FF06CB7E"-->
+
+    </FrameLayout>
+
 </LinearLayout>
