@@ -104,9 +104,7 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
             int screenHeight = (int)(height/density);//屏幕高度(dp)
             LogUtil.e("123", screenWidth + "======" + screenHeight);
         }else if(id == R.id.wam_tv_test2){
-            System.out.println("=========");
-            System.out.println("=========");
-            System.out.println("=========");
+            Utils.navigation(MainActivity.this, RouterHub.SmartWrite.WRITE_TEST_ACTIVITY);
         }else if(id == R.id.wam_tv_dialog){
 
         }

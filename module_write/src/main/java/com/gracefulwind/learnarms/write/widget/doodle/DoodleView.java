@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
 
 
+import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -59,6 +60,8 @@ public class DoodleView extends View implements Smartable {
 //---------------------
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        setBackgroundColor(getResources().getColor(R.color.public_color_transparent));
         mPresenter = new OperationPresenter(context, this);
     }
 

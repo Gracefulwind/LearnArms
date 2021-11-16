@@ -11,6 +11,10 @@
         <activity android:name=".mvp.ui.activity.SmartHandNoteActivity"
             android:screenOrientation="landscape"
             />
+
+        <activity android:name=".mvp.ui.activity.WriteTestActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

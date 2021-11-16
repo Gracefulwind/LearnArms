@@ -993,5 +993,6 @@ public class SmartHandNoteView extends FrameLayout {
         ViewGroup.LayoutParams doodleLayoutParams = targetView.getLayoutParams();
         doodleLayoutParams.height = height;
         targetView.setLayoutParams(doodleLayoutParams);
+//        targetView.invalidate();
     }
 }

@@ -58,7 +58,8 @@ public class OperationPresenter {
     private Paint mPaint;
     private Operation mOperation;
 
-    private @ColorInt int mBackgroundColor = 0xFF00f0f0;
+//    private @ColorInt int mBackgroundColor = 0x00FFFFFF;
+    private @ColorInt int mBackgroundColor = 0;
     private @ColorInt int mPaintColor = Color.RED;
     private @ColorInt int mEraserColor = Color.WHITE;
     /**
@@ -218,6 +219,7 @@ public class OperationPresenter {
         mOperation.isFinished = true;
         if(mOperation.operationType == Operation.ERASER){
             mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
             mPaint.setColor(mBackgroundColor);
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -266,8 +268,9 @@ public class OperationPresenter {
 //        }
         //缓存层可以不用了
 //        cacheCanvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
-//        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
-        canvas.drawARGB(0x00, 0x00, 0x00, 0x00);
+        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.DST);
+        //不设置留没法绘制paint，为什么
+//        canvas.drawARGB(0x00, 0x00, 0x00, 0x00);
         boolean operationListChanged = false;
         //固化了的
         while(mOperationList.size() > maxCancelTime){

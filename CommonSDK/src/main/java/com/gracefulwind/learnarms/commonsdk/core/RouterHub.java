@@ -169,6 +169,7 @@ public interface RouterHub {
         String BASE = WRITE_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
         String SMART_HAND_NOTE_ACTIVITY = BASE + "/SmartHandNoteActivity";
+        String WRITE_TEST_ACTIVITY = BASE + "/WriteTestActivity";
     }
 
 }
