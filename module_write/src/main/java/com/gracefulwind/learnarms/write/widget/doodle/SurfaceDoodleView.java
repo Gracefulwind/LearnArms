@@ -17,14 +17,18 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
+import com.gracefulwind.learnarms.write.widget.Smartable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.gracefulwind.learnarms.write.widget.doodle.OperationPresenter.MODE_DOODLE;
 
 /**
  * @ClassName: SurfaceDoodleView
@@ -37,7 +41,7 @@ import java.util.List;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Callback,Runnable{
+public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Callback, Runnable, Doodle, Smartable {
     public static final String TAG = "SurfaceDoodleView";
 
     private OperationPresenter mPresenter;
@@ -52,6 +56,9 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
     private SurfaceHolder mHolder;
     private boolean isSurfaceStarted;
     private Canvas mCanvas;
+    //默认模式为涂鸦
+    @EditMode
+    private int mEditMode = MODE_DOODLE;
 
 
     public SurfaceDoodleView(Context context) {
@@ -79,23 +86,27 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
         mHolder = getHolder();
         mHolder.setFormat(PixelFormat.TRANSLUCENT);
         mHolder.addCallback(this);
-//        mPresenter = new OperationPresenter(context, this);
+        mPresenter = new OperationPresenter(context, this);
     }
 
 //=================================================================================================
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        cacheBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Constants.bitmapQuality);
-        cacheCanvas = new Canvas(cacheBitmap);
-        holdBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Constants.bitmapQuality);
-        holdCanvas = new Canvas(holdBitmap);
+//        cacheBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Constants.bitmapQuality);
+//        cacheCanvas = new Canvas(cacheBitmap);
+//        holdBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Constants.bitmapQuality);
+//        holdCanvas = new Canvas(holdBitmap);
+
+        mPresenter.createHoldBitmapIfNull(getMeasuredWidth(), getMeasuredHeight());
     }
 
-    private float mPrevX;
-    private float mPrevY;
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mPresenter.changeSize(w, h, oldw, oldh);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -107,107 +118,33 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
         }
         int actionIndex = event.getActionIndex();
         int toolType = event.getToolType(actionIndex);
-//        //非电容笔则不处理
-//        if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
-//            return false;
-//        }
+        //非电容笔则不处理
+        if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
+            return false;
+        }
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                actionDown(x, y);
+                mPresenter.actionDown(x, y);
+//                actionDown(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
                 int height = getHeight();
                 int width = getWidth();
                 if ((x >= 0 && x <= width) && (y >= 0 && y <= height)) {
-                    actionMove(x, y);
+                    mPresenter.actionMove(x, y );
                 }else {
-                    actionJump(x, y);
+                    mPresenter.actionJump(x, y);
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                actionUp(x, y);
+                mPresenter.actionUp(x, y);
                 break;
         }
         return true;
     }
-
-    public void actionDown(float x, float y){
-        mPrevX = x;
-        mPrevY = y;
-        createPathAndPaint();
-        //将 Path 起始坐标设为手指按下屏幕的坐标
-        mPath.moveTo(x, y);
-    }
-
-
-    public void actionMove(float x, float y){
-        mPath.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2, (y + mPrevY) / 2);
-        mPrevX = x;
-        mPrevY = y;
-    }
-
-    public void actionJump(float x, float y){
-        int height = getHeight();
-        int width = getWidth();
-        if(mPrevX > width){
-            mPrevX = width;
-        }
-        if(mPrevY > height){
-            mPrevY = height;
-        }
-        mPath.moveTo(mPrevX, mPrevY);
-        mPrevX = x;
-        mPrevY = y;
-    }
-
-    public void actionUp(float x, float y){
-        //保存放到down里，不然move时没路径
-//        saveOperation();
-        mOperation.isFinished = true;
-//        if(mOperation.operationType == Operation.ERASER){
-//            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-////            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
-//            mPaint.setColor(mBackgroundColor);
-//            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-//            mPaint.setStrokeJoin(Paint.Join.ROUND);
-//        }
-//        clearRedoList();
-//        doodleView.invalidate();
-    }
-
-    private Path mPath;
-    private Paint mPaint;
-    private Operation mOperation;
-
-    private void createPathAndPaint() {
-        mPath = new Path();
-        mPaint = new Paint();
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-//        mPaint.setColor(mPaintColor);
-        mPaint.setStrokeWidth(10);
-        mPaint.setXfermode(null);
-        mPaint.setColor(Color.RED);
-        saveOperation();
-    }
-    private List<Operation> mOperationList = new ArrayList<>();
-    private void saveOperation() {
-        mOperation = new Operation(mPath, mPaint);
-//        if(mEditMode == MODE_DOODLE){
-//            mOperation.operationType = Operation.DOODLE;
-//        }else {
-//            mOperation.operationType = Operation.ERASER;
-//        }
-        mOperation.operationType = Operation.DOODLE;
-        mOperationList.add(mOperation);
-//        if(null != mOnPathChangedListener){
-//            mOnPathChangedListener.onCancelListChanged(mOperationList);
-//        }
-    }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -254,9 +191,10 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
             try {
                 //使用获得的Canvas做具体的绘制
 //                mCanvas.drawColor(mBackgroundColor, PorterDuff.Mode.DST);
-                for(Operation op : mOperationList){
-                    mCanvas.drawPath(op.path, op.paint);
-                }
+                mPresenter.drawCanvas(mCanvas);
+//                for(Operation op : mOperationList){
+//                    mCanvas.drawPath(op.path, op.paint);
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -264,4 +202,99 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
             }
         }
     }
+
+//==================================================================================================
+    @Override
+    public void setPaintEditMode(@EditMode int editMode){
+        mPresenter.setPaintMode(editMode);
+    }
+
+    @Override
+    public int getEditMode(){
+        return mPresenter.getEditMode();
+    }
+
+    public boolean isModeDoodle(){
+        return mPresenter.isModeDoodle();
+    }
+
+    /**
+     * 撤销最后一笔
+     * */
+    public boolean cancelLastDraw(){
+        return mPresenter.cancelLastDraw();
+    }
+
+    /**
+     * 撤回最后一次的撤销最后一笔
+     * */
+    public boolean redoLastDraw(){
+        return mPresenter.redoLastDraw();
+    }
+
+    public void setPaintColor(@ColorInt int paintColor){
+        mPresenter.setPaintColor(paintColor);
+    }
+
+    public @ColorInt int getPaintColor(){
+        return mPresenter.getPaintColor();
+    }
+
+    public void setPaintSize(float paintSize){
+        mPresenter.setPaintSize(paintSize);
+    }
+
+    public float getPaintSize(){
+        return mPresenter.getPaintSize();
+    }
+
+    /**
+     * 将presenter暴露出去的话直接操作presenter就可以了，免去了中间操作View的过渡
+     * 没必要暴露出去了的感觉
+     * */
+    protected OperationPresenter getViewPresenter(){
+        return mPresenter;
+    }
+
+    public void setOnPathChangedListener(OnPathChangedListener listener){
+        mPresenter.setOnPathChangedListener(listener);
+    }
+
+    public Doodle.OnPathChangedListener getOnPathChangedListener(){
+        return mPresenter.getOnPathChangedListener();
+    }
+
+//====================================
+    @Override
+    public void refreshUi(){
+        //do nothing
+    }
+
+    @Override
+    public void initCanvas(Canvas canvas, int backgroundColor){
+        canvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
+    }
+
+
+//==Smartable==========================================
+    @Override
+    public void smartTranslateTo(float translateX, float translateY) {
+        setTranslationX(translateX);
+        setTranslationY(translateY);
+    }
+
+    @Override
+    public void smartTranslateBy(float dX, float dY) {
+        setTranslationX(getTranslationX() + dX);
+        setTranslationY(getTranslationY() + dY);
+    }
+
+    @Override
+    public void smartScaleTo(float pivotX, float pivotY, float scaleX, float scaleY) {
+        setPivotX(pivotX);
+        setPivotY(pivotY);
+        setScaleX(scaleX);
+        setScaleY(scaleY);
+    }
+
 }

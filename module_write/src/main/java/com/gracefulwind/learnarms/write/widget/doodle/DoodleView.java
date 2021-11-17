@@ -3,6 +3,7 @@ package com.gracefulwind.learnarms.write.widget.doodle;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -31,7 +32,7 @@ import java.util.List;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class DoodleView extends View implements Smartable {
+public class DoodleView extends View implements Smartable,Doodle {
     public static final String TAG = "DoodleView";
 
     private OperationPresenter mPresenter;
@@ -210,9 +211,9 @@ public class DoodleView extends View implements Smartable {
         return mPresenter.isModeDoodle();
     }
 
-    public boolean isModeScale(){
-        return mPresenter.isModeDoodle();
-    }
+//    public boolean isModeScale(){
+//        return mPresenter.isModeDoodle();
+//    }
 
     /**
      * 撤销最后一笔
@@ -246,19 +247,20 @@ public class DoodleView extends View implements Smartable {
 
     /**
      * 将presenter暴露出去的话直接操作presenter就可以了，免去了中间操作View的过渡
+     * 不再暴露吧，安全起见
      * */
-    public OperationPresenter getViewPresenter(){
+    protected OperationPresenter getViewPresenter(){
         return mPresenter;
     }
 
-    public void setOnPathChangedListener(OnPathChangedListener listener){
+    public void setOnPathChangedListener(Doodle.OnPathChangedListener listener){
         mPresenter.setOnPathChangedListener(listener);
     }
 
-    public OnPathChangedListener getOnPathChangedListener(){
+    public Doodle.OnPathChangedListener getOnPathChangedListener(){
         return mPresenter.getOnPathChangedListener();
     }
-
+//-----===-----
     public Bitmap saveAsBitmap(){
         Bitmap bmp = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bmp);
@@ -303,15 +305,14 @@ public class DoodleView extends View implements Smartable {
         mPresenter.setBitmap(bitmap);
     }
 
-    //    @Override
-//    public void setEnabled(boolean enabled) {
-//        if(enabled){
-//            requestDisall
-//        }
-//        super.setEnabled(enabled);
-//    }
-    public interface OnPathChangedListener{
-        void onCancelListChanged(List<Operation> list);
-        void onRedoListChanged(List<Operation> list);
+    @Override
+    public void refreshUi(){
+        this.invalidate();
     }
+
+    @Override
+    public void initCanvas(Canvas canvas, int backgroundColor){
+        canvas.drawColor(backgroundColor, PorterDuff.Mode.DST);
+    }
+
 }

@@ -27,6 +27,20 @@
             android:layout_height="wrap_content"
             android:text="橡皮擦"
             />
+
+        <Button
+            android:id="@+id/wawt_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="撤销"
+            />
+
+        <Button
+            android:id="@+id/wawt_btn_redo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="反撤销"
+            />
     </LinearLayout>
     
     <TextView

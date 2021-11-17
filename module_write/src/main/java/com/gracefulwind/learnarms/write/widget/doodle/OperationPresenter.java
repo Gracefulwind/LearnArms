@@ -41,7 +41,7 @@ public class OperationPresenter {
     /**
      * 暂时还没用到，init进来的
      * */
-    private DoodleView doodleView;
+    private Doodle doodleView;
     private Context mContext;
     //默认模式为涂鸦
     @EditMode
@@ -50,7 +50,7 @@ public class OperationPresenter {
     private int maxCancelTime = 20;
     private List<Operation> mOperationList = new ArrayList<>();
     private List<Operation> mRedoList = new ArrayList<>();
-    private DoodleView.OnPathChangedListener mOnPathChangedListener;
+    private Doodle.OnPathChangedListener mOnPathChangedListener;
     /**
      * path
      * */
@@ -82,7 +82,7 @@ public class OperationPresenter {
     private boolean isFirstInit = true;
 
 
-    public OperationPresenter(Context context, DoodleView doodleView) {
+    public OperationPresenter(Context context, Doodle doodleView) {
         mContext = context;
         this.doodleView = doodleView;
         mPaintWidth = mContext.getResources().getDimensionPixelSize(R.dimen.public_dimen_2dp);
@@ -171,7 +171,7 @@ public class OperationPresenter {
         createPathAndPaint();
         //将 Path 起始坐标设为手指按下屏幕的坐标
         mPath.moveTo(x, y);
-        doodleView.invalidate();
+        doodleView.refreshUi();
     }
 
     public void actionMove(float x, float y){
@@ -196,7 +196,7 @@ public class OperationPresenter {
 //        mPath.lineTo(x, y);
         mPrevX = x;
         mPrevY = y;
-        doodleView.invalidate();
+        doodleView.refreshUi();
     }
 
     public void actionJump(float x, float y){
@@ -225,7 +225,7 @@ public class OperationPresenter {
             mPaint.setStrokeJoin(Paint.Join.ROUND);
         }
         clearRedoList();
-        doodleView.invalidate();
+        doodleView.refreshUi();
     }
 
     public void setPaintColor(@ColorInt int paintColor){
@@ -268,7 +268,9 @@ public class OperationPresenter {
 //        }
         //缓存层可以不用了
 //        cacheCanvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
-        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.DST);
+//        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.DST);
+//        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
+        doodleView.initCanvas(canvas, mBackgroundColor);
         //不设置留没法绘制paint，为什么
 //        canvas.drawARGB(0x00, 0x00, 0x00, 0x00);
         boolean operationListChanged = false;
@@ -299,7 +301,7 @@ public class OperationPresenter {
             return true;
         }else {
             LogUtil.d(TAG, "can't cancelLastDraw");
-            Toast.makeText(doodleView.getContext(), "无可撤销！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "无可撤销！", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -313,7 +315,7 @@ public class OperationPresenter {
             return true;
         }else {
             LogUtil.d(TAG, "can't redoLastDraw");
-            Toast.makeText(doodleView.getContext(), "无可fan撤销！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "无可fan撤销！", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -332,7 +334,7 @@ public class OperationPresenter {
             }
 //            //清空缓存画板
 //            cacheCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            doodleView.invalidate();
+            doodleView.refreshUi();
         }
     }
 
@@ -355,7 +357,7 @@ public class OperationPresenter {
     private void clearAllL(){
         clearRedoList();
         clearOperationList();
-        doodleView.invalidate();
+        doodleView.refreshUi();
     }
 
     public void changeSize(int w, int h, int oldw, int oldh) {
@@ -383,11 +385,11 @@ public class OperationPresenter {
         tempBitmap.recycle();
     }
 
-    public void setOnPathChangedListener(DoodleView.OnPathChangedListener listener){
+    public void setOnPathChangedListener(Doodle.OnPathChangedListener listener){
         mOnPathChangedListener = listener;
     }
 
-    public DoodleView.OnPathChangedListener getOnPathChangedListener(){
+    public Doodle.OnPathChangedListener getOnPathChangedListener(){
         return mOnPathChangedListener;
     }
 

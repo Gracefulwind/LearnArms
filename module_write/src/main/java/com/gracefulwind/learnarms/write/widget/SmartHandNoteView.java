@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.write.widget.doodle.Doodle;
 import com.gracefulwind.learnarms.write.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.write.widget.doodle.EditMode;
 import com.gracefulwind.learnarms.write.widget.edit.SmartTextView;
@@ -847,11 +848,11 @@ public class SmartHandNoteView extends FrameLayout {
         return mDoodleView.redoLastDraw();
     }
 
-    public void setOnPathChangedListener(DoodleView.OnPathChangedListener listener){
+    public void setOnPathChangedListener(Doodle.OnPathChangedListener listener){
         mDoodleView.setOnPathChangedListener(listener);
     }
 
-    public DoodleView.OnPathChangedListener getOnPathChangedListener(){
+    public Doodle.OnPathChangedListener getOnPathChangedListener(){
         return mDoodleView.getOnPathChangedListener();
     }
 

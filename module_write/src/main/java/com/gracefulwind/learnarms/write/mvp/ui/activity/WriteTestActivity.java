@@ -74,15 +74,23 @@ public class WriteTestActivity extends MyBaseActivity{
 
     }
 
-    @OnClick({R2.id.wawt_btn_click1, R2.id.wawt_btn_doodle, R2.id.wawt_btn_eraser})
+    @OnClick({R2.id.wawt_btn_click1, R2.id.wawt_btn_doodle, R2.id.wawt_btn_eraser, R2.id.wawt_btn_cancel, R2.id.wawt_btn_redo})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.wawt_btn_click1 == id){
             System.out.println("====================");
         }else if(R.id.wawt_btn_doodle == id){
             //涂鸦
+            wawtSdvDoodle.setPaintEditMode(OperationPresenter.MODE_DOODLE);
         }else if(R.id.wawt_btn_eraser == id){
             //橡皮擦
+            wawtSdvDoodle.setPaintEditMode(OperationPresenter.MODE_ERASER);
+        }else if(R.id.wawt_btn_cancel == id){
+            //撤销
+            wawtSdvDoodle.cancelLastDraw();
+        }else if(R.id.wawt_btn_redo == id){
+            //反撤销
+            wawtSdvDoodle.redoLastDraw();
         }else if(R.id.wawt_btn_click1 == id){
             //预留
         }
