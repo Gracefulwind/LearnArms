@@ -82,11 +82,24 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         //使surfaceView透明
-        setZOrderOnTop(true);
+//        setZOrderOnTop(true);
+//        setZOrderMediaOverlay(true);
         mHolder = getHolder();
         mHolder.setFormat(PixelFormat.TRANSLUCENT);
         mHolder.addCallback(this);
         mPresenter = new OperationPresenter(context, this);
+    }
+
+//====================================
+    @Override
+    public void refreshUi(){
+        //do nothing
+    }
+
+    @Override
+    public void initCanvas(Canvas canvas, int backgroundColor){
+        canvas.drawColor(backgroundColor, PorterDuff.Mode.SRC);
+//        canvas.drawColor(backgroundColor);
     }
 
 //=================================================================================================
@@ -100,6 +113,23 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
 //        holdCanvas = new Canvas(holdBitmap);
 
         mPresenter.createHoldBitmapIfNull(getMeasuredWidth(), getMeasuredHeight());
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        ViewGroup parent = (ViewGroup) getParent();
+        if (parent instanceof SmartHandNoteView) {
+            SmartHandNoteView parentView = (SmartHandNoteView) parent;
+            int parentHeight = parentView.getHeight();
+            int textViewHeight = parentView.getTextViewHeight();
+            int baseHeight = getHeight();
+            //高
+            int myHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
+            ViewGroup.LayoutParams layoutParams = getLayoutParams();
+            layoutParams.height = myHeight;
+            setLayoutParams(layoutParams);
+        }
     }
 
     @Override
@@ -137,6 +167,14 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
                     mPresenter.actionMove(x, y );
                 }else {
                     mPresenter.actionJump(x, y);
+                }
+                ViewParent parent = getParent();
+                if(parent instanceof SmartHandNoteView){
+                    SmartHandNoteView parentView = (SmartHandNoteView) parent;
+                    int lineHeight = parentView.getLineHeight();
+                    if(y >= height - responseLineNumber * lineHeight){
+                        parentView.changeBackgroundHeight(height + expandLineNumber * lineHeight);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -177,15 +215,16 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
         while(isSurfaceStarted){
             //do someThing
             draw();
-            try {
-                Thread.sleep(50);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(50);
+//            }catch (InterruptedException e){
+//                e.printStackTrace();
+//            }
         }
     }
 
     private void draw(){
+        long start = System.currentTimeMillis();
         mCanvas = mHolder.lockCanvas();
         if (mCanvas != null) {
             try {
@@ -200,6 +239,13 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
             } finally {
                 mHolder.unlockCanvasAndPost(mCanvas);
             }
+        }
+        long end=System.currentTimeMillis();
+        try{
+            if(end - start < 35){
+                Thread.sleep(35 - (end - start));
+            }
+        }catch(Exception e){
         }
     }
 
@@ -248,6 +294,14 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
         return mPresenter.getPaintSize();
     }
 
+    public Bitmap getBitmap() {
+        return mPresenter.getBitmap();
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mPresenter.setBitmap(bitmap);
+    }
+
     /**
      * 将presenter暴露出去的话直接操作presenter就可以了，免去了中间操作View的过渡
      * 没必要暴露出去了的感觉
@@ -263,18 +317,6 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
     public Doodle.OnPathChangedListener getOnPathChangedListener(){
         return mPresenter.getOnPathChangedListener();
     }
-
-//====================================
-    @Override
-    public void refreshUi(){
-        //do nothing
-    }
-
-    @Override
-    public void initCanvas(Canvas canvas, int backgroundColor){
-        canvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
-    }
-
 
 //==Smartable==========================================
     @Override

@@ -87,10 +87,14 @@ public class SmartHandNoteActivity extends MyBaseActivity<SmartHandNotePresenter
             washnShnHandNote.getDoodleBitmap();
         }else if(R.id.washn_btn_test2 == id){
             System.out.println("=======================");
+            washnShnHandNote.test();
         }else if(R.id.washn_btn_cancel == id){
             washnShnHandNote.cancelLastDraw();
         }else if(R.id.washn_btn_uncancel == id){
             washnShnHandNote.redoLastDraw();
+        }else if(R.id.washn_btn_uncancel == id){
+            //预留
+
         }else if(R.id.washn_btn_uncancel == id){
             //预留
         }

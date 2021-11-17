@@ -25,6 +25,7 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.write.widget.doodle.Doodle;
 import com.gracefulwind.learnarms.write.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.write.widget.doodle.EditMode;
+import com.gracefulwind.learnarms.write.widget.doodle.SurfaceDoodleView;
 import com.gracefulwind.learnarms.write.widget.edit.SmartTextView;
 import com.gracefulwind.learnarms.write.widget.textbox.TextBoxContainer;
 
@@ -63,7 +64,7 @@ public class SmartHandNoteView extends FrameLayout {
     private List<Smartable> smartViewList = new ArrayList<>();
     private LinesView mLinesView;
     private SmartTextView mSmartTextView;
-    private DoodleView mDoodleView;
+    private SurfaceDoodleView mDoodleView;
 //    private TextBoxView mTextBoxView;
     private TextBoxContainer mTextBoxContainer;
 
@@ -121,7 +122,7 @@ public class SmartHandNoteView extends FrameLayout {
         LayoutParams lvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mLinesView.setLayoutParams(lvLayoutParams);
         //add doodleView
-        mDoodleView = new DoodleView(mContext);
+        mDoodleView = new SurfaceDoodleView(mContext);
         LayoutParams dvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mDoodleView.setLayoutParams(dvLayoutParams);
         //add textBoxView
@@ -859,16 +860,12 @@ public class SmartHandNoteView extends FrameLayout {
     //=========================================
     int lineNum = 0;
     public void test() {
-        Rect rect = new Rect();
 //        LogUtil.e(TAG, "rect = " + rect);
 //        System.out.println("========");
 //        int lineBounds = mSmartTextView.getLineBounds(lineNum, rect);
 //        LogUtil.e(TAG, "result rect = " + rect + " , lineBounds = " + lineBounds + " , viewHeight = " + mSmartTextView.getHeight());
 //        scrollTo(0, 0);
-        System.out.println("==============");
-        System.out.println("==============");
-        System.out.println("==============");
-        mTextBoxContainer.test();
+//        mDoodleView.setZOrderMediaOverlay(true);
     }
 
     public void setChildPivot(float pivotX, float pivotY){

@@ -1,6 +1,8 @@
 package com.gracefulwind.learnarms.write.widget.doodle;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 
@@ -26,6 +28,9 @@ public interface Doodle {
     void draw(Canvas canvas);
     void initCanvas(Canvas canvas, int backgroundColor);
 
+    //==for views======================
+    public void setLayoutParams(ViewGroup.LayoutParams params);
+
     //==for out control===================
     void setPaintEditMode(@EditMode int editMode);
     @EditMode int getEditMode();
@@ -36,6 +41,9 @@ public interface Doodle {
     @ColorInt int getPaintColor();
     void setPaintSize(float paintSize);
     float getPaintSize();
+    Bitmap getBitmap();
+    void setBitmap(Bitmap bitmap);
+
     void setOnPathChangedListener(OnPathChangedListener listener);
     Doodle.OnPathChangedListener getOnPathChangedListener();
 
