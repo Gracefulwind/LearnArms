@@ -2,6 +2,7 @@ package com.gracefulwind.learnarms.write.mvp.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +43,8 @@ public class SmartHandNoteActivity extends MyBaseActivity<SmartHandNotePresenter
 
     @BindView(R2.id.washn_shnv_hand_note)
     SmartHandNoteView washnShnHandNote;
+    @BindView(R2.id.washn_ll_Top)
+    LinearLayout washnLlTop;
 
     @Override
     public void setupActivityComponent(@NonNull @NotNull AppComponent appComponent) {
@@ -66,7 +69,7 @@ public class SmartHandNoteActivity extends MyBaseActivity<SmartHandNotePresenter
 
     @Override
     public void initData(@Nullable @org.jetbrains.annotations.Nullable Bundle bundle) {
-
+//        wawtLlTop.setZOrderOnTop();
     }
 
     @OnClick({R2.id.washn_btn_keyboard, R2.id.washn_btn_doodle, R2.id.washn_btn_eraser, R2.id.washn_btn_text_box
@@ -84,10 +87,15 @@ public class SmartHandNoteActivity extends MyBaseActivity<SmartHandNotePresenter
         }else if(R.id.washn_btn_text_box == id){
             washnShnHandNote.setViewMode(SmartHandNoteView.MODE_TEXT_BOX);
         }else if(R.id.washn_btn_test1 == id){
-            washnShnHandNote.getDoodleBitmap();
+            washnShnHandNote.test();
+//            washnShnHandNote.getDoodleBitmap();
         }else if(R.id.washn_btn_test2 == id){
             System.out.println("=======================");
-            washnShnHandNote.test();
+            if(View.GONE == washnShnHandNote.getVisibility()){
+                washnShnHandNote.setVisibility(View.VISIBLE);
+            }else{
+                washnShnHandNote.setVisibility(View.GONE);
+            }
         }else if(R.id.washn_btn_cancel == id){
             washnShnHandNote.cancelLastDraw();
         }else if(R.id.washn_btn_uncancel == id){

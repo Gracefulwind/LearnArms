@@ -72,9 +72,9 @@ public class OperationPresenter {
 
     //缓存层
     //todo:wd 现在过程中只操作path了，而ui的操作只在onDraw中,
-//    // 所以缓存层失去了意义，可删
-//    private Bitmap cacheBitmap;
-//    private Canvas cacheCanvas;
+    // 所以缓存层失去了意义，可删
+    private Bitmap cacheBitmap;
+    private Canvas cacheCanvas;
     //持久层
     private Bitmap holdBitmap;
     private Canvas holdCanvas;
@@ -86,32 +86,22 @@ public class OperationPresenter {
         mContext = context;
         this.doodleView = doodleView;
         mPaintWidth = mContext.getResources().getDimensionPixelSize(R.dimen.public_dimen_2dp);
-//        //初始化画笔和path
-//        mPath = new Path();
-//        mPaint = new Paint();
-//        mPaint.setStyle(Paint.Style.STROKE);
-//        mPaint.setStrokeCap(Paint.Cap.ROUND);
-//        //滤镜用不到
-////        BlurMaskFilter PaintBGBlur = new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID);
-////        mPaint.setMaskFilter(PaintBGBlur);
-//        mPaint.setStrokeWidth(10);
-//        createPathAndPaint();
     }
 
-//    public boolean hasCacheBitmap(){
-//        return cacheBitmap != null;
-//    }
+    public boolean hasCacheBitmap(){
+        return cacheBitmap != null;
+    }
 
-//    public void createCacheBitmapIfNull(int width, int height){
-//        if(!hasCacheBitmap()){
-//            createCacheBitmap(width, height);
-//        }
-//    }
+    public void createCacheBitmapIfNull(int width, int height){
+        if(!hasCacheBitmap()){
+            createCacheBitmap(width, height);
+        }
+    }
 
-//    public void createCacheBitmap(int width, int height) {
-//        cacheBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
-//        cacheCanvas = new Canvas(cacheBitmap);
-//    }
+    public void createCacheBitmap(int width, int height) {
+        cacheBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
+        cacheCanvas = new Canvas(cacheBitmap);
+    }
 
     public boolean hasHoldBitmap(){
         return holdBitmap != null;
@@ -262,17 +252,16 @@ public class OperationPresenter {
      * 现在path操作都在action中，ui绘制都在drawCanvas中，那么缓存canvas就没意义了啊
      * */
     public void drawCanvas(Canvas canvas) {
-//        if(isFirstInit){
-//            canvas.drawColor(mBackgroundColor);
-//            isFirstInit = !isFirstInit;
-//        }
-        //缓存层可以不用了
-//        cacheCanvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
-//        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.DST);
-//        canvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
-        doodleView.initCanvas(canvas, mBackgroundColor);
-        //不设置留没法绘制paint，为什么
-//        canvas.drawARGB(0x00, 0x00, 0x00, 0x00);
+        if(doodleView instanceof SurfaceDoodleView){
+            drawWithSurfaceView(canvas);
+        }else if(doodleView instanceof DoodleView){
+            drawWithCommon(canvas);
+        }
+    }
+
+    public void drawWithCommon(Canvas canvas) {
+        cacheCanvas.drawColor(mBackgroundColor, PorterDuff.Mode.CLEAR);
+//            doodleView.initCanvas(canvas, mBackgroundColor);
         boolean operationListChanged = false;
         //固化了的
         while(mOperationList.size() > maxCancelTime){
@@ -283,13 +272,29 @@ public class OperationPresenter {
         if(operationListChanged && null != mOnPathChangedListener){
             mOnPathChangedListener.onCancelListChanged(mOperationList);
         }
-//        cacheCanvas.drawBitmap(holdBitmap, 0f,0f,null);
+        cacheCanvas.drawBitmap(holdBitmap, 0f,0f,null);
+        for(Operation op : mOperationList){
+            cacheCanvas.drawPath(op.path, op.paint);
+        }
+        canvas.drawBitmap(cacheBitmap,0f,0f,null);
+    }
+
+    public void drawWithSurfaceView(Canvas canvas) {
+        doodleView.initCanvas(canvas, mBackgroundColor);
+        boolean operationListChanged = false;
+        //固化了的
+        while(mOperationList.size() > maxCancelTime){
+            operationListChanged = true;
+            Operation remove = mOperationList.remove(0);
+            holdCanvas.drawPath(remove.path, remove.paint);
+        }
+        if(operationListChanged && null != mOnPathChangedListener){
+            mOnPathChangedListener.onCancelListChanged(mOperationList);
+        }
         canvas.drawBitmap(holdBitmap, 0f,0f,null);
         for(Operation op : mOperationList){
-//            cacheCanvas.drawPath(op.path, op.paint);
             canvas.drawPath(op.path, op.paint);
         }
-//        canvas.drawBitmap(cacheBitmap,0f,0f,null);
     }
 
     /**
@@ -361,19 +366,18 @@ public class OperationPresenter {
     }
 
     public void changeSize(int w, int h, int oldw, int oldh) {
-//        changeCacheBitmap(w, h, oldw, oldh);
+        changeCacheBitmap(w, h, oldw, oldh);
         changeHolderBitmap(w, h, oldw, oldh);
     }
 
-//    private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
-//        Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
-//        Bitmap tempBitmap = cacheBitmap;
-//        cacheCanvas = new Canvas(newBitmap);
-////        cacheCanvas.setBitmap(newBitmap);
-//        cacheCanvas.drawBitmap(cacheBitmap, 0, 0, null);
-//        cacheBitmap = newBitmap;
-//        tempBitmap.recycle();
-//    }
+    private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
+        Bitmap tempBitmap = cacheBitmap;
+        cacheCanvas = new Canvas(newBitmap);
+        cacheCanvas.drawBitmap(cacheBitmap, 0, 0, null);
+        cacheBitmap = newBitmap;
+        tempBitmap.recycle();
+    }
 
     private void changeHolderBitmap(int w, int h, int oldw, int oldh) {
         Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽

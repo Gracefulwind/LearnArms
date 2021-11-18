@@ -64,7 +64,7 @@ public class SmartHandNoteView extends FrameLayout {
     private List<Smartable> smartViewList = new ArrayList<>();
     private LinesView mLinesView;
     private SmartTextView mSmartTextView;
-    private SurfaceDoodleView mDoodleView;
+    private DoodleView mDoodleView;
 //    private TextBoxView mTextBoxView;
     private TextBoxContainer mTextBoxContainer;
 
@@ -122,7 +122,8 @@ public class SmartHandNoteView extends FrameLayout {
         LayoutParams lvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mLinesView.setLayoutParams(lvLayoutParams);
         //add doodleView
-        mDoodleView = new SurfaceDoodleView(mContext);
+        mDoodleView = new DoodleView(mContext);
+//        mDoodleView = new SurfaceDoodleView(mContext);
         LayoutParams dvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mDoodleView.setLayoutParams(dvLayoutParams);
         //add textBoxView

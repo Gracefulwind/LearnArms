@@ -22,6 +22,7 @@ import androidx.annotation.RequiresApi;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -49,16 +50,9 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
     private int responseLineNumber = 2;
     private int expandLineNumber = 3;
 
-    private Bitmap cacheBitmap;
-    private Canvas cacheCanvas;
-    private Bitmap holdBitmap;
-    private Canvas holdCanvas;
     private SurfaceHolder mHolder;
     private boolean isSurfaceStarted;
     private Canvas mCanvas;
-    //默认模式为涂鸦
-    @EditMode
-    private int mEditMode = MODE_DOODLE;
 
 
     public SurfaceDoodleView(Context context) {
@@ -82,8 +76,10 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         //使surfaceView透明
-//        setZOrderOnTop(true);
+        setZOrderOnTop(true);
+//        setBackgroundColor(context.getResources().getColor(R.color.public_color_transparent));
 //        setZOrderMediaOverlay(true);
+//        setAlpha(0);
         mHolder = getHolder();
         mHolder.setFormat(PixelFormat.TRANSLUCENT);
         mHolder.addCallback(this);
@@ -107,11 +103,6 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        cacheBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Constants.bitmapQuality);
-//        cacheCanvas = new Canvas(cacheBitmap);
-//        holdBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Constants.bitmapQuality);
-//        holdCanvas = new Canvas(holdBitmap);
-
         mPresenter.createHoldBitmapIfNull(getMeasuredWidth(), getMeasuredHeight());
     }
 
