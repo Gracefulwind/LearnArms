@@ -43,6 +43,7 @@ import com.gracefulwind.learnarms.write.widget.Smartable;
 public class SmartTextView extends TextView implements Smartable {
     public static final String TAG = SmartTextView.class.getName();
 
+    private Context mContext;
     private  boolean mNeedLines = false;
     private TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private int width;
@@ -50,23 +51,23 @@ public class SmartTextView extends TextView implements Smartable {
     private OnSizeChangeListener mOnSizeChangeListener;
 
     public SmartTextView(Context context) {
-//        this(context, null);
         super(context);
-        initView();
+        initView(context);
 
     }
 
     public SmartTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView();
+        initView(context);
     }
 
     public SmartTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView();
+        initView(context);
     }
 
-    private void initView() {
+    private void initView(Context context) {
+        mContext = context;
         setFocusableInTouchMode(true);
         //android9和10的行高问题的解决暂时解决方案
         //会造成开销，最好还是想办法把中英文的行高固定下来(降低中文行高)
@@ -74,6 +75,22 @@ public class SmartTextView extends TextView implements Smartable {
             soluteLineHeightMethod1();
 //            soluteLineHeightMethod2();
         }
+        //限制下高度
+        post(new Runnable() {
+            @Override
+            public void run() {
+                int width = getWidth();
+                int maxLines = (int) ((width * Constants.a4Ratio) / getLineHeight());
+                setMaxLines(maxLines);
+//                int height = getHeight();
+                LogUtil.e(TAG, "width = " + width + " , height = " + height);
+            }
+        });
+    }
+
+    @Override
+    public void scrollTo(int x, int y) {
+//        super.scrollTo(x, y);
     }
 
     private void soluteLineHeightMethod1() {

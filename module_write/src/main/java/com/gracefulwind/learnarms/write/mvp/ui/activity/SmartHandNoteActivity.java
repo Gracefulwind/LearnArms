@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
 import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.R2;
 import com.gracefulwind.learnarms.write.mvp.contract.SmartHandNoteContract;
@@ -70,6 +71,16 @@ public class SmartHandNoteActivity extends MyBaseActivity<SmartHandNotePresenter
     @Override
     public void initData(@Nullable @org.jetbrains.annotations.Nullable Bundle bundle) {
 //        wawtLlTop.setZOrderOnTop();
+//        washnShnHandNote.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                washnShnHandNote.setViewMode(SmartHandNoteView.MODE_DOODLE);
+//                washnShnHandNote.setDoodleMode(OperationPresenter.MODE_DOODLE);
+//            }
+//        });
+        washnShnHandNote.setViewMode(SmartHandNoteView.MODE_DOODLE);
+        washnShnHandNote.setDoodleMode(OperationPresenter.MODE_DOODLE);
+        KeyboardUtil.hideSoftKeyboard(this);
     }
 
     @OnClick({R2.id.washn_btn_keyboard, R2.id.washn_btn_doodle, R2.id.washn_btn_eraser, R2.id.washn_btn_text_box

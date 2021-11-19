@@ -10,6 +10,7 @@
 
         <activity android:name=".mvp.ui.activity.SmartHandNoteActivity"
             android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             />
 
         <activity android:name=".mvp.ui.activity.WriteTestActivity"

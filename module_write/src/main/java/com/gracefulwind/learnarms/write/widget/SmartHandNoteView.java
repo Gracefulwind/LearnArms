@@ -16,12 +16,15 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
+import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.write.widget.doodle.Doodle;
 import com.gracefulwind.learnarms.write.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.write.widget.doodle.EditMode;
@@ -104,12 +107,24 @@ public class SmartHandNoteView extends FrameLayout {
 
     private void initView(@NotNull Context context, @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
         mContext = context;
-
+//        setFocusable(true);
+//        setFocusableInTouchMode(true);
         createChildren();
         mScroller = new OverScroller(getContext());
         initGesture();
         //init viewMode
         setViewMode(MODE_TEXT);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                for (Smartable smart : smartViewList) {
+                    if(smart instanceof View){
+                        View v = (View) smart;
+                        KeyboardUtil.hideSoftKeyboard(mContext, v);
+                    }
+                }
+            }
+        });
     }
 
     private void createChildren() {
@@ -988,10 +1003,22 @@ public class SmartHandNoteView extends FrameLayout {
         }
     }
 
+    boolean firstToastFlag = false;
     private void setChildHeight(View targetView, int height) {
+        int width = targetView.getWidth();
+        int maxHeight = (int) (width * Constants.a4Ratio);
         ViewGroup.LayoutParams doodleLayoutParams = targetView.getLayoutParams();
-        doodleLayoutParams.height = height;
+        if(0 == width || maxHeight > height){
+            doodleLayoutParams.height = height;
+        }else {
+            doodleLayoutParams.height = maxHeight;
+            if(!firstToastFlag){
+                firstToastFlag = true;
+                Toast.makeText(mContext, "已达到最大长度！", Toast.LENGTH_SHORT).show();
+            }
+        }
         targetView.setLayoutParams(doodleLayoutParams);
+
 //        targetView.invalidate();
     }
 }

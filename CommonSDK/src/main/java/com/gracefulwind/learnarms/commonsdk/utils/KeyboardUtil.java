@@ -52,4 +52,10 @@ public class KeyboardUtil {
         }
     }
 
+    public static void hideSoftKeyboard(Context context, View view) {
+        if (view == null) return;
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
 }
