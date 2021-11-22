@@ -51,6 +51,7 @@ public interface RouterHub {
     String WEATHER_HOME = "/weather";//天气组件
     String READER_HOME = "/novels";//小说组件
     String WRITE_HOME = "/smart_write";//智能手写组件
+    String NEW_WRITE_HOME = "/new_write";//智能手写组件-新
 
     /**
      * 服务组件, 用于给每个组件暴露特有的服务
@@ -170,6 +171,15 @@ public interface RouterHub {
         String HOME_ACTIVITY = BASE + "/HomeActivity";
         String SMART_HAND_NOTE_ACTIVITY = BASE + "/SmartHandNoteActivity";
         String WRITE_TEST_ACTIVITY = BASE + "/WriteTestActivity";
+    }
+
+//====================================================================
+    /**
+     * newWrite组件
+     * */
+    interface NewWrite{
+        String BASE = NEW_WRITE_HOME;
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
     }
 
 }
