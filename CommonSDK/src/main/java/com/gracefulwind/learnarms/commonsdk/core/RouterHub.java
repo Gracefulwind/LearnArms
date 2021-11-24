@@ -180,6 +180,7 @@ public interface RouterHub {
     interface NewWrite{
         String BASE = NEW_WRITE_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
+        String TEST_NEW_WRITE_ACTIVITY = BASE + "/TestNewWriteActivity";
     }
 
 }

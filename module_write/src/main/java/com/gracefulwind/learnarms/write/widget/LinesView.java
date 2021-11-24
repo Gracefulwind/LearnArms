@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
+import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.widget.edit.SmartTextView;
 
 
@@ -33,30 +35,31 @@ public class LinesView extends View implements Smartable{
     private int width;
     private int height;
 
-    private int mLineHeight;
-    private SmartTextView mSmartTextview;
+//    private int mLineHeight;
+//    private SmartTextView mSmartTextview;
 
 
 //    public LinesView(Context context) {
 //        this(context, null);
 //    }
 
-    public LinesView(Context context, SmartTextView bindTextview) {
-        this(context, bindTextview, null);
+    public LinesView(Context context) {
+        this(context, null);
     }
 
-    public LinesView(Context context, SmartTextView bindTextview, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
-        this(context, bindTextview, attrs, 0);
+    public LinesView(Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public LinesView(Context context, SmartTextView bindTextview, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
+    public LinesView(Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context, bindTextview, attrs, defStyleAttr);
+        initView(context, attrs, defStyleAttr);
     }
 
-    private void initView(Context context, SmartTextView bindTextview, AttributeSet attrs, int defStyleAttr) {
-        mSmartTextview = bindTextview;
-        mLineHeight = bindTextview.getLineHeight();
+    private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+//        paint.setColor(ContextCompat.getColor(context, R.color.note_line));
+        paint.setStrokeWidth(2f);
+        paint.setStyle(Paint.Style.FILL);
     }
 
     @Override
@@ -86,49 +89,28 @@ public class LinesView extends View implements Smartable{
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentWidth = parentView.getWidth();
-            int parentHeight = parentView.getHeight();
+        if (parent instanceof SmartHandNote) {
+            SmartHandNote parentView = (SmartHandNote) parent;
+            int parentHeight = parent.getHeight();
             int textViewHeight = parentView.getTextViewHeight();
-            int baseWidth = getWidth();
             int baseHeight = getHeight();
-//            LogUtil.e(TAG, "onLayout baseHeight = " + baseHeight + " , parentHeight = " + parentHeight + " , textViewHeight = " + textViewHeight);
-//            float maxScaleRate = parentView.getMaxScaleRate();
-//            //宽
-//            if ((parentWidth * maxScaleRate) != baseWidth) {
-//                ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//                layoutParams.width = (int) (parentWidth * maxScaleRate);
-//                setLayoutParams(layoutParams);
-//                setTranslationX(((maxScaleRate - 1) / 2) * -parentWidth);
-//            }
             //高
-            int myHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//            if(textViewHeight >= parentHeight){
-//                layoutParams.height = textViewHeight;
-//            }else {
-//                layoutParams.height = (int) (parentHeight);
-//            }
-            layoutParams.height = myHeight;
+            int comparedHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
+            layoutParams.height = comparedHeight;
             setLayoutParams(layoutParams);
-//            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//            LogUtil.e(TAG, "onLayout, parentwidth = " + parentWidth + " , parentheight = " + parentHeight
-//                    + " , width = " + width1 + " , height = " + height1 + ", layoutHeight = " + layoutParams.height);
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        paint.setStyle(Paint.Style.FILL);
-        if(null == mSmartTextview){
-            if(!tryToInit()){
-                //获取不到smartView直接退出好么
-                return;
-            }
+        ViewParent parent = getParent();
+        if(!(parent instanceof SmartHandNote)){
+            return;
         }
-        int lineCount = mSmartTextview.getLineCount();
+        SmartHandNote smartView = (SmartHandNote) parent;
+        int lineCount = smartView.getLineCount();
         float textHeight = getLineHeight();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
@@ -141,7 +123,7 @@ public class LinesView extends View implements Smartable{
         canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
         Rect rect = new Rect();
         for(int x = 0; x <= lineCount - 1; x++){
-            mSmartTextview.getLineBounds(x, rect);
+            smartView.getLineBounds(x, rect);
             totalHeight = rect.bottom;
 //            totalHeight = mSmartTextview.getLineBounds(x, rect);
             canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
@@ -162,29 +144,26 @@ public class LinesView extends View implements Smartable{
 //        }
     }
 
-    private boolean tryToInit() {
-        ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView tempParent = (SmartHandNoteView) parent;
-            mSmartTextview = tempParent.getTextView();
-            mLineHeight = mSmartTextview.getLineHeight();
-            return true;
-        }else {
-            return false;
-        }
-    }
-
-    public void setLineHeight(int lineHeight){
-        mLineHeight = lineHeight;
-    }
+//    private boolean tryToInit() {
+//        ViewParent parent = getParent();
+//        if(parent instanceof SmartHandNote){
+//            SmartHandNoteView tempParent = (SmartHandNoteView) parent;
+//            mSmartTextview = tempParent.getTextView();
+//            mLineHeight = mSmartTextview.getLineHeight();
+//            return true;
+//        }else {
+//            return false;
+//        }
+//    }
 
     public int getLineHeight(){
         ViewParent parent = getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView tempParent = (SmartHandNoteView) parent;
-            mLineHeight = tempParent.getLineHeight();
+        int lineHeight = 0;
+        if (parent instanceof SmartHandNote) {
+            SmartHandNote tempParent = (SmartHandNote) parent;
+            lineHeight = tempParent.getLineHeight();
         }
-        return mLineHeight;
+        return lineHeight;
     }
 
 

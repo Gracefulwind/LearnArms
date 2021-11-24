@@ -6,6 +6,11 @@
         <activity
             android:name=".mvp.ui.activity.MainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".mvp.ui.activity.TestNewWriteActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            />
     </application>
 
 </manifest>

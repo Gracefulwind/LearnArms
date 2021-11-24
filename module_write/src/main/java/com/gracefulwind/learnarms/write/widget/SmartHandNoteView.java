@@ -48,7 +48,7 @@ import java.util.List;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class SmartHandNoteView extends FrameLayout {
+public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
     public static final String TAG = "SmartHandNoteView";
     public static final int MODE_SCALE = 0x00000000;
     public static final int MODE_TEXT = 0x00000001;
@@ -133,7 +133,7 @@ public class SmartHandNoteView extends FrameLayout {
         LayoutParams stvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         mSmartTextView.setLayoutParams(stvLayoutParams);
         //add linesView
-        mLinesView = new LinesView(mContext, mSmartTextView);
+        mLinesView = new LinesView(mContext);
         LayoutParams lvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mLinesView.setLayoutParams(lvLayoutParams);
         //add doodleView
@@ -381,12 +381,12 @@ public class SmartHandNoteView extends FrameLayout {
         //基于缩放比例的左/右偏移量
 //        float realOutWidth = ((1 - 1) / 2) * textWidth;
 //                    float textHeight = mSmartTextView.getHeight();
-        float lineHeight = mLinesView.getHeight();
+        float lineHeight = mDoodleView.getHeight();
         float noteHeight = getHeight();
         float textPx = mSmartTextView.getPivotX();
 //                    float textPy = mSmartTextView.getPivotY();
 //                    float linePx = mLinesView.getPivotX();
-        float linePy = mLinesView.getPivotY();
+        float linePy = mDoodleView.getPivotY();
         //控制右滑
         float minDistanceX = (textWidth - textPx) - (textWidth - textPx) * mLastScale;
         if(mDistanceX < minDistanceX){
@@ -779,12 +779,22 @@ public class SmartHandNoteView extends FrameLayout {
         return mSmartTextView.getLineHeight();
     }
 
+    @Override
+    public int getLineCount() {
+        return mSmartTextView.getLineCount();
+    }
+
     public int getTextViewWidth() {
         return mSmartTextView.getWidth();
     }
 
     public int getTextViewHeight() {
         return mSmartTextView.getHeight();
+    }
+
+    @Override
+    public int getLineBounds(int line, Rect bounds) {
+        return mSmartTextView.getLineBounds(line, bounds);
     }
 
 
@@ -975,14 +985,6 @@ public class SmartHandNoteView extends FrameLayout {
 
     public void setBitmap(Bitmap bitmap){
         int bitmapHeight = bitmap.getHeight();
-//        int doodleHeight = mDoodleView.getHeight();
-//        //高
-//        if(bitmapHeight > doodleHeight){
-//            setChildHeight(mDoodleView, bitmapHeight);
-//            ViewGroup.LayoutParams lineLayoutParams = mLinesView.getLayoutParams();
-//            lineLayoutParams.height = bitmapHeight;
-//            mLinesView.setLayoutParams(lineLayoutParams);
-//        }
         changeBackgroundHeight(bitmapHeight);
         mDoodleView.setBitmap(bitmap);
     }
@@ -1007,18 +1009,18 @@ public class SmartHandNoteView extends FrameLayout {
     private void setChildHeight(View targetView, int height) {
         int width = targetView.getWidth();
         int maxHeight = (int) (width * Constants.a4Ratio);
-        ViewGroup.LayoutParams doodleLayoutParams = targetView.getLayoutParams();
-        if(0 == width || maxHeight > height){
-            doodleLayoutParams.height = height;
-        }else {
-            doodleLayoutParams.height = maxHeight;
-            if(!firstToastFlag){
+        ViewGroup.LayoutParams childLayoutParams = targetView.getLayoutParams();
+        if (0 == width || maxHeight > height) {
+            if(childLayoutParams.height < height){
+                childLayoutParams.height = height;
+            }
+        } else {
+            childLayoutParams.height = maxHeight;
+            if (!firstToastFlag) {
                 firstToastFlag = true;
                 Toast.makeText(mContext, "已达到最大长度！", Toast.LENGTH_SHORT).show();
             }
         }
-        targetView.setLayoutParams(doodleLayoutParams);
-
-//        targetView.invalidate();
+        targetView.setLayoutParams(childLayoutParams);
     }
 }

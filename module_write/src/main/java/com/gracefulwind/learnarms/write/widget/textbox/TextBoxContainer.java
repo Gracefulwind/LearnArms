@@ -94,9 +94,9 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //编辑模式不再向上传递事件
-        if (isEnabled()){
-            return true;
-        }
+//        if (isEnabled()){
+//            return true;
+//        }
         return super.onTouchEvent(event);
     }
 

@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity {
                 Utils.navigation(MainActivity.this, RouterHub.SmartWrite.HOME_ACTIVITY);
                 break;
             case R.id.am_tv_new_smart_write:
-                //手写板
+                //新手写板
                 Utils.navigation(MainActivity.this, RouterHub.NewWrite.HOME_ACTIVITY);
                 break;
             case R.id.am_tv_copy:

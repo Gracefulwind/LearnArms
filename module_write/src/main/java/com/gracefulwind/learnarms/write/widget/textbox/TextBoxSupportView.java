@@ -71,10 +71,12 @@ public class TextBoxSupportView extends View implements Smartable {
         if(!isEnabled()){
             return false;
         }
-//        //非电容笔则不处理
-//        if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
-//            return false;
-//        }
+        //非电容笔则不处理
+        int actionIndex = event.getActionIndex();
+        int toolType = event.getToolType(actionIndex);
+        if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
+            return false;
+        }
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
@@ -82,9 +84,7 @@ public class TextBoxSupportView extends View implements Smartable {
             case MotionEvent.ACTION_DOWN:
                 mPrevX = x;
                 mPrevY = y;
-//                LogUtil.e(TAG, "ACTION_DOWN  x = " + x + " , y = " + y);
                 mParent.clearFocus();
-//                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 drawTextLine = true;

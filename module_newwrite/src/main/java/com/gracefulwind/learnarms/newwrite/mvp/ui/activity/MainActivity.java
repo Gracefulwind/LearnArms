@@ -2,6 +2,7 @@ package com.gracefulwind.learnarms.newwrite.mvp.ui.activity;
 
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,7 +10,9 @@ import androidx.annotation.Nullable;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.newwrite.R;
+import com.gracefulwind.learnarms.newwrite.R2;
 import com.gracefulwind.learnarms.newwrite.mvp.contract.MainContract;
 import com.gracefulwind.learnarms.newwrite.mvp.di.component.DaggerMainComponent;
 import com.gracefulwind.learnarms.newwrite.mvp.presenter.MainPresenter;
@@ -17,6 +20,8 @@ import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import org.jetbrains.annotations.NotNull;
+
+import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
@@ -33,6 +38,8 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  */
 @Route(path = RouterHub.NewWrite.HOME_ACTIVITY)
 public class MainActivity extends MyBaseActivity<MainPresenter> implements MainContract.View {
+    public static final String TAG = "MainActivity";
+
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerMainComponent //如找不到该类,请编译一下项目
@@ -46,13 +53,11 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.newwrite_activity_main; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
-//        return 0;
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         //setToolBar(toolbar, "Main");
-
         initListener();
     }
 
@@ -66,4 +71,13 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
         ArmsUtils.snackbarText(message);
     }
 
+    @OnClick({R2.id.nam_btn_test1})
+    public void onViewClicked(View view) {
+        int id = view.getId();
+        if(R.id.nam_btn_test1 == id){
+            Utils.navigation(MainActivity.this, RouterHub.NewWrite.TEST_NEW_WRITE_ACTIVITY);
+        }else if(R.id.nam_btn_test1 == id){
+
+        }
+    }
 }
