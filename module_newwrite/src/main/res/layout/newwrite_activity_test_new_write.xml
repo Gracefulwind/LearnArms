@@ -41,7 +41,30 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-
+        <Button
+            android:id="@+id/natnw_btn_click2_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="写字板"
+            />
+        <Button
+            android:id="@+id/natnw_btn_click2_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="涂鸦"
+            />
+        <Button
+            android:id="@+id/natnw_btn_click2_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="橡皮擦"
+            />
+        <Button
+            android:id="@+id/natnw_btn_click2_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文本框"
+            />
     </LinearLayout>
 
     <com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView

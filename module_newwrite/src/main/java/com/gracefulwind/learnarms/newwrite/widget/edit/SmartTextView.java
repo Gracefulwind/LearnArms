@@ -96,13 +96,13 @@ public class SmartTextView extends TextView implements Smartable {
 
     @Override
     public void scrollTo(int x, int y) {
-        ViewParent realParent = getRealParent();
-        if(realParent instanceof SmartHandNote){
-            SmartHandNote smartView = (SmartHandNote) realParent;
-            smartView.smartScrollTo(x, y, this);
-        }else {
-            super.scrollTo(x, y);
-        }
+//        ViewParent realParent = getRealParent();
+//        if(realParent instanceof SmartHandNote){
+//            SmartHandNote smartView = (SmartHandNote) realParent;
+//            smartView.smartScrollTo(x, y, this);
+//        }else {
+//            super.scrollTo(x, y);
+//        }
     }
 
     @Override

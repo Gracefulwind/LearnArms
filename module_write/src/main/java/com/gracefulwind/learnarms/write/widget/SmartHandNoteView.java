@@ -1000,8 +1000,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
                     setChildHeight(view, height);
                 }
             }
-//            setChildHeight(mDoodleView, height);
-//            setChildHeight(mLinesView, height);
         }
     }
 

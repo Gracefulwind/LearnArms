@@ -21,4 +21,5 @@ public interface SmartHandNote {
     int getTextViewHeight();
     int getLineBounds(int line, Rect bounds);
     void smartScrollTo(int x, int y, View startView);
+    void changeBackgroundHeight(int height);
 }

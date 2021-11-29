@@ -56,7 +56,8 @@ public class TestNewWriteActivity extends BaseActivity {
 
     }
 
-    @OnClick({R2.id.natnw_btn_click1, R2.id.natnw_btn_click2, R2.id.natnw_btn_click3, R2.id.natnw_btn_click4})
+    @OnClick({R2.id.natnw_btn_click1, R2.id.natnw_btn_click2, R2.id.natnw_btn_click3, R2.id.natnw_btn_click4
+            , R2.id.natnw_btn_click2_1, R2.id.natnw_btn_click2_2, R2.id.natnw_btn_click2_3, R2.id.natnw_btn_click2_4})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.natnw_btn_click1 == id){
@@ -65,11 +66,23 @@ public class TestNewWriteActivity extends BaseActivity {
             LogUtil.e(TAG, "====");
 
         }else if(R.id.natnw_btn_click2 == id){
-
+            smartHandNoteView.test();
         }else if(R.id.natnw_btn_click3 == id){
 
         }else if(R.id.natnw_btn_click4 == id){
 
+        }else if(R.id.natnw_btn_click2_1 == id){
+            //写字板
+            smartHandNoteView.setViewMode(smartHandNoteView.MODE_TEXT);
+        }else if(R.id.natnw_btn_click2_2 == id){
+            //涂鸦
+            smartHandNoteView.setViewMode(smartHandNoteView.MODE_DOODLE);
+        }else if(R.id.natnw_btn_click2_3 == id){
+            //橡皮擦
+            smartHandNoteView.setViewMode(smartHandNoteView.MODE_ERASER);
+        }else if(R.id.natnw_btn_click2_4 == id){
+            //文本框
+//            smartHandNoteView.setViewMode(smartHandNoteView.MODE_DOODLE);
         }else if(R.id.natnw_btn_click4 == id){
 
         }

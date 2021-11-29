@@ -20,4 +20,12 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <com.gracefulwind.learnarms.newwrite.widget.doodle.DoodleView
+        android:id="@+id/nvshn_dv_doodle_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/public_dimen_0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
