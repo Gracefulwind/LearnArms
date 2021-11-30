@@ -127,6 +127,15 @@ public class TextBoxManager {
             SmartHandNote parent = (SmartHandNote) realParent;
             parent.setChanged(true);
         }
+    }
 
+    public List<TextBoxBean> getTextBoxContain() {
+        List<TextBoxBean> containList = new ArrayList<>();
+        for (TextBoxView view: mEditViewList) {
+            TextBoxBean bean = new TextBoxBean();
+            bean.str = view.getText();
+            containList.add(bean);
+        }
+        return containList;
     }
 }

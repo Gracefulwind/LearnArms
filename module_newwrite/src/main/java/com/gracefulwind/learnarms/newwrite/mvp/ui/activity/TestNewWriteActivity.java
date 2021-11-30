@@ -13,6 +13,7 @@ import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
+import com.gracefulwind.learnarms.newwrite.widget.SmartHandNote;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -73,16 +74,16 @@ public class TestNewWriteActivity extends BaseActivity {
 
         }else if(R.id.natnw_btn_click2_1 == id){
             //写字板
-            smartHandNoteView.setViewMode(smartHandNoteView.MODE_TEXT);
+            smartHandNoteView.setViewMode(SmartHandNote.MODE_TEXT);
         }else if(R.id.natnw_btn_click2_2 == id){
             //涂鸦
-            smartHandNoteView.setViewMode(smartHandNoteView.MODE_DOODLE);
+            smartHandNoteView.setViewMode(SmartHandNote.MODE_DOODLE);
         }else if(R.id.natnw_btn_click2_3 == id){
             //橡皮擦
-            smartHandNoteView.setViewMode(smartHandNoteView.MODE_ERASER);
+            smartHandNoteView.setViewMode(SmartHandNote.MODE_ERASER);
         }else if(R.id.natnw_btn_click2_4 == id){
             //文本框
-            smartHandNoteView.setViewMode(smartHandNoteView.MODE_TEXT_BOX);
+            smartHandNoteView.setViewMode(SmartHandNote.MODE_TEXT_BOX);
         }else if(R.id.natnw_btn_click4 == id){
 
         }

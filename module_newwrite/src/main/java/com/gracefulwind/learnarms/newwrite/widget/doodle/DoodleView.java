@@ -277,4 +277,14 @@ public class DoodleView extends View implements Smartable,Doodle {
     public ViewParent getRealParent() {
         return getParent().getParent();
     }
+
+    @Override
+    public boolean canCancel() {
+        return mPresenter.canCancel();
+    }
+
+    @Override
+    public boolean canRedo() {
+        return mPresenter.canRedo();
+    }
 }

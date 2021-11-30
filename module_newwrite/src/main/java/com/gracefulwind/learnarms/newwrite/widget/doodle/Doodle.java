@@ -37,6 +37,8 @@ public interface Doodle {
     void setPaintEditMode(@EditMode int editMode);
     @EditMode int getEditMode();
     boolean isModeDoodle();
+    boolean canCancel();
+    boolean canRedo();
     boolean cancelLastDraw();
     boolean redoLastDraw();
     void setPaintColor(@ColorInt int paintColor);

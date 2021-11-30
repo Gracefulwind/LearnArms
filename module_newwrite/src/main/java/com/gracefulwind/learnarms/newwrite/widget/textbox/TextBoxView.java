@@ -283,4 +283,8 @@ public class TextBoxView extends FrameLayout {
         }
     }
 
+    public String getText() {
+        return vtbEtEdit.getText().toString();
+    }
+
 }

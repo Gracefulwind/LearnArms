@@ -307,6 +307,26 @@ public class OperationPresenter {
     }
 
     /**
+     * 是否可撤销
+     */
+    public boolean canCancel() {
+        if (null == mOperationList) {
+            return false;
+        }
+        return 0 != mOperationList.size();
+    }
+
+    /**
+     * 是否可 反 撤销
+     */
+    public boolean canRedo() {
+        if (null == mRedoList) {
+            return false;
+        }
+        return 0 != mRedoList.size();
+    }
+
+    /**
      * 撤销最后一笔
      * */
     public boolean cancelLastDraw(){

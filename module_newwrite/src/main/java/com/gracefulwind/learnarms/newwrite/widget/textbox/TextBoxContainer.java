@@ -19,6 +19,8 @@ import com.gracefulwind.learnarms.newwrite.widget.Smartable;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * @ClassName: TextBoxContainer
  * @Author: Gracefulwind
@@ -172,6 +174,10 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
         Canvas canvas = new Canvas(bitmap);
         this.draw(canvas);
         return bitmap;
+    }
+
+    public List<TextBoxBean> getTextBoxContain() {
+        return mTextBoxManager.getTextBoxContain();
     }
 
     @Override

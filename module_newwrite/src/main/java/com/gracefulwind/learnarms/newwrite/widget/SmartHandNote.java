@@ -15,9 +15,14 @@ import android.view.View;
  * @Email: 429344332@qq.com
  */
 public interface SmartHandNote {
-
+    //舍弃缩放了
+//    int MODE_SCALE = 0x00000000;
+    int MODE_TEXT = 0x00000001;
+    int MODE_DOODLE = 0x00000002;
+    int MODE_ERASER = 0x00000003;
+    int MODE_TEXT_BOX = 0x00000004;
 //==对外的接口==================================================================================================
-
+    void setViewMode(@ViewMode int viewMode);
 
 //==对子控件的接口=============================================================================================
     void refreshLineView();
