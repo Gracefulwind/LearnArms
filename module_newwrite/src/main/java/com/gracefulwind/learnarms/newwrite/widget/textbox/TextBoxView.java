@@ -1,6 +1,8 @@
 package com.gracefulwind.learnarms.newwrite.widget.textbox;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
+import com.gracefulwind.learnarms.newwrite.widget.SmartHandNote;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView;
 
 import butterknife.BindView;
@@ -34,7 +37,7 @@ public class TextBoxView extends FrameLayout {
     public static float minWidth = UiUtil.dip2px(32);
     public static float minHeight = UiUtil.dip2px(32);
     private Context mContext;
-    private SmartHandNoteView mParent;
+    private SmartHandNote mParent;
     private TextBoxManager mManager;
     private View mRootView;
 
@@ -49,25 +52,25 @@ public class TextBoxView extends FrameLayout {
     EditText vtbEtEdit;
     boolean editable = true;
 
-    public TextBoxView(Context context, SmartHandNoteView parent, TextBoxManager manager) {
+    public TextBoxView(Context context, SmartHandNote parent, TextBoxManager manager) {
         this(context, parent, manager, null);
     }
 
-    public TextBoxView(Context context, SmartHandNoteView parent, TextBoxManager manager, AttributeSet attrs) {
+    public TextBoxView(Context context, SmartHandNote parent, TextBoxManager manager, AttributeSet attrs) {
         this(context, parent, manager, attrs, 0);
     }
 
-    public TextBoxView(Context context, SmartHandNoteView parent, TextBoxManager manager, AttributeSet attrs, int defStyleAttr) {
+    public TextBoxView(Context context, SmartHandNote parent, TextBoxManager manager, AttributeSet attrs, int defStyleAttr) {
         this(context, parent, manager, attrs, defStyleAttr, 0);
     }
 
-    public TextBoxView(Context context, SmartHandNoteView parent, TextBoxManager manager, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TextBoxView(Context context, SmartHandNote parent, TextBoxManager manager, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context, parent, manager);
     }
 
     //init
-    private void initView(Context context, SmartHandNoteView parent, TextBoxManager manager) {
+    private void initView(Context context, SmartHandNote parent, TextBoxManager manager) {
         mContext = context;
         mParent = parent;
         mManager = manager;
@@ -85,6 +88,22 @@ public class TextBoxView extends FrameLayout {
 //                if(!hasFocus && StringUtil.isEmpty(vtbEtEdit.getText().toString().replace(" ", ""))){
 //                    mManager.deleteTextBox(TextBoxView.this);
 //                }
+            }
+        });
+        vtbEtEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                callSmartHandViewChanged();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         setViewTouchEvent();
@@ -135,6 +154,7 @@ public class TextBoxView extends FrameLayout {
                         LayoutParams layoutParams = (LayoutParams) getLayoutParams();
                         baseMarginLeft = layoutParams.leftMargin;
                         baseMarginTop = layoutParams.topMargin;
+                        callSmartHandViewChanged();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (doActionMove(x, y)) return true;
@@ -204,6 +224,7 @@ public class TextBoxView extends FrameLayout {
                         mPrevY = y;
                         baseWidth = getWidth();
                         baseHeight = getHeight();
+                        callSmartHandViewChanged();
                         break;
                     case MotionEvent.ACTION_MOVE:
 //                        if (doActionMove(x, y)) return true;
@@ -255,5 +276,11 @@ public class TextBoxView extends FrameLayout {
 //    public void onViewClicked(View view) {
 //
 //    }
+
+    private void callSmartHandViewChanged() {
+        if (null != mParent) {
+            mParent.setChanged(true);
+        }
+    }
 
 }

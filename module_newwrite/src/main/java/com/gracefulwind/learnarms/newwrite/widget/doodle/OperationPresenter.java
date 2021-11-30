@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.view.ViewParent;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -15,6 +16,7 @@ import androidx.annotation.ColorInt;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.newwrite.R;
+import com.gracefulwind.learnarms.newwrite.widget.SmartHandNote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -250,6 +252,7 @@ public class OperationPresenter {
         if(null != mOnPathChangedListener){
             mOnPathChangedListener.onCancelListChanged(mOperationList);
         }
+        callSmartHandViewChanged();
     }
 
     /**
@@ -345,6 +348,7 @@ public class OperationPresenter {
             }
 //            //清空缓存画板
 //            cacheCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            callSmartHandViewChanged();
             doodleView.refreshUi();
         }
     }
@@ -368,6 +372,7 @@ public class OperationPresenter {
     private void clearAllL(){
         clearRedoList();
         clearOperationList();
+        callSmartHandViewChanged();
         doodleView.refreshUi();
     }
 
@@ -428,5 +433,13 @@ public class OperationPresenter {
         holdBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
         holdCanvas = new Canvas(holdBitmap);
         holdCanvas.drawBitmap(bitmap, 0f, 0f, null);
+    }
+
+    private void callSmartHandViewChanged() {
+        ViewParent parentView = doodleView.getRealParent();
+        if (parentView instanceof SmartHandNote) {
+            SmartHandNote smartHandView = (SmartHandNote) parentView;
+            smartHandView.setChanged(true);
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
+import com.gracefulwind.learnarms.newwrite.widget.SmartHandNote;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView;
 
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ public class TextBoxManager {
 //        textView.setMinHeight();
         mEditViewList.add(editText);
         mContainer.addView(editText);
+        callSmartHandViewChanged();
     }
 
     /**
@@ -104,6 +106,7 @@ public class TextBoxManager {
 //        }
         mEditViewList.remove(textBox);
         mContainer.removeView(textBox);
+        callSmartHandViewChanged();
     }
 
     public void clearFocus() {
@@ -112,5 +115,18 @@ public class TextBoxManager {
 
     public ViewParent getRealParent(){
         return mContainer.getRealParent();
+    }
+
+    /**
+     * 增删全在manager里统一响应，拖拽和改变宽度不涉及到manager，就在内部处理
+     * */
+    private void callSmartHandViewChanged() {
+        ViewParent realParent = mContainer.getRealParent();
+        //能 instanceof 就代表肯定不为null了
+        if(realParent instanceof SmartHandNote){
+            SmartHandNote parent = (SmartHandNote) realParent;
+            parent.setChanged(true);
+        }
+
     }
 }

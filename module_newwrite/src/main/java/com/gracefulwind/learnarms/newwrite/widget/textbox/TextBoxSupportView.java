@@ -30,8 +30,6 @@ import com.gracefulwind.learnarms.newwrite.widget.Smartable;
  */
 public class TextBoxSupportView extends View implements Smartable {
     public static final String TAG = "TextBoxView";
-    private int width;
-    private int height;
     private TextBoxContainer mParent;
     private Context mContext;
 
@@ -153,8 +151,6 @@ public class TextBoxSupportView extends View implements Smartable {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        width = w;
-        height = h;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.gracefulwind.learnarms.newwrite.widget.doodle;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import androidx.annotation.ColorInt;
 
@@ -29,7 +30,8 @@ public interface Doodle {
     void initCanvas(Canvas canvas, int backgroundColor);
 
     //==for views======================
-    public void setLayoutParams(ViewGroup.LayoutParams params);
+    void setLayoutParams(ViewGroup.LayoutParams params);
+    ViewParent getRealParent();
 
     //==for out control===================
     void setPaintEditMode(@EditMode int editMode);

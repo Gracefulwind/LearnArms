@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
@@ -62,6 +63,10 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
     DoodleView mDoodleView;
     @BindView(R2.id.nvshn_tbc_text_box)
     TextBoxContainer mTextBoxContainer;
+
+ //---------------------------------------
+    private boolean isChanged = false;
+    private ContentChangedListener mContentChangedListener;
 
     public SmartHandNoteView(Context context) {
         this(context, null);
@@ -233,6 +238,47 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
         }
         targetView.setLayoutParams(childLayoutParams);
     }
+
+//==对外接口==================================================================================================
+    /**
+     * needCallback:是否要调用内容变化的回调
+     */
+    public void setText(CharSequence text, boolean needCallback) {
+        mSmartTextView.setText(text, needCallback);
+    }
+
+//===一些其他的接口=================================================================================================
+    /**
+     * 当前的变动情况
+     */
+    @Override
+    public boolean isChanged() {
+        return isChanged;
+    }
+
+    /**
+     * 每次暂存后手动调用开关
+     */
+    @Override
+    public void setChanged(boolean changed) {
+        isChanged = changed;
+        LogUtil.e(TAG, "===== content changed, result = " + changed);
+        if (null != mContentChangedListener) {
+            mContentChangedListener.onContentChanged(changed);
+        }
+    }
+
+    /**
+     * 设置内容变动监听器
+     */
+    public void setContentChangedListener(ContentChangedListener listener) {
+        mContentChangedListener = listener;
+    }
+
+    public interface ContentChangedListener {
+        void onContentChanged(boolean changed);
+    }
+//====================================================================================================
 
     public void test() {
         if(mSmartTextView.getVisibility() == View.VISIBLE){

@@ -15,6 +15,11 @@ import android.view.View;
  * @Email: 429344332@qq.com
  */
 public interface SmartHandNote {
+
+//==对外的接口==================================================================================================
+
+
+//==对子控件的接口=============================================================================================
     void refreshLineView();
     int getLineHeight();
     int getLineCount();
@@ -22,4 +27,11 @@ public interface SmartHandNote {
     int getLineBounds(int line, Rect bounds);
     void smartScrollTo(int x, int y, View startView);
     void changeBackgroundHeight(int height);
+
+//===============================================
+    /**
+     * smartHandNoteView变动监听控制接口
+     * */
+    void setChanged(boolean changed);
+    boolean isChanged();
 }

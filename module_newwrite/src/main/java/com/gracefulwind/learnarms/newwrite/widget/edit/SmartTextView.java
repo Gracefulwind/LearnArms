@@ -50,6 +50,7 @@ public class SmartTextView extends TextView implements Smartable {
     private int width;
     private int height;
     private OnSizeChangeListener mOnSizeChangeListener;
+    private TextWatcher mTextWatcher;
 
     public SmartTextView(Context context) {
         super(context);
@@ -87,6 +88,23 @@ public class SmartTextView extends TextView implements Smartable {
                 LogUtil.e(TAG, "width = " + width + " , height = " + height);
             }
         });
+        mTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                callSmartHandViewChanged();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+        addTextChangedListener(mTextWatcher);
     }
 
 //    @Override
@@ -108,6 +126,24 @@ public class SmartTextView extends TextView implements Smartable {
     @Override
     public void smartScrollTo(int x, int y){
 //        super.scrollTo(x, y);
+    }
+
+    private void callSmartHandViewChanged() {
+        ViewGroup parent = (ViewGroup) getRealParent();
+        if(parent instanceof SmartHandNote){
+            SmartHandNote smartView = (SmartHandNote) parent;
+            smartView.setChanged(true);
+        }
+    }
+
+    public void setText(CharSequence text, boolean needCallback){
+        if(needCallback){
+            setText(text);
+        }else {
+            removeTextChangedListener(mTextWatcher);
+            setText(text);
+            addTextChangedListener(mTextWatcher);
+        }
     }
 
     private void soluteLineHeightMethod1() {
