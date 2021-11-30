@@ -9,6 +9,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.newwrite.R;
@@ -18,6 +20,7 @@ import com.gracefulwind.learnarms.newwrite.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.newwrite.widget.doodle.OperationPresenter;
 import com.gracefulwind.learnarms.newwrite.widget.edit.LinesView;
 import com.gracefulwind.learnarms.newwrite.widget.edit.SmartTextView;
+import com.gracefulwind.learnarms.newwrite.widget.textbox.TextBoxContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +60,8 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
     SmartTextView mSmartTextView;
     @BindView(R2.id.nvshn_dv_doodle_view)
     DoodleView mDoodleView;
-//    TextBoxContainer mTextBoxContainer;
+    @BindView(R2.id.nvshn_tbc_text_box)
+    TextBoxContainer mTextBoxContainer;
 
     public SmartHandNoteView(Context context) {
         this(context, null);
@@ -79,10 +83,15 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
     private void initView(Context context) {
         mContext = context;
         View childView = UiUtil.inflate(R.layout.newwrite_view_smart_hand_note);
+//        ConstraintLayout childGroup = (ConstraintLayout) childView;
+//        mTextBoxContainer = new TextBoxContainer(mContext, this);
         setFillViewport(true);
         bindView(childView);
         smartViewList.add(mLinesView);
         smartViewList.add(mSmartTextView);
+        smartViewList.add(mDoodleView);
+        smartViewList.add(mTextBoxContainer);
+        mDoodleView.setControlParent(this);
     }
 
     private void bindView(View childView) {
@@ -109,7 +118,7 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
                 mSmartTextView.setEnabled(true);
                 mSmartTextView.requestFocus();
                 mDoodleView.setEnabled(false);
-//                mTextBoxContainer.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
 //                setTextBoxEnable(false);
 //                doTranslateTo(0,0);
 //                doScale(1);
@@ -119,27 +128,27 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(true);
                 mDoodleView.setPaintEditMode(OperationPresenter.MODE_DOODLE);
-//                mTextBoxContainer.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
 //                setTextBoxEnable(false);
                 break;
             case MODE_ERASER:
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(true);
                 mDoodleView.setPaintEditMode(OperationPresenter.MODE_ERASER);
-//                mTextBoxContainer.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
 //                setTextBoxEnable(false);
                 break;
             case MODE_TEXT_BOX:
                 //设置文本框可编辑模式
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(false);
-//                mTextBoxContainer.setEnabled(true);
+                mTextBoxContainer.setEnabled(true);
 //                setTextBoxEnable(true);
                 break;
             default:
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(false);
-//                mTextBoxContainer.setEnabled(false);
+                mTextBoxContainer.setEnabled(false);
 //                setTextBoxEnable(false);
                 break;
         }
@@ -182,12 +191,13 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
 
     @Override
     public void smartScrollTo(int x, int y, View startView) {
-        for(Smartable smart : smartViewList){
-//            if(startView == smart){
-//                continue;
-//            }
-            smart.smartScrollTo(x, y);
-        }
+//        for(Smartable smart : smartViewList){
+////            if(startView == smart){
+////                continue;
+////            }
+//            smart.smartScrollTo(x, y);
+//        }
+        scrollTo(x, y);
     }
 
     @Override
@@ -230,5 +240,11 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
         }else {
             mSmartTextView.setVisibility(VISIBLE);
         }
+    }
+
+    public void test2() {
+        System.out.println("===========");
+        System.out.println("===========");
+        System.out.println("===========");
     }
 }

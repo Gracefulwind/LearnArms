@@ -99,6 +99,10 @@ public class OperationPresenter {
     }
 
     public void createCacheBitmap(int width, int height) {
+        if(width == 0 || height == 0){
+            LogUtil.e(TAG, "w or h = 0 when create bitmap");
+            return;
+        }
         cacheBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
         cacheCanvas = new Canvas(cacheBitmap);
     }
@@ -114,6 +118,10 @@ public class OperationPresenter {
     }
 
     public void createHoldBitmap(int width, int height) {
+        if(width == 0 || height == 0){
+            LogUtil.e(TAG, "w or h = 0 when create bitmap");
+            return;
+        }
         holdBitmap = Bitmap.createBitmap(width, height, Constants.bitmapQuality);
         holdCanvas = new Canvas(holdBitmap);
     }
@@ -369,6 +377,10 @@ public class OperationPresenter {
     }
 
     private void changeCacheBitmap(int w, int h, int oldw, int oldh) {
+        if(w == 0 || h == 0){
+            LogUtil.e(TAG, "w or h = 0 when create bitmap");
+            return;
+        }
         Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
         Bitmap tempBitmap = cacheBitmap;
         cacheCanvas = new Canvas(newBitmap);
@@ -378,6 +390,10 @@ public class OperationPresenter {
     }
 
     private void changeHolderBitmap(int w, int h, int oldw, int oldh) {
+        if(w == 0 || h == 0){
+            LogUtil.e(TAG, "w or h = 0 when create bitmap");
+            return;
+        }
         Bitmap newBitmap = Bitmap.createBitmap(w, h, Constants.bitmapQuality);//大图高宽
         Bitmap tempBitmap = holdBitmap;
         holdCanvas = new Canvas(newBitmap);

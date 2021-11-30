@@ -127,18 +127,18 @@ public class LinesView extends View implements Smartable {
 
     @Override
     public void scrollTo(int x, int y) {
-        ViewParent realParent = getRealParent();
-        if(realParent instanceof SmartHandNote){
-            SmartHandNote smartView = (SmartHandNote) realParent;
-            smartView.smartScrollTo(x, y, this);
-        }else {
-            super.scrollTo(x, y);
-        }
+//        ViewParent realParent = getRealParent();
+//        if(realParent instanceof SmartHandNote){
+//            SmartHandNote smartView = (SmartHandNote) realParent;
+//            smartView.smartScrollTo(x, y, this);
+//        }else {
+//            super.scrollTo(x, y);
+//        }
     }
 
     @Override
     public void smartScrollTo(int x, int y){
-        super.scrollTo(x, y);
+//        super.scrollTo(x, y);
     }
 
 

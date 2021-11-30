@@ -107,7 +107,7 @@ public class SmartTextView extends TextView implements Smartable {
 
     @Override
     public void smartScrollTo(int x, int y){
-        super.scrollTo(x, y);
+//        super.scrollTo(x, y);
     }
 
     private void soluteLineHeightMethod1() {

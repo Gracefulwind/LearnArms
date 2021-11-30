@@ -76,14 +76,15 @@ public class SmartTextView extends TextView implements Smartable {
 //            soluteLineHeightMethod2();
         }
         //限制下高度
+        //必须要等init后设置
         post(new Runnable() {
             @Override
             public void run() {
                 int width = getWidth();
-                int maxLines = (int) ((width * Constants.a4Ratio) / getLineHeight());
+                int maxLines = (int) ((width * Constants.a4Ratio) / getLineHeight()) + 1;
                 setMaxLines(maxLines);
 //                int height = getHeight();
-                LogUtil.e(TAG, "width = " + width + " , height = " + height);
+//                LogUtil.e(TAG, "width = " + width + " , height = " + height);
             }
         });
     }

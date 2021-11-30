@@ -68,7 +68,7 @@ public class TestNewWriteActivity extends BaseActivity {
         }else if(R.id.natnw_btn_click2 == id){
             smartHandNoteView.test();
         }else if(R.id.natnw_btn_click3 == id){
-
+            smartHandNoteView.test2();
         }else if(R.id.natnw_btn_click4 == id){
 
         }else if(R.id.natnw_btn_click2_1 == id){
@@ -82,7 +82,7 @@ public class TestNewWriteActivity extends BaseActivity {
             smartHandNoteView.setViewMode(smartHandNoteView.MODE_ERASER);
         }else if(R.id.natnw_btn_click2_4 == id){
             //文本框
-//            smartHandNoteView.setViewMode(smartHandNoteView.MODE_DOODLE);
+            smartHandNoteView.setViewMode(smartHandNoteView.MODE_TEXT_BOX);
         }else if(R.id.natnw_btn_click4 == id){
 
         }

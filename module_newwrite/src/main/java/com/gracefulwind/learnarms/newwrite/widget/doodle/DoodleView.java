@@ -34,6 +34,7 @@ public class DoodleView extends View implements Smartable,Doodle {
     public static final String TAG = "DoodleView";
 
     private OperationPresenter mPresenter;
+    //todo:wd 删除这个
     private ViewGroup mControlParent;
     private int responseLineNumber = 2;
     private int expandLineNumber = 3;
@@ -76,7 +77,7 @@ public class DoodleView extends View implements Smartable,Doodle {
         super.onLayout(changed, left, top, right, bottom);
         LogUtil.e(TAG, String.format("onLayout :  changed = %s, left = %s, top = %s, right = %s, bottom = %s"
                 , changed, left, top, right, bottom));
-        ViewGroup parent = (ViewGroup) getParent();
+        ViewGroup parent = (ViewGroup) getRealParent();
         if (parent instanceof SmartHandNote) {
             SmartHandNote parentView = (SmartHandNote) parent;
             int parentHeight = parent.getHeight();
@@ -107,8 +108,12 @@ public class DoodleView extends View implements Smartable,Doodle {
         if(!isEnabled()){
             return false;
         }
-        if(null != mControlParent){
-            mControlParent.requestDisallowInterceptTouchEvent(true);
+//        if(null != mControlParent){
+//            mControlParent.requestDisallowInterceptTouchEvent(true);
+//        }
+        ViewParent realParent = getRealParent();
+        if(realParent instanceof SmartHandNote){
+            realParent.requestDisallowInterceptTouchEvent(true);
         }
         int actionIndex = event.getActionIndex();
         int toolType = event.getToolType(actionIndex);
@@ -131,7 +136,7 @@ public class DoodleView extends View implements Smartable,Doodle {
                 }else {
                     mPresenter.actionJump(x, y);
                 }
-                ViewParent parent = getParent();
+                ViewParent parent = getRealParent();
                 if(parent instanceof SmartHandNote){
                     SmartHandNote parentView = (SmartHandNote) parent;
                     int lineHeight = parentView.getLineHeight();
@@ -159,54 +164,6 @@ public class DoodleView extends View implements Smartable,Doodle {
 
     }
 
-//    /**
-//     * 满足在handNote中的使用，总大小是textview比例系数的需求
-//     * */
-//    @Override
-//    public void setPivotX(float pivotX){
-//        super.setPivotX(pivotX);
-//    }
-
-//    @Override
-//    public void setViewHeightWithTextView(int textViewHeight) {
-//        int height = getHeight();
-//        ViewParent parent = getParent();
-//        if (parent instanceof SmartHandNoteView) {
-//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-//            int parentHeight = parentView.getHeight();
-//            int baseHeight = getHeight();
-//            float maxScaleRate = parentView.getMaxScaleRate();
-//            //高
-//            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-//            if(textViewHeight > parentHeight * maxScaleRate){
-//                layoutParams.height = textViewHeight;
-//            }else {
-//                layoutParams.height = (int) (parentHeight * maxScaleRate);
-//            }
-//            setLayoutParams(layoutParams);
-//        }
-//    }
-
-//    @Override
-//    public void smartTranslateTo(float translateX, float translateY) {
-//        setTranslationX(translateX);
-//        setTranslationY(translateY);
-//    }
-//
-//    @Override
-//    public void smartTranslateBy(float dX, float dY) {
-//        setTranslationX(getTranslationX() + dX);
-//        setTranslationY(getTranslationY() + dY);
-//    }
-//
-//    @Override
-//    public void smartScaleTo(float pivotX, float pivotY, float scaleX, float scaleY) {
-//        setPivotX(pivotX);
-//        setPivotY(pivotY);
-//        setScaleX(scaleX);
-//        setScaleY(scaleY);
-//    }
-
     //====================================================================================================
     public void setPaintEditMode(@EditMode int editMode){
         mPresenter.setPaintMode(editMode);
@@ -219,10 +176,6 @@ public class DoodleView extends View implements Smartable,Doodle {
     public boolean isModeDoodle(){
         return mPresenter.isModeDoodle();
     }
-
-//    public boolean isModeScale(){
-//        return mPresenter.isModeDoodle();
-//    }
 
     /**
      * 撤销最后一笔
@@ -307,17 +260,17 @@ public class DoodleView extends View implements Smartable,Doodle {
 
     @Override
     public void scrollTo(int x, int y) {
-        ViewParent realParent = getRealParent();
-        if(realParent instanceof SmartHandNote){
-            SmartHandNote smartView = (SmartHandNote) realParent;
-            smartView.smartScrollTo(x, y, this);
-        }else {
-            super.scrollTo(x, y);
-        }
+//        ViewParent realParent = getRealParent();
+//        if(realParent instanceof SmartHandNote){
+//            SmartHandNote smartView = (SmartHandNote) realParent;
+//            smartView.smartScrollTo(x, y, this);
+//        }else {
+//            super.scrollTo(x, y);
+//        }
     }
 
     public void smartScrollTo(int x, int y){
-        super.scrollTo(x, y);
+//        super.scrollTo(x, y);
     }
 
     @Override

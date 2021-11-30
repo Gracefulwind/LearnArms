@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi;
 
 
 import com.gracefulwind.learnarms.write.R;
+import com.gracefulwind.learnarms.write.widget.SmartHandNote;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -126,9 +127,9 @@ public class DoodleView extends View implements Smartable,Doodle {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
-        if (parent instanceof SmartHandNoteView) {
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentHeight = parentView.getHeight();
+        if (parent instanceof SmartHandNote) {
+            SmartHandNote parentView = (SmartHandNoteView) parent;
+            int parentHeight = parent.getHeight();
             int textViewHeight = parentView.getTextViewHeight();
             int baseHeight = getHeight();
             //高
