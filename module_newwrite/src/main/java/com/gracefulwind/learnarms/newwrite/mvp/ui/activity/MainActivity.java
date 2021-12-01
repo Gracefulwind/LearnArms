@@ -75,7 +75,7 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.nam_btn_test1 == id){
-            Utils.navigation(MainActivity.this, RouterHub.NewWrite.TEST_NEW_WRITE_ACTIVITY);
+            Utils.navigation(this, RouterHub.NewWrite.TEST_NEW_WRITE_ACTIVITY);
         }else if(R.id.nam_btn_test1 == id){
 
         }

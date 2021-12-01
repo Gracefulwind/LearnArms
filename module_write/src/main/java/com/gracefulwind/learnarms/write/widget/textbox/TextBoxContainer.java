@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
+import com.gracefulwind.learnarms.write.widget.SmartHandNote;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -33,9 +34,6 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
     private Context mContext;
     private SmartHandNoteView mParent;
     private TextBoxSupportView textBoxView;
-    //回头删了吧。。。
-    private int width;
-    private int height;
 
     private TextBoxManager mTextBoxManager;
 
@@ -69,17 +67,15 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        width = w;
-        height = h;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
-        if(parent instanceof SmartHandNoteView){
-            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-            int parentHeight = parentView.getHeight();
+        if(parent instanceof SmartHandNote){
+            SmartHandNote parentView = (SmartHandNote) parent;
+            int parentHeight = parent.getHeight();
             int textViewHeight = parentView.getTextViewHeight();
             int baseHeight = getHeight();
             //高

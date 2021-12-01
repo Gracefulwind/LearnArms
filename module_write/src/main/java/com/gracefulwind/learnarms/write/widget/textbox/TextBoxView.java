@@ -130,6 +130,7 @@ public class TextBoxView extends FrameLayout {
 //                    return false;
 //                }
 //                return mTouchGestureDetector.onTouchEvent(event);
+                getParent().requestDisallowInterceptTouchEvent(true);
                 int action = event.getAction();
                 float x = event.getRawX();
                 float y = event.getRawY();
@@ -199,6 +200,7 @@ public class TextBoxView extends FrameLayout {
             private int baseHeight;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                getParent().requestDisallowInterceptTouchEvent(true);
                 int action = event.getAction();
                 float x = event.getRawX();
                 float y = event.getRawY();

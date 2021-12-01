@@ -17,7 +17,6 @@ import androidx.annotation.RequiresApi;
 
 import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.widget.SmartHandNote;
-import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
 import java.util.List;
@@ -92,6 +91,10 @@ public class DoodleView extends View implements Smartable,Doodle {
         if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
             return false;
         }
+        ViewParent realParent = getParent();
+        if(realParent instanceof SmartHandNote){
+            realParent.requestDisallowInterceptTouchEvent(true);
+        }
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
@@ -108,8 +111,8 @@ public class DoodleView extends View implements Smartable,Doodle {
                     mPresenter.actionJump(x, y);
                 }
                 ViewParent parent = getParent();
-                if(parent instanceof SmartHandNoteView){
-                    SmartHandNoteView parentView = (SmartHandNoteView) parent;
+                if(parent instanceof SmartHandNote){
+                    SmartHandNote parentView = (SmartHandNote) parent;
                     int lineHeight = parentView.getLineHeight();
                     if(y >= height - responseLineNumber * lineHeight){
                         parentView.changeBackgroundHeight(height + expandLineNumber * lineHeight);
@@ -127,8 +130,8 @@ public class DoodleView extends View implements Smartable,Doodle {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
-        if (parent instanceof SmartHandNote) {
-            SmartHandNote parentView = (SmartHandNoteView) parent;
+        if(parent instanceof SmartHandNote){
+            SmartHandNote parentView = (SmartHandNote) parent;
             int parentHeight = parent.getHeight();
             int textViewHeight = parentView.getTextViewHeight();
             int baseHeight = getHeight();
@@ -164,9 +167,9 @@ public class DoodleView extends View implements Smartable,Doodle {
 //    public void setViewHeightWithTextView(int textViewHeight) {
 //        int height = getHeight();
 //        ViewParent parent = getParent();
-//        if (parent instanceof SmartHandNoteView) {
-//            SmartHandNoteView parentView = (SmartHandNoteView) parent;
-//            int parentHeight = parentView.getHeight();
+//        if (parent instanceof SmartHandNote) {
+//            SmartHandNote parentView = (SmartHandNote) parent;
+//            int parentHeight = parent.getHeight();
 //            int baseHeight = getHeight();
 //            float maxScaleRate = parentView.getMaxScaleRate();
 //            //高

@@ -28,6 +28,7 @@ import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.gracefulwind.learnarms.write.widget.doodle.Doodle;
 import com.gracefulwind.learnarms.write.widget.doodle.DoodleView;
 import com.gracefulwind.learnarms.write.widget.doodle.EditMode;
+import com.gracefulwind.learnarms.write.widget.doodle.OperationPresenter;
 import com.gracefulwind.learnarms.write.widget.doodle.SurfaceDoodleView;
 import com.gracefulwind.learnarms.write.widget.edit.SmartTextView;
 import com.gracefulwind.learnarms.write.widget.textbox.TextBoxContainer;
@@ -50,11 +51,6 @@ import java.util.List;
  */
 public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
     public static final String TAG = "SmartHandNoteView";
-    public static final int MODE_SCALE = 0x00000000;
-    public static final int MODE_TEXT = 0x00000001;
-    public static final int MODE_DOODLE = 0x00000002;
-    public static final int MODE_TEXT_BOX = 0x00000003;
-
 
     public static final int TYPE_TOUCH = 0x00010001;
     public static final int TYPE_INTERCEPT = 0x00010002;
@@ -84,12 +80,13 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
     float mDistanceX = 0f, mDistanceY = 0f;
     private float focusX;
     private float focusY;
-//    private Matrix mMatrix = new Matrix();
-//    private float[] matrixValues = new float[9];
-//    boolean flag = true;
     //scroll相关
     private OverScroller mScroller;
     private long mLastScroll;
+
+//---------------------------------------
+    private boolean isChanged = false;
+    private ContentChangedListener mContentChangedListener;
 
 
     public SmartHandNoteView(@NonNull @NotNull Context context) {
@@ -107,8 +104,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
 
     private void initView(@NotNull Context context, @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
         mContext = context;
-//        setFocusable(true);
-//        setFocusableInTouchMode(true);
         createChildren();
         mScroller = new OverScroller(getContext());
         initGesture();
@@ -142,9 +137,7 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         LayoutParams dvLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mDoodleView.setLayoutParams(dvLayoutParams);
         //add textBoxView
-//        mTextBoxView = new TextBoxView(mContext, this);
         mTextBoxContainer = new TextBoxContainer(mContext, this);
-//        mSmartTextView.getLineHeight()
         mSmartTextView.setOnSizeChangedListener(new SmartTextView.OnSizeChangeListener() {
             @Override
             public void onSizeChange(int w, int h, int oldw, int oldh) {
@@ -154,8 +147,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
                 }else {
                     changeBackgroundHeight((int) (thisHeight));
                 }
-//                mLinesView.setViewHeightWithTextView(h);
-//                mDoodleView.setViewHeightWithTextView(h);
             }
         });
         smartViewList.add(mLinesView);
@@ -407,12 +398,14 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         if(mDistanceY > maxDistanceY){
             mDistanceY = maxDistanceY;
         }
-
-//                    LogUtil.e(TAG, "maxDistanceY = " + maxDistanceY + " , minDistanceY = " + minDistanceY
-//                        + " , tempY = " + tempY + " , targetY = " + mDistanceY);
-//                    if(mDistanceX)
         //两个均可，用To方法方便控制最大距离
         doTranslateTo(mDistanceX, mDistanceY);
+    }
+
+    @Override
+    public void smartScrollTo(float x, float y){
+        //限定边界
+        doTranslateTo(x, y);
     }
 
     /**
@@ -424,11 +417,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         for (Smartable smartView : smartViewList) {
             smartView.smartScaleTo(focusX, focusY, tempScale, tempScale);
         }
-//        mSmartTextView.smartScaleTo(focusX, focusY, tempScale, tempScale);
-//        mLinesView.smartScaleTo(focusX, focusY, tempScale, tempScale);
-//        mDoodleView.smartScaleTo(focusX, focusY, tempScale, tempScale);
-//        mTextBoxView.smartScaleTo(focusX, focusY, tempScale, tempScale);
-//        textBoxContainer.smartScaleTo(focusX, focusY, tempScale, tempScale);
     }
 
     private void doScale(float tempScale) {
@@ -439,11 +427,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         for (Smartable smartView : smartViewList) {
             smartView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
         }
-//        mSmartTextView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
-//        mLinesView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
-//        mDoodleView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
-//        mTextBoxView.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
-//        textBoxContainer.smartScaleTo(pivotX, pivotY, tempScale, tempScale);
     }
 
     public float getScaleRate(){
@@ -461,11 +444,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         for (Smartable smartView : smartViewList) {
             smartView.smartTranslateTo(translateX, translateY);
         }
-//        mSmartTextView.smartTranslateTo(translateX, translateY);
-//        mLinesView.smartTranslateTo(translateX, translateY);
-//        mDoodleView.smartTranslateTo(translateX, translateY);
-//        mTextBoxView.smartTranslateTo(translateX, translateY);
-//        textBoxContainer.smartTranslateTo(translateX, translateY);
     }
 
     /**
@@ -477,24 +455,12 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         for (Smartable smartView : smartViewList) {
             smartView.smartTranslateBy(distanceX, distanceY);
         }
-//        mSmartTextView.smartTranslateBy(distanceX, distanceY);
-//        mLinesView.smartTranslateBy(distanceX, distanceY);
-//        mDoodleView.smartTranslateBy(distanceX, distanceY);
-//        mTextBoxView.smartTranslateBy(distanceX, distanceY);
-//        textBoxContainer.smartTranslateBy(distanceX, distanceY);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-//        int width = getWidth();
-//        int height = getHeight();
-//        ViewGroup.LayoutParams layoutParams = mLinesView.getLayoutParams();
-//        layoutParams.width = 3 * width;
-//        mLinesView.setLayoutParams(layoutParams);
-//        mLinesView.scrollTo(width, 0);
-//        LogUtil.e(TAG, "onMeasure, width = " + width + " , height = " + height);
     }
 
 //    @Override
@@ -703,22 +669,19 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
     /**
      * 操作模式切换
      * */
-    public void setViewMode(int viewMode) {
+    public void setViewMode(@ViewMode int viewMode) {
         mViewMode = viewMode;
-
         switch (viewMode) {
-            case MODE_SCALE:
-                mSmartTextView.setEnabled(false);
-                mDoodleView.setEnabled(false);
-                mTextBoxContainer.setEnabled(false);
-//                setTextBoxEnable(false);
-                break;
+//            case MODE_SCALE:
+//                mSmartTextView.setEnabled(false);
+//                mDoodleView.setEnabled(false);
+//                mTextBoxContainer.setEnabled(false);
+//                break;
             case MODE_TEXT:
                 mSmartTextView.setEnabled(true);
                 mSmartTextView.requestFocus();
                 mDoodleView.setEnabled(false);
                 mTextBoxContainer.setEnabled(false);
-//                setTextBoxEnable(false);
                 doTranslateTo(0,0);
                 doScale(1);
                 showSoftKeyboard();
@@ -726,45 +689,32 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
             case MODE_DOODLE:
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(true);
+                mDoodleView.setPaintEditMode(OperationPresenter.MODE_DOODLE);
                 mTextBoxContainer.setEnabled(false);
-//                setTextBoxEnable(false);
+                break;
+            case MODE_ERASER:
+                mSmartTextView.setEnabled(false);
+                mDoodleView.setEnabled(true);
+                mDoodleView.setPaintEditMode(OperationPresenter.MODE_ERASER);
+                mTextBoxContainer.setEnabled(false);
                 break;
             case MODE_TEXT_BOX:
                 //设置文本框可编辑模式
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(false);
                 mTextBoxContainer.setEnabled(true);
-//                setTextBoxEnable(true);
                 break;
             default:
                 mSmartTextView.setEnabled(false);
                 mDoodleView.setEnabled(false);
                 mTextBoxContainer.setEnabled(false);
-//                setTextBoxEnable(false);
                 break;
         }
         for (Smartable smartView : smartViewList) {
             View view = (View) smartView;
             view.invalidate();
         }
-//        mSmartTextView.invalidate();
-//        mLinesView.invalidate();
-//        mDoodleView.invalidate();
-//        mTextBoxView.invalidate();
-//        mTextBoxContainer.invalidate();
     }
-
-//    private void setTextBoxEnable(boolean enable) {
-//        mTextBoxView.setEnabled(enable);
-//        enableEditText(enable);
-//    }
-//
-//    @Deprecated
-//    private void enableEditText(boolean enable) {
-//        for (TextView tv : mEditViewList){
-//            tv.setEnabled(enable);
-//        }
-//    }
 
     private void showSoftKeyboard() {
         InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -784,9 +734,9 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         return mSmartTextView.getLineCount();
     }
 
-    public int getTextViewWidth() {
-        return mSmartTextView.getWidth();
-    }
+//    public int getTextViewWidth() {
+//        return mSmartTextView.getWidth();
+//    }
 
     public int getTextViewHeight() {
         return mSmartTextView.getHeight();
@@ -883,45 +833,6 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         return mDoodleView.getOnPathChangedListener();
     }
 
-    //=========================================
-    int lineNum = 0;
-    public void test() {
-//        LogUtil.e(TAG, "rect = " + rect);
-//        System.out.println("========");
-//        int lineBounds = mSmartTextView.getLineBounds(lineNum, rect);
-//        LogUtil.e(TAG, "result rect = " + rect + " , lineBounds = " + lineBounds + " , viewHeight = " + mSmartTextView.getHeight());
-//        scrollTo(0, 0);
-//        mDoodleView.setZOrderMediaOverlay(true);
-    }
-
-    public void setChildPivot(float pivotX, float pivotY){
-        for (Smartable smartView : smartViewList) {
-            View view = (View) smartView;
-            view.setPivotX(pivotX);
-            view.setPivotY(pivotY);
-        }
-//        mLinesView.setPivotX(pivotX);
-//        mLinesView.setPivotY(pivotY);
-//        mDoodleView.setPivotX(pivotX);
-//        mDoodleView.setPivotY(pivotY);
-//        mSmartTextView.setPivotX(pivotX);
-//        mSmartTextView.setPivotY(pivotY);
-    }
-
-    public void logView(View v){
-        float scaleX = v.getScaleX();
-        float translationX = v.getTranslationX();
-        float translationY = v.getTranslationY();
-        float pivotX = v.getPivotX();
-        float pivotY = v.getPivotY();
-        int width = v.getWidth();
-        int height = v.getHeight();
-        Matrix matrix = v.getMatrix();
-        LogUtil.e(TAG, v.getClass().getSimpleName() + " == scale = " + scaleX + ", translationX = " + translationX + " , translationY = " + translationY);
-        LogUtil.e(TAG, v.getClass().getSimpleName() + " pivotX = " + pivotX + ", pivotY = " + pivotY + " , width = " + width + " , height = " + height);
-        LogUtil.e(TAG, v.getClass().getSimpleName() + " matrix = " + matrix);
-    }
-
     /**
      * 涂鸦画板的文字
      * */
@@ -989,6 +900,7 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
         mDoodleView.setBitmap(bitmap);
     }
 
+    @Override
     public void changeBackgroundHeight(int height) {
         int doodleHeight = mDoodleView.getHeight();
         if(height > doodleHeight){
@@ -1020,5 +932,57 @@ public class SmartHandNoteView extends FrameLayout implements SmartHandNote{
             }
         }
         targetView.setLayoutParams(childLayoutParams);
+    }
+
+//===一些其他的接口=================================================================================================
+    /**
+     * 当前的变动情况
+     */
+    @Override
+    public boolean isChanged() {
+        return isChanged;
+    }
+
+    /**
+     * 每次暂存后手动调用开关
+     */
+    @Override
+    public void setChanged(boolean changed) {
+        isChanged = changed;
+        LogUtil.e(TAG, "===== content changed, result = " + changed);
+        if (null != mContentChangedListener) {
+            mContentChangedListener.onContentChanged(changed);
+        }
+    }
+
+    /**
+     * 设置内容变动监听器
+     */
+    public void setContentChangedListener(ContentChangedListener listener) {
+        mContentChangedListener = listener;
+    }
+
+    public interface ContentChangedListener {
+        void onContentChanged(boolean changed);
+    }
+
+
+//=========================================
+    int lineNum = 0;
+    public void test() {
+//        LogUtil.e(TAG, "rect = " + rect);
+//        System.out.println("========");
+//        int lineBounds = mSmartTextView.getLineBounds(lineNum, rect);
+//        LogUtil.e(TAG, "result rect = " + rect + " , lineBounds = " + lineBounds + " , viewHeight = " + mSmartTextView.getHeight());
+//        scrollTo(0, 0);
+//        mDoodleView.setZOrderMediaOverlay(true);
+    }
+
+    public void setChildPivot(float pivotX, float pivotY){
+        for (Smartable smartView : smartViewList) {
+            View view = (View) smartView;
+            view.setPivotX(pivotX);
+            view.setPivotY(pivotY);
+        }
     }
 }

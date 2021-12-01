@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.write.widget.SmartHandNote;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -93,6 +94,31 @@ public class SmartTextView extends TextView implements Smartable {
     public void scrollTo(int x, int y) {
 //        super.scrollTo(x, y);
     }
+
+    @Override
+    protected void onSelectionChanged(int selStart, int selEnd){
+        super.onSelectionChanged(selStart, selEnd);
+//        LogUtil.e(TAG, String.format("onSelectionChanged: selStart = %s, selEnd = %s", selStart, selEnd));
+//        Layout layout = getLayout();
+//        if(null == layout){
+//            return;
+//        }
+//        Rect rect = new Rect();
+//        int lineForOffset = layout.getLineForOffset(selEnd);
+//        int lineBottom = layout.getLineBottom(lineForOffset);
+//        LogUtil.e(TAG, "lineBottom = " + lineBottom);
+//        ViewParent parent = getParent();
+//        if(parent instanceof SmartHandNote){
+//            SmartHandNote smartView = (SmartHandNote) parent;
+//            smartView.smartScrollTo(0, -lineBottom);
+//        }
+    }
+
+//    @Override
+//    public void scrollBy(int x, int y) {
+//        super.scrollBy(x, y);
+//        LogUtil.e(TAG, String.format("scrollBy: x = %s, y = %s", x, y));
+//    }
 
     private void soluteLineHeightMethod1() {
         setFallbackLineSpacing(false);
@@ -256,8 +282,8 @@ public class SmartTextView extends TextView implements Smartable {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
-                    + " }        { new w,h = " +  w + "," + h);
+//        LogUtil.e(TAG, "onSizeChanged, { old w,h = " + oldw + "," + oldh
+//                    + " }        { new w,h = " +  w + "," + h);
         this.width = w;
         this.height = h;
         if(null != mOnSizeChangeListener){
@@ -444,7 +470,7 @@ public class SmartTextView extends TextView implements Smartable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        LogUtil.e(TAG, "onTouchEvent == " + event);
+//        LogUtil.e(TAG, "onTouchEvent == " + event);
         if(isEnabled()){
             boolean b = super.onTouchEvent(event);
             return b;

@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.write.R;
+import com.gracefulwind.learnarms.write.widget.SmartHandNote;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -46,7 +47,7 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
     public static final String TAG = "SurfaceDoodleView";
 
     private OperationPresenter mPresenter;
-    private ViewGroup mControlParent;
+//    private ViewGroup mControlParent;
     private int responseLineNumber = 2;
     private int expandLineNumber = 3;
 
@@ -134,8 +135,12 @@ public class SurfaceDoodleView extends SurfaceView implements SurfaceHolder.Call
         if(!isEnabled()){
             return false;
         }
-        if(null != mControlParent){
-            mControlParent.requestDisallowInterceptTouchEvent(true);
+//        if(null != mControlParent){
+//            mControlParent.requestDisallowInterceptTouchEvent(true);
+//        }
+        ViewParent realParent = getParent();
+        if(realParent instanceof SmartHandNote){
+            realParent.requestDisallowInterceptTouchEvent(true);
         }
         int actionIndex = event.getActionIndex();
         int toolType = event.getToolType(actionIndex);

@@ -71,7 +71,7 @@ public class TestNewWriteActivity extends BaseActivity {
         }else if(R.id.natnw_btn_click3 == id){
             smartHandNoteView.test2();
         }else if(R.id.natnw_btn_click4 == id){
-
+            Utils.navigation(this, RouterHub.Weather.WEATHER_ACTIVITY);
         }else if(R.id.natnw_btn_click2_1 == id){
             //写字板
             smartHandNoteView.setViewMode(SmartHandNote.MODE_TEXT);

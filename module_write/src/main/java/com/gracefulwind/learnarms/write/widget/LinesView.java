@@ -32,8 +32,6 @@ public class LinesView extends View implements Smartable{
     public static final String TAG = "LinesView";
 
     private final TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-    private int width;
-    private int height;
 
 //    private int mLineHeight;
 //    private SmartTextView mSmartTextview;
@@ -65,8 +63,6 @@ public class LinesView extends View implements Smartable{
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        this.width = w;
-        this.height = h;
     }
 
     @Override
@@ -89,15 +85,15 @@ public class LinesView extends View implements Smartable{
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
-        if (parent instanceof SmartHandNote) {
+        if(parent instanceof SmartHandNote){
             SmartHandNote parentView = (SmartHandNote) parent;
             int parentHeight = parent.getHeight();
             int textViewHeight = parentView.getTextViewHeight();
             int baseHeight = getHeight();
             //高
+            int myHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            int comparedHeight = Math.max(Math.max(textViewHeight, parentHeight), baseHeight);
-            layoutParams.height = comparedHeight;
+            layoutParams.height = myHeight;
             setLayoutParams(layoutParams);
         }
     }
@@ -133,15 +129,6 @@ public class LinesView extends View implements Smartable{
             canvas.drawLine(paddingLeft, totalHeight, width - paddingRight, totalHeight, paint);
         }
 
-////        LogUtil.e(TAG, "====onDraw====  , height = " + height + " , width = " + width + ", textHeight = " + textHeight);
-////        LogUtil.d(TAG, "this w = " + this.width + " & h = " + this.height + "\r\n get w = " + width + " & h = " + height);
-////        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < height; x++){
-//        for(int x = 0; (paddingTop + paddingBottom + (x * textHeight)) < this.height; x++){
-////            //如果我绘制的超出原来的大小，视图会变大
-////        for(int x = 0; (paddingTop + paddingBottom + ((x-2) * textHeight)) < this.height; x++){
-////        for(int x = 0; x < textViewLines; x++){
-//            canvas.drawLine(paddingLeft, paddingTop + x * textHeight, width - paddingRight, paddingTop + x * textHeight, paint);
-//        }
     }
 
 //    private boolean tryToInit() {

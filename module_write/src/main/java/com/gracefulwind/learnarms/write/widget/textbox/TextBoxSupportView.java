@@ -8,10 +8,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.write.widget.SmartHandNote;
 import com.gracefulwind.learnarms.write.widget.SmartHandNoteView;
 import com.gracefulwind.learnarms.write.widget.Smartable;
 
@@ -71,12 +73,24 @@ public class TextBoxSupportView extends View implements Smartable {
         if(!isEnabled()){
             return false;
         }
+        mParent.clearFocus();
         //非电容笔则不处理
         int actionIndex = event.getActionIndex();
         int toolType = event.getToolType(actionIndex);
         if(toolType != MotionEvent.TOOL_TYPE_STYLUS){
             return false;
         }
+        ViewParent parent = getParent();
+        if(parent instanceof TextBoxContainer){
+            ViewParent realParent = parent.getParent();
+            if(realParent instanceof SmartHandNote){
+                realParent.requestDisallowInterceptTouchEvent(true);
+            }
+        }
+//        ViewParent realParent = getParent();
+//        if(realParent instanceof SmartHandNote){
+//            realParent.requestDisallowInterceptTouchEvent(true);
+//        }
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
