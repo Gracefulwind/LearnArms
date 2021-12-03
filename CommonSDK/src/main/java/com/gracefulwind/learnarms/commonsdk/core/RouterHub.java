@@ -181,6 +181,7 @@ public interface RouterHub {
         String BASE = NEW_WRITE_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
         String TEST_NEW_WRITE_ACTIVITY = BASE + "/TestNewWriteActivity";
+        String TEST_XUNFEI_ACTIVITY = BASE + "/TestXunfeiActivity";
     }
 
 }

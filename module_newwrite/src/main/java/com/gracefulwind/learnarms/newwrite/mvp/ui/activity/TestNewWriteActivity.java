@@ -1,14 +1,17 @@
 package com.gracefulwind.learnarms.newwrite.mvp.ui.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
+import com.gracefulwind.learnarms.commonsdk.utils.BitmapUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.Utils;
 import com.gracefulwind.learnarms.newwrite.R;
@@ -40,6 +43,7 @@ public class TestNewWriteActivity extends BaseActivity {
 
     @BindView(R2.id.natnw_shv_hand_view)
     SmartHandNoteView smartHandNoteView;
+    private Bitmap viewDoodle;
 
 
     @Override
@@ -71,7 +75,14 @@ public class TestNewWriteActivity extends BaseActivity {
         }else if(R.id.natnw_btn_click3 == id){
             smartHandNoteView.test2();
         }else if(R.id.natnw_btn_click4 == id){
-            Utils.navigation(this, RouterHub.Weather.WEATHER_ACTIVITY);
+//            Utils.navigation(this, RouterHub.Weather.WEATHER_ACTIVITY);
+            viewDoodle = smartHandNoteView.getDoodleBitmap();
+            if(null != viewDoodle) {
+                String s = BitmapUtil.saveBitmap(this, viewDoodle);
+                if(null == s){
+                    Toast.makeText(this, "保存失败", Toast.LENGTH_SHORT).show();
+                }
+            }
         }else if(R.id.natnw_btn_click2_1 == id){
             //写字板
             smartHandNoteView.setViewMode(SmartHandNote.MODE_TEXT);

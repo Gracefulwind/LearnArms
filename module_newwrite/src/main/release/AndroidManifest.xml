@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gracefulwind.learnarms.newwrite">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application>
         <activity
             android:name=".mvp.ui.activity.MainActivity"
@@ -11,6 +13,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             />
+        <activity
+            android:name=".mvp.ui.activity.TestXunfeiActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

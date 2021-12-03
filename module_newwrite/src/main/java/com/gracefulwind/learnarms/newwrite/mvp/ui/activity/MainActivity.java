@@ -71,13 +71,15 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
         ArmsUtils.snackbarText(message);
     }
 
-    @OnClick({R2.id.nam_btn_test1})
+    @OnClick({R2.id.nam_btn_test1, R2.id.nam_btn_test_xunfei})
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.nam_btn_test1 == id){
             Utils.navigation(this, RouterHub.NewWrite.TEST_NEW_WRITE_ACTIVITY);
+        }else if(R.id.nam_btn_test_xunfei == id){
+            Utils.navigation(this, RouterHub.NewWrite.TEST_XUNFEI_ACTIVITY);
         }else if(R.id.nam_btn_test1 == id){
-
+            Utils.navigation(this, RouterHub.NewWrite.TEST_NEW_WRITE_ACTIVITY);
         }
     }
 }

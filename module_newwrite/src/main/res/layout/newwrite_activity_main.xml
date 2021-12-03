@@ -32,6 +32,13 @@
             android:text="转跳到手写板"
             />
 
+        <Button
+            android:id="@+id/nam_btn_test_xunfei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试讯飞"
+            />
+
     </LinearLayout>
 
 

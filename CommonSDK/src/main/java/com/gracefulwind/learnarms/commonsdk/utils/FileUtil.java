@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -34,7 +35,35 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
+//===================================================================================================
+    public static boolean isFolderExist(String fileDir){
+        return new File(fileDir).exists();
+    }
 
+    public static boolean isFolderExist(File fileDir){
+//        new File(fileDir, "123");
+        return new File(fileDir.getAbsolutePath()).exists();
+    }
+
+    public static File getFolderName(Context context, String folderName){
+        File folderDir = null;
+        folderDir = context.getExternalFilesDir(folderName);
+        return folderDir;
+    }
+
+    public static File makeFolders(Context context, String folderName){
+        File folderDir = null;
+        folderDir = context.getExternalFilesDir(folderName);
+        if(!folderDir.exists()){
+            folderDir.mkdirs();
+        }
+        return folderDir;
+    }
+
+
+
+
+//===================================================================================================
     /**
      *
      * 根据路径获取图片的uri
@@ -219,5 +248,6 @@ public class FileUtil {
         return base64;
     }
 
+//===================================================================================================
 
 }

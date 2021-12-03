@@ -131,11 +131,17 @@ public class BitmapUtil {
     public static String saveBitmap(Context context, Bitmap bitmap){
         String savedPath = null;
         LogUtil.d(TAG, "saveBitmap");
-        File externalCacheDir = context.getExternalCacheDir();
+
         File cacheDir = null;
-        //存在picture文件夹下,google推荐的方式怎么说呢。。。至少vivo手机的图库里拿不到
+//        //存在picture文件夹下,google推荐的方式怎么说呢。。。至少vivo手机的图库里拿不到
         cacheDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//        cacheDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        //外部路径的自定义名字是不行的
+//        cacheDir = Environment.getExternalStoragePublicDirectory("ceshide");
+        //存在项目路径下,也可以在图册中看到，建议不用PublicDirectory了
+        cacheDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        cacheDir = context.getExternalFilesDir("ceshide");
+        //缓存路径
+//        File externalCacheDir = context.getExternalCacheDir();
 //        cacheDir = externalCacheDir.exists() ? externalCacheDir : context.getCacheDir();
         if(!cacheDir.exists()){
             //throw or toast?
