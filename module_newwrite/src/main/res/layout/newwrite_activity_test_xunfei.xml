@@ -23,6 +23,12 @@
             android:text="测试语音"
             />
         <Button
+            android:id="@+id/natx_btn_test_click"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试按钮"
+            />
+        <Button
             android:id="@+id/natx_btn_test_write"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

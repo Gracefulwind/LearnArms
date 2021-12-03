@@ -1,6 +1,7 @@
 package com.gracefulwind.learnarms.newwrite.mvp.ui.activity;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.google.gson.JsonObject;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.XunfeiUtil;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
 import com.jess.arms.base.BaseActivity;
@@ -27,13 +30,17 @@ import com.jess.arms.di.component.AppComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
@@ -106,7 +113,7 @@ public class TestXunfeiActivity extends BaseActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @OnClick({R2.id.natx_btn_connect_voice, R2.id.natx_btn_test_voice, R2.id.natx_btn_test_write
-            , R2.id.natx_btn_test_click1
+            , R2.id.natx_btn_test_click1, R2.id.natx_btn_test_click
             })
     public void onViewClicked(View view) {
         int id = view.getId();
@@ -127,6 +134,11 @@ public class TestXunfeiActivity extends BaseActivity {
             doRecord();
         }else if(R.id.natx_btn_test_write == id){
             
+        }else if(R.id.natx_btn_test_click == id){
+            //======
+            System.out.println("=========");
+            System.out.println("=========");
+            System.out.println("=========");
         }else if(R.id.natx_btn_test_click1 == id){
             //======
 
@@ -142,15 +154,13 @@ public class TestXunfeiActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void connectVoice() throws Exception {
 //        LogUtil.e(TAG, "=========testVoice");
-//        WebSocketHelper webSocketHelper = new WebSocketHelper(url);
-//        natxTvResult.setText("");
-//        HmacWithShaTobase64()
-        String authUrl = initParams();
-        String url = authUrl.toString().replace("http://", "ws://").replace("https://", "wss://");
-//        String url = String.format(baseUrl, "");
+//        String authUrl = initParams();
+        HttpUrl authUrl = XunfeiUtil.getVoiceUrl(baseUrl, apiKey, apiSecret);
+        String realUrl = authUrl.toString().replace("http://", "ws://").replace("https://", "wss://");
+//        String realUrl = String.format(baseUrl, "");
         //构造request对象
         Request request = new Request.Builder()
-                .url(url)
+                .url(realUrl)
                 .build();
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
@@ -158,7 +168,13 @@ public class TestXunfeiActivity extends BaseActivity {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
-                LogUtil.e(TAG, "onOpen = ");
+                LogUtil.e(TAG, "onOpen, response = " + (null != response ? response.message() : null));
+//                if(null != filePath){
+//                    webSocket.send();
+//                }
+                if(null != filePath){
+                    testDemo();
+                }
             }
 
             @Override
@@ -170,6 +186,7 @@ public class TestXunfeiActivity extends BaseActivity {
             @Override
             public void onMessage(WebSocket webSocket, ByteString bytes) {
                 super.onMessage(webSocket, bytes);
+                //几乎没用
                 LogUtil.e(TAG, "onMessage ByteString = " + bytes);
             }
 
@@ -189,43 +206,150 @@ public class TestXunfeiActivity extends BaseActivity {
             public void onFailure(WebSocket webSocket, Throwable t, @org.jetbrains.annotations.Nullable Response response) {
                 super.onFailure(webSocket, t, response);
                 LogUtil.e(TAG, "onFailure: response = " + (null != response ? response.message() : null));
-                t.printStackTrace();
+//                t.printStackTrace();
+                LogUtil.e(TAG, t.toString() + "\r\n" + t.getMessage() + "\r\n" + t.getCause());
             }
         });
     }
-    String hostUrl = "http://iat-api.xfyun.cn/v2/iat";
-    String shaKey = "api_key=\"$api_key\",algorithm=\"hmac-sha256\",headers=\"host date request-line\",signature=\"$signature\"";
+
+//    private static final String file = "resource\\iat\\16k_10.pcm";
+    public static final int StatusFirstFrame = 0;
+    public static final int StatusContinueFrame = 1;
+    public static final int StatusLastFrame = 2;
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private String initParams() throws NoSuchAlgorithmException, InvalidKeyException, MalformedURLException {
-        URL url = new URL(hostUrl);
-        //date
-//        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.CHINA);
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String date = format.format(new Date());
-        //author
-        StringBuilder builder = new StringBuilder("host: ").append(url.getHost()).append("\n").//
-                append("date: ").append(date).append("\n").//
-                append("GET ").append(url.getPath()).append(" HTTP/1.1");
-
-        Charset charset = Charset.forName("UTF-8");
-        Mac mac = Mac.getInstance("hmacsha256");
-        SecretKeySpec spec = new SecretKeySpec(apiSecret.getBytes(charset), "hmacsha256");
-        mac.init(spec);
-        byte[] hexDigits = mac.doFinal(builder.toString().getBytes(charset));
-
-        String sha = Base64.getEncoder().encodeToString(hexDigits);
-        //================
-        String authorization = String.format("api_key=\"%s\", algorithm=\"%s\", headers=\"%s\", signature=\"%s\"", apiKey, "hmac-sha256", "host date request-line", sha);
-
-        HttpUrl httpUrl = HttpUrl.parse("http://" + url.getHost() + url.getPath()).newBuilder().//
-                addQueryParameter("authorization", Base64.getEncoder().encodeToString(authorization.getBytes(charset))).//
-                addQueryParameter("date", date).//
-                addQueryParameter("host", url.getHost()).//
-                build();
-
-        return httpUrl.toString();
+    private void testDemo() {
+        new Thread(()->{
+            //连接成功，开始发送数据
+            int frameSize = 1280; //每一帧音频的大小,建议每 40ms 发送 122B
+            int intervel = 40;
+            int status = 0;  // 音频的状态
+//            try (FileInputStream fs = new FileInputStream(file)) {
+//            try (FileInputStream fs = new FileInputStream(filePath)) {
+            //------
+            AssetManager assets = getAssets();
+            InputStream open = null;
+            try {
+                open = assets.open("16k_10.pcm");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            try /*(FileInputStream fs = new FileInputStream(filePath))*/ {
+            //------
+                byte[] buffer = new byte[frameSize];
+                // 发送音频
+                end:
+                while (true) {
+                    int len = open.read(buffer);
+//                    int len = fs.read(buffer);
+                    if (len == -1) {
+                        status = StatusLastFrame;  //文件读完，改变status 为 2
+                    }
+                    switch (status) {
+                        case StatusFirstFrame:   // 第一帧音频status = 0
+                            JsonObject frame = new JsonObject();
+                            JsonObject business = new JsonObject();  //第一帧必须发送
+                            JsonObject common = new JsonObject();  //第一帧必须发送
+                            JsonObject data = new JsonObject();  //每一帧都要发送
+                            // 填充common
+                            common.addProperty("app_id", appid);
+                            //填充business
+                            business.addProperty("language", "zh_cn");
+                            //business.addProperty("language", "en_us");//英文
+                            //business.addProperty("language", "ja_jp");//日语，在控制台可添加试用或购买
+                            //business.addProperty("language", "ko_kr");//韩语，在控制台可添加试用或购买
+                            //business.addProperty("language", "ru-ru");//俄语，在控制台可添加试用或购买
+                            business.addProperty("domain", "iat");
+                            business.addProperty("accent", "mandarin");//中文方言请在控制台添加试用，添加后即展示相应参数值
+                            //business.addProperty("nunum", 0);
+                            //business.addProperty("ptt", 0);//标点符号
+                            //business.addProperty("rlang", "zh-hk"); // zh-cn :简体中文（默认值）zh-hk :繁体香港(若未授权不生效，在控制台可免费开通)
+                            //business.addProperty("vinfo", 1);
+                            business.addProperty("dwa", "wpgs");//动态修正(若未授权不生效，在控制台可免费开通)
+                            //business.addProperty("nbest", 5);// 句子多候选(若未授权不生效，在控制台可免费开通)
+                            //business.addProperty("wbest", 3);// 词级多候选(若未授权不生效，在控制台可免费开通)
+                            //填充data
+                            data.addProperty("status", StatusFirstFrame);
+                            data.addProperty("format", "audio/L16;rate=16000");
+                            data.addProperty("encoding", "raw");
+                            data.addProperty("audio", Base64.getEncoder().encodeToString(Arrays.copyOf(buffer, len)));
+                            //填充frame
+                            frame.add("common", common);
+                            frame.add("business", business);
+                            frame.add("data", data);
+                            webSocket.send(frame.toString());
+                            status = StatusContinueFrame;  // 发送完第一帧改变status 为 1
+                            break;
+                        case StatusContinueFrame:  //中间帧status = 1
+                            JsonObject frame1 = new JsonObject();
+                            JsonObject data1 = new JsonObject();
+                            data1.addProperty("status", StatusContinueFrame);
+                            data1.addProperty("format", "audio/L16;rate=16000");
+                            data1.addProperty("encoding", "raw");
+                            data1.addProperty("audio", Base64.getEncoder().encodeToString(Arrays.copyOf(buffer, len)));
+                            frame1.add("data", data1);
+                            webSocket.send(frame1.toString());
+                            // System.out.println("send continue");
+                            break;
+                        case StatusLastFrame:    // 最后一帧音频status = 2 ，标志音频发送结束
+                            JsonObject frame2 = new JsonObject();
+                            JsonObject data2 = new JsonObject();
+                            data2.addProperty("status", StatusLastFrame);
+                            data2.addProperty("audio", "");
+                            data2.addProperty("format", "audio/L16;rate=16000");
+                            data2.addProperty("encoding", "raw");
+                            frame2.add("data", data2);
+                            webSocket.send(frame2.toString());
+                            System.out.println("sendlast");
+                            break end;
+                    }
+                    Thread.sleep(intervel); //模拟音频采样延时
+                }
+                System.out.println("all data is send");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
+
+//    String hostUrl = "http://iat-api.xfyun.cn/v2/iat";
+//    String shaKey = "api_key=\"$api_key\",algorithm=\"hmac-sha256\",headers=\"host date request-line\",signature=\"$signature\"";
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    private String initParams() throws NoSuchAlgorithmException, InvalidKeyException, MalformedURLException {
+//        //url不支持ws，只能先用http的，写完后再替换
+//        URL url = new URL(hostUrl);
+//        //date
+////        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.CHINA);
+//        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+//        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        String date = format.format(new Date());
+//        //author
+//        StringBuilder builder = new StringBuilder("host: ").append(url.getHost()).append("\n")
+//                .append("date: ").append(date).append("\n")
+//                .append("GET ").append(url.getPath()).append(" HTTP/1.1");
+//
+//        Charset charset = Charset.forName("UTF-8");
+//        Mac mac = Mac.getInstance("hmacsha256");
+//        SecretKeySpec spec = new SecretKeySpec(apiSecret.getBytes(charset), "hmacsha256");
+//        mac.init(spec);
+//        byte[] hexDigits = mac.doFinal(builder.toString().getBytes(charset));
+//
+//        String sha = Base64.getEncoder().encodeToString(hexDigits);
+//        //================
+//        String authorization = String.format("api_key=\"%s\", algorithm=\"%s\", headers=\"%s\", signature=\"%s\"", apiKey, "hmac-sha256", "host date request-line", sha);
+//        //这里也只能解析http/https的。。。
+//        HttpUrl httpUrl = HttpUrl.parse("http://" + url.getHost() + url.getPath()).newBuilder()
+//                .addQueryParameter("authorization", Base64.getEncoder().encodeToString(authorization.getBytes(charset)))
+//                .addQueryParameter("date", date)
+//                .addQueryParameter("host", url.getHost())
+//                .build();
+//
+//        return httpUrl.toString();
+//    }
 
     boolean isRecording = false;
     String audioSaveDir = "MediaRecorder";
@@ -285,7 +409,8 @@ public class TestXunfeiActivity extends BaseActivity {
             mMediaRecorder.stop();
             mMediaRecorder.release();
             mMediaRecorder = null;
-
+            sendToXunfei();
+            isRecording = false;
 //            filePath = null;
         } catch (RuntimeException e) {
             LogUtil.e(TAG, e.toString());
@@ -296,6 +421,16 @@ public class TestXunfeiActivity extends BaseActivity {
                 filePath.delete();
             }
             filePath = null;
+        }
+    }
+
+    private void sendToXunfei() {
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                connectVoice();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 //===========================================================================
