@@ -59,5 +59,6 @@ dependencies {
     api rootProject.ext.dependencies["retrofit-converter-gson"]
     api rootProject.ext.dependencies["retrofit-adapter-rxjava2"]
 
-
+//    api(name: 'commons-codec-1.6', ext: 'jar')
+    implementation files('lib/commons-codec-1.6.jar')
 }

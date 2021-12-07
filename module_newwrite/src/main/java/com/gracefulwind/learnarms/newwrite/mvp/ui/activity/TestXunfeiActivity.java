@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.google.gson.JsonObject;
+import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
@@ -27,13 +28,16 @@ import com.gracefulwind.learnarms.newwrite.R2;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -52,6 +56,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -133,7 +139,12 @@ public class TestXunfeiActivity extends BaseActivity {
             //测试录音
             doRecord();
         }else if(R.id.natx_btn_test_write == id){
-            
+            //测试手写
+            try {
+                connectWord();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }else if(R.id.natx_btn_test_click == id){
             //======
             System.out.println("=========");
@@ -147,15 +158,50 @@ public class TestXunfeiActivity extends BaseActivity {
         }
     }
 
-    private static final String appid = "a2d1f0bf"; //在控制台-我的应用获取
-    private static final String apiSecret = "NGYzNDZhOGNlOThiNzdlNDhkYjdhYTQ1"; //在控制台-我的应用-语音听写（流式版）获取
-    private static final String apiKey = "99a7c5355ea23cd0462ed2cca0b33ac6"; //在控制台-我的应用-语音听写（流式版）获取
-    private static String baseUrl = "ws://iat-api.xfyun.cn/v2/iat?authorization=%s&date=%s&host=%s";
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void connectWord() throws UnsupportedEncodingException {
+        AssetManager assets = getAssets();
+        InputStream open = null;
+        byte[] bytes;
+        try {
+            open = assets.open("ocr.jpg");
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024 * 4];
+            int n = 0;
+            while ((n = open.read(buffer)) != -1) {
+                out.write(buffer, 0, n);
+            }
+            bytes = out.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Request wordRequest = XunfeiUtil.getWordRequest(bytes);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+        client.newCall(wordRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                LogUtil.e(TAG, "onFailure");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                LogUtil.e(TAG, "onResponse, response = " + response.body().string());
+            }
+        });
+
+    }
+
+    //    private static final String appid = "a2d1f0bf"; //在控制台-我的应用获取
+//    private static final String apiSecret = "NGYzNDZhOGNlOThiNzdlNDhkYjdhYTQ1"; //在控制台-我的应用-语音听写（流式版）获取
+//    private static final String apiKey = "99a7c5355ea23cd0462ed2cca0b33ac6"; //在控制台-我的应用-语音听写（流式版）获取
+    private static String baseUrl = "http://iat-api.xfyun.cn/v2/iat?authorization=%s&date=%s&host=%s";
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void connectVoice() throws Exception {
-//        LogUtil.e(TAG, "=========testVoice");
-//        String authUrl = initParams();
-        HttpUrl authUrl = XunfeiUtil.getVoiceUrl(baseUrl, apiKey, apiSecret);
+        HttpUrl authUrl = XunfeiUtil.getVoiceUrl();
         String realUrl = authUrl.toString().replace("http://", "ws://").replace("https://", "wss://");
 //        String realUrl = String.format(baseUrl, "");
         //构造request对象
@@ -252,7 +298,7 @@ public class TestXunfeiActivity extends BaseActivity {
                             JsonObject common = new JsonObject();  //第一帧必须发送
                             JsonObject data = new JsonObject();  //每一帧都要发送
                             // 填充common
-                            common.addProperty("app_id", appid);
+                            common.addProperty("app_id", Constants.XunFei.APPID);
                             //填充business
                             business.addProperty("language", "zh_cn");
                             //business.addProperty("language", "en_us");//英文
@@ -315,41 +361,6 @@ public class TestXunfeiActivity extends BaseActivity {
             }
         }).start();
     }
-
-//    String hostUrl = "http://iat-api.xfyun.cn/v2/iat";
-//    String shaKey = "api_key=\"$api_key\",algorithm=\"hmac-sha256\",headers=\"host date request-line\",signature=\"$signature\"";
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    private String initParams() throws NoSuchAlgorithmException, InvalidKeyException, MalformedURLException {
-//        //url不支持ws，只能先用http的，写完后再替换
-//        URL url = new URL(hostUrl);
-//        //date
-////        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.CHINA);
-//        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-//        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-//        String date = format.format(new Date());
-//        //author
-//        StringBuilder builder = new StringBuilder("host: ").append(url.getHost()).append("\n")
-//                .append("date: ").append(date).append("\n")
-//                .append("GET ").append(url.getPath()).append(" HTTP/1.1");
-//
-//        Charset charset = Charset.forName("UTF-8");
-//        Mac mac = Mac.getInstance("hmacsha256");
-//        SecretKeySpec spec = new SecretKeySpec(apiSecret.getBytes(charset), "hmacsha256");
-//        mac.init(spec);
-//        byte[] hexDigits = mac.doFinal(builder.toString().getBytes(charset));
-//
-//        String sha = Base64.getEncoder().encodeToString(hexDigits);
-//        //================
-//        String authorization = String.format("api_key=\"%s\", algorithm=\"%s\", headers=\"%s\", signature=\"%s\"", apiKey, "hmac-sha256", "host date request-line", sha);
-//        //这里也只能解析http/https的。。。
-//        HttpUrl httpUrl = HttpUrl.parse("http://" + url.getHost() + url.getPath()).newBuilder()
-//                .addQueryParameter("authorization", Base64.getEncoder().encodeToString(authorization.getBytes(charset)))
-//                .addQueryParameter("date", date)
-//                .addQueryParameter("host", url.getHost())
-//                .build();
-//
-//        return httpUrl.toString();
-//    }
 
     boolean isRecording = false;
     String audioSaveDir = "MediaRecorder";

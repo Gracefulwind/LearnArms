@@ -40,4 +40,20 @@ public class Constants {
         String HEFENG_KEY = "94c2ffc7db1949389f228612266fc7f8";
         String DOUBAN_KEY = "0df993c66c0c636e29ecbb5344252a4a";
     }
+
+    public interface XunFei{
+        String APPID = "a2d1f0bf";
+        //==voice ===================================
+        interface Voice{
+            String BaseUrl = "http://iat-api.xfyun.cn/v2/iat?authorization=%s&date=%s&host=%s";
+            String APISecret = "NGYzNDZhOGNlOThiNzdlNDhkYjdhYTQ1";
+            String APIKey = "99a7c5355ea23cd0462ed2cca0b33ac6";
+        }
+        //==word ===================================
+        interface Word{
+            String BaseUrl = "http://webapi.xfyun.cn/v1/service/v1/ocr/handwriting";
+            String APIKey = "36cf8304d9d8d97c605573b4cf494c8a";
+        }
+
+    }
 }
