@@ -151,20 +151,31 @@ public class TestXunfeiActivity extends BaseActivity {
             System.out.println("=========");
             System.out.println("=========");
         }else if(R.id.natx_btn_test_click1 == id){
-            //======
-
+            //======测试角色分离
+            connectLongFormASR();
         }else if(R.id.natx_btn_test_write == id){
             //======
         }
     }
 
+    private void connectLongFormASR() {
+
+    }
+
+    int writeFlag = 6;
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void connectWord() throws UnsupportedEncodingException {
         AssetManager assets = getAssets();
         InputStream open = null;
         byte[] bytes;
         try {
-            open = assets.open("ocr.jpg");
+            String add = "";
+            if(writeFlag <= 0){
+                add = "ocr.jpg";
+            }else {
+                add = "test" + writeFlag + ".png";
+            }
+            open = assets.open(add);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024 * 4];
             int n = 0;
@@ -275,7 +286,11 @@ public class TestXunfeiActivity extends BaseActivity {
             AssetManager assets = getAssets();
             InputStream open = null;
             try {
-                open = assets.open("16k_10.pcm");
+                if(null != filePath){
+                    open = new FileInputStream(filePath);
+                }else {
+                    open = assets.open("16k_10.pcm");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return;

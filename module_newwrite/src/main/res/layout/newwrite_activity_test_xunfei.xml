@@ -45,7 +45,7 @@
             android:id="@+id/natx_btn_test_click1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="测试按钮1"
+            android:text="角色分离"
             />
     </LinearLayout>
 
