@@ -3,13 +3,16 @@ package com.gracefulwind.learnarms.commonsdk.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
+import android.text.Html;
 
 import androidx.annotation.RequiresApi;
 
+import com.gracefulwind.learnarms.commonsdk.bean.ApiResultDto;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -18,20 +21,27 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okio.BufferedSink;
 
 /**
@@ -115,6 +125,83 @@ public class XunfeiUtil {
                 .post(formBody)
                 .build();
         return request;
+    }
+
+    /**
+     * 文件分片大小,可根据实际情况调整
+     */
+    public static final int SLICE_SICE = 10485760;// 10M
+    public static String prepare(File audio) throws SignatureException, IOException {
+        Map<String, String> prepareParam = getBaseAuthParam(null);
+        long fileLength = audio.length();
+
+        prepareParam.put("file_len", fileLength + "");
+        prepareParam.put("file_name", audio.getName());
+        prepareParam.put("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
+
+        /********************TODO 可配置参数********************/
+        // 转写类型
+//        prepareParam.put("lfasr_type", "0");
+        // 开启分词
+//        prepareParam.put("has_participle", "true");
+        // 说话人分离
+//        prepareParam.put("has_seperate", "true");
+        // 设置多候选词个数
+//        prepareParam.put("max_alternatives", "2");
+        /****************************************************/
+        String url = Constants.XunFei.ASR.BaseUrl + Constants.XunFei.ASR.PREPARE;
+        //构造request对象
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+//        Response response = client.newCall(request).execute();
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String message = response.body().string();
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                LogUtil.e(TAG, "error : " + e.getMessage());
+            }
+
+        });
+//
+//        {
+//            String response = HttpUtil.post(url, prepareParam);
+//            if (response == null) {
+//                throw new RuntimeException("预处理接口请求失败！");
+//            }
+//            ApiResultDto resultDto = JSON.parseObject(response, ApiResultDto.class);
+//            String taskId = resultDto.getData();
+//            if (resultDto.getOk() != 0 || taskId == null) {
+//                throw new RuntimeException("预处理失败！" + response);
+//            }
+//
+//            System.out.println("预处理成功, taskid：" + taskId);
+//        }
+
+
+
+
+        return null;
+    }
+
+    public static Map<String, String> getBaseAuthParam(String taskId) throws SignatureException {
+        Map<String, String> baseParam = new HashMap<String, String>();
+        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
+        baseParam.put("app_id", Constants.XunFei.APPID);
+        baseParam.put("ts", ts);
+        baseParam.put("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
+        if (taskId != null) {
+            baseParam.put("task_id", taskId);
+        }
+        return baseParam;
     }
 
 }

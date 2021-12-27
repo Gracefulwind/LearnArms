@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +44,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
@@ -152,14 +154,23 @@ public class TestXunfeiActivity extends BaseActivity {
             System.out.println("=========");
         }else if(R.id.natx_btn_test_click1 == id){
             //======测试角色分离
-            connectLongFormASR();
+            try {
+                connectLongFormASR();
+            } catch (SignatureException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else if(R.id.natx_btn_test_write == id){
             //======
         }
     }
 
-    private void connectLongFormASR() {
-
+    private void connectLongFormASR() throws SignatureException, IOException {
+        AssetManager assets = getAssets();
+//        assets.
+        // 预处理
+        String taskId = XunfeiUtil.prepare(new File("lfasr.wav"));
     }
 
     int writeFlag = 6;
@@ -226,12 +237,13 @@ public class TestXunfeiActivity extends BaseActivity {
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
                 LogUtil.e(TAG, "onOpen, response = " + (null != response ? response.message() : null));
+////                if(null != filePath){
+////                    webSocket.send();
+////                }
 //                if(null != filePath){
-//                    webSocket.send();
+//                    testDemo();
 //                }
-                if(null != filePath){
-                    testDemo();
-                }
+                testDemo();
             }
 
             @Override
@@ -286,11 +298,12 @@ public class TestXunfeiActivity extends BaseActivity {
             AssetManager assets = getAssets();
             InputStream open = null;
             try {
-                if(null != filePath){
-                    open = new FileInputStream(filePath);
-                }else {
-                    open = assets.open("16k_10.pcm");
-                }
+//                if(null != filePath){
+//                    open = new FileInputStream(filePath);
+//                }else {
+//                    open = assets.open("16k_10.pcm");
+//                }
+                open = assets.open("16k_10.pcm");
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -309,8 +322,8 @@ public class TestXunfeiActivity extends BaseActivity {
                     switch (status) {
                         case StatusFirstFrame:   // 第一帧音频status = 0
                             JsonObject frame = new JsonObject();
-                            JsonObject business = new JsonObject();  //第一帧必须发送
                             JsonObject common = new JsonObject();  //第一帧必须发送
+                            JsonObject business = new JsonObject();  //第一帧必须发送
                             JsonObject data = new JsonObject();  //每一帧都要发送
                             // 填充common
                             common.addProperty("app_id", Constants.XunFei.APPID);

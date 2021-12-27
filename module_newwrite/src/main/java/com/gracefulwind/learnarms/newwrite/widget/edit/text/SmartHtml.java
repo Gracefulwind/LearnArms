@@ -1189,6 +1189,9 @@ public class SmartHtml {
 
         private static void startImg(Editable text, Attributes attributes, Html.ImageGetter img) {
             String src = attributes.getValue("", "src");
+            //Html本身没有宽高的支持
+            String width = attributes.getValue("", "width");
+            String height = attributes.getValue("", "height");
             Drawable d = null;
 
             if (img != null) {

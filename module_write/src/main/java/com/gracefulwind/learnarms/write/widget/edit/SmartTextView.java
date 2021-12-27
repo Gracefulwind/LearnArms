@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;

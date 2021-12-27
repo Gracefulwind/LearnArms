@@ -55,5 +55,15 @@ public class Constants {
             String APIKey = "36cf8304d9d8d97c605573b4cf494c8a";
         }
 
+        //===========================================
+        interface ASR{
+            String BaseUrl = "http://raasr.xfyun.cn/api";
+            String SecretKey = "e2660939530a1544220399f8f310bf84";
+            String PREPARE = "/prepare";
+            String UPLOAD = "/upload";
+            String MERGE = "/merge";
+            String GET_RESULT = "/getResult";
+            String GET_PROGRESS = "/getProgress";
+        }
     }
 }
