@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.gracefulwind.learnarms.commonsdk.core.MyApplication;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -20,6 +22,8 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
@@ -45,15 +49,55 @@ public class FileUtil {
         return new File(fileDir.getAbsolutePath()).exists();
     }
 
-    public static File getFolderName(Context context, String folderName){
+    /**
+     * 根据folderName获取项目下的文件夹路径
+     * */
+    public static File getExternalFolder(String folderName){
+        return getExternalFolder(MyApplication.getContext(), folderName);
+    }
+
+    /**
+     * 根据folderName获取项目下的文件夹路径
+     * */
+    public static File getExternalFolder(Context context, String folderName){
         File folderDir = null;
         folderDir = context.getExternalFilesDir(folderName);
         return folderDir;
     }
 
-    public static File makeFolders(Context context, String folderName){
+    /**
+     * 根据folderName生成项目下的文件夹路径
+     * */
+    public static File makeExternalFolder(String folderName){
+        return makeExternalFolder(MyApplication.getContext(), folderName);
+    }
+
+    /**
+     * 根据folderName生成项目下的文件夹路径
+     * */
+    public static File makeExternalFolder(Context context, String folderName){
         File folderDir = null;
         folderDir = context.getExternalFilesDir(folderName);
+        if(!folderDir.exists()){
+            folderDir.mkdirs();
+        }
+        return folderDir;
+    }
+
+    /**
+     *获取二级文件夹路径
+     * */
+    public static File getSubFolder(File file, String folderName){
+        File folderDir = new File(file, folderName);
+        return folderDir;
+    }
+
+    /**
+     *生成二级文件夹路径
+     * */
+    public static File makeSubFolder(File file, String folderName){
+        File folderDir = null;
+        folderDir = new File(file, folderName);
         if(!folderDir.exists()){
             folderDir.mkdirs();
         }
@@ -246,6 +290,127 @@ public class FileUtil {
             closeIO(output);
         }
         return base64;
+    }
+
+//==pcm相关=================================================================================================
+    private static String rootPath = "AudioRecord";
+    //原始文件(不能播放)
+    private final static String AUDIO_PCM_BASEPATH = "/" + rootPath + "/pcm/";
+    //可播放的高质量音频文件
+    private final static String AUDIO_WAV_BASEPATH = "/" + rootPath + "/wav/";
+
+    private static void setRootPath(String rootPath) {
+        FileUtil.rootPath = rootPath;
+    }
+
+    public static String getPcmFileAbsolutePath(String fileName) {
+        if (TextUtils.isEmpty(fileName)) {
+            throw new NullPointerException("fileName isEmpty");
+        }
+        if (!isSdcardExit()) {
+            throw new IllegalStateException("sd card no found");
+        }
+        String mAudioRawPath = "";
+        if (isSdcardExit()) {
+            if (!fileName.endsWith(".pcm")) {
+                fileName = fileName + ".pcm";
+            }
+//            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_PCM_BASEPATH;
+            File file1 = FileUtil.makeExternalFolder(rootPath);
+            String fileBasePath = file1 + "/pcm/";
+
+            File file = new File(fileBasePath);
+            //创建目录
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            mAudioRawPath = fileBasePath + fileName;
+        }
+        return mAudioRawPath;
+    }
+
+    public static String getWavFileAbsolutePath(String fileName) {
+        if (fileName == null) {
+            throw new NullPointerException("fileName can't be null");
+        }
+        if (!isSdcardExit()) {
+            throw new IllegalStateException("sd card no found");
+        }
+
+        String mAudioWavPath = "";
+        if (isSdcardExit()) {
+            if (!fileName.endsWith(".wav")) {
+                fileName = fileName + ".wav";
+            }
+//            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_WAV_BASEPATH;
+            File file1 = FileUtil.makeExternalFolder(rootPath);
+            String fileBasePath = file1 + "/wav/";
+
+            File file = new File(fileBasePath);
+            //创建目录
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            mAudioWavPath = fileBasePath + fileName;
+        }
+        return mAudioWavPath;
+    }
+
+    /**
+     * 判断是否有外部存储设备sdcard
+     *
+     * @return true | false
+     */
+    public static boolean isSdcardExit() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * 获取全部pcm文件列表
+     *
+     * @return
+     */
+    public static List<File> getPcmFiles() {
+        List<File> list = new ArrayList<>();
+//        String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_PCM_BASEPATH;
+        File file1 = FileUtil.makeExternalFolder(rootPath);
+        String fileBasePath = file1 + "/pcm/";
+
+        File rootFile = new File(fileBasePath);
+        if (rootFile.exists()) {
+            File[] files = rootFile.listFiles();
+            for (File file : files) {
+                list.add(file);
+            }
+        }
+        return list;
+
+    }
+
+    /**
+     * 获取全部wav文件列表
+     *
+     * @return
+     */
+    public static List<File> getWavFiles() {
+        List<File> list = new ArrayList<>();
+//        String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_WAV_BASEPATH;
+        File file1 = FileUtil.makeExternalFolder(rootPath);
+        String fileBasePath = file1 + "/wav/";
+
+        File rootFile = new File(fileBasePath);
+        if (!rootFile.exists()) {
+        } else {
+            File[] files = rootFile.listFiles();
+            for (File file : files) {
+                list.add(file);
+            }
+
+        }
+        return list;
     }
 
 //===================================================================================================

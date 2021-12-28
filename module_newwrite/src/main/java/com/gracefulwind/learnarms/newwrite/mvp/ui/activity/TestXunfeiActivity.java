@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
@@ -18,18 +17,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.XunfeiUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.XunfeiUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.audio.AudioRecorder;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.FlowSpeakEntity;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.FlowSpeakEntity1;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -39,22 +41,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -96,6 +88,8 @@ public class TestXunfeiActivity extends BaseActivity {
     private String fileName;
     private Context mContext;
     private File filePath;
+    private AudioRecorder audioRecorder;
+    private String pcmName;
 
     @Override
     public void setupActivityComponent(@NonNull @NotNull AppComponent appComponent) {
@@ -117,11 +111,13 @@ public class TestXunfeiActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //test不管了，反正有权限的
         }
+        audioRecorder = AudioRecorder.getInstance();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @OnClick({R2.id.natx_btn_connect_voice, R2.id.natx_btn_test_voice, R2.id.natx_btn_test_write
             , R2.id.natx_btn_test_click1, R2.id.natx_btn_test_click
+            , R2.id.natx_btn_test_pcm, R2.id.natx_btn_connect_pcm
             })
     public void onViewClicked(View view) {
         int id = view.getId();
@@ -161,10 +157,120 @@ public class TestXunfeiActivity extends BaseActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(R.id.natx_btn_test_pcm == id){
+            //======测试pcm
+            testPcm();
+        }else if(R.id.natx_btn_connect_pcm == id){
+            //======连接pcm
+            try {
+                connectPcm();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }else if(R.id.natx_btn_test_write == id){
             //======
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void connectPcm() throws Exception{
+        HttpUrl authUrl = XunfeiUtil.getVoiceUrl();
+        String realUrl = authUrl.toString().replace("http://", "ws://").replace("https://", "wss://");
+//        String realUrl = String.format(baseUrl, "");
+        //构造request对象
+        Request request = new Request.Builder()
+                .url(realUrl)
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+        webSocket = client.newWebSocket(request, new WebSocketListener() {
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                super.onOpen(webSocket, response);
+                LogUtil.e(TAG, "onOpen, response = " + (null != response ? response.message() : null));
+                natxTvResult.setText("");
+//                if(null == )
+                if(null != pcmList && pcmList.size() > 0){
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(pcmList.get(0));
+                        XunfeiUtil.sendSpeakPcm(webSocket, fileInputStream);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+//                XunfeiUtil.sendSpeakPcm(webSocket, open);
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, String text) {
+                super.onMessage(webSocket, text);
+                LogUtil.e(TAG, "onMessage String = " + text);
+                FlowSpeakEntity1 flowSpeakEntity = new Gson().fromJson(text, FlowSpeakEntity1.class);
+                natxTvResult.setText(natxTvResult.getText() + flowSpeakEntity.getData());
+                System.out.println("===");
+                System.out.println("===");
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, ByteString bytes) {
+                super.onMessage(webSocket, bytes);
+                //几乎没用
+                LogUtil.e(TAG, "onMessage ByteString = " + bytes);
+            }
+
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                super.onClosing(webSocket, code, reason);
+                LogUtil.e(TAG, "onClosing = ");
+            }
+
+            @Override
+            public void onClosed(WebSocket webSocket, int code, String reason) {
+                super.onClosed(webSocket, code, reason);
+                LogUtil.e(TAG, "onClosed = ");
+            }
+
+            @Override
+            public void onFailure(WebSocket webSocket, Throwable t, @org.jetbrains.annotations.Nullable Response response) {
+                super.onFailure(webSocket, t, response);
+                LogUtil.e(TAG, "onFailure: response = " + (null != response ? response.message() : null));
+//                t.printStackTrace();
+                LogUtil.e(TAG, t.toString() + "\r\n" + t.getMessage() + "\r\n" + t.getCause());
+            }
+        });
+    }
+
+    private void sendPcm() {
+//        sendSpeakPcm
+    }
+
+    boolean isPcmRecording = false;
+    private void testPcm() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if(isPcmRecording){
+                Toast.makeText(mContext, "结束录音", Toast.LENGTH_SHORT).show();
+                stopPcmRecord();
+            }else {
+                Toast.makeText(mContext, "开始录音", Toast.LENGTH_SHORT).show();
+                startPcmRecord();
+            }
+        }
+    }
+
+    private void startPcmRecord() {
+        pcmName = DateFormat.format("yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)).toString();
+        audioRecorder.createDefaultAudio(pcmName);
+        audioRecorder.start(null);
+        isPcmRecording = true;
+    }
+
+    List<String> pcmList;
+    private void stopPcmRecord() {
+        pcmList = audioRecorder.stop();
+        isPcmRecording = false;
+    }
+
 
     private void connectLongFormASR() throws SignatureException, IOException {
         AssetManager assets = getAssets();
@@ -237,13 +343,16 @@ public class TestXunfeiActivity extends BaseActivity {
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
                 LogUtil.e(TAG, "onOpen, response = " + (null != response ? response.message() : null));
-////                if(null != filePath){
-////                    webSocket.send();
-////                }
-//                if(null != filePath){
-//                    testDemo();
-//                }
                 testDemo();
+                AssetManager assets = getAssets();
+                InputStream open = null;
+                try {
+                    open = assets.open("16k_10.pcm");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                XunfeiUtil.sendSpeakPcm(webSocket, open);
             }
 
             @Override
@@ -421,7 +530,8 @@ public class TestXunfeiActivity extends BaseActivity {
             /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default 声音的（波形）的采样 */
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             fileName = DateFormat.format("yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)) + ".m4a";
-            File folderName = FileUtil.getFolderName(getApplicationContext(), audioSaveDir);
+            File folderName = FileUtil.makeExternalFolder(getApplicationContext(), audioSaveDir);
+//            File folderName = FileUtil.makeSubFolder(FileUtil.getExternalFolderName(getApplicationContext(), audioSaveDir), "tete");
             if (!FileUtil.isFolderExist(folderName)) {
 //                FileUtil.makeFolders(getApplicationContext(), audioSaveDir);
                 return;

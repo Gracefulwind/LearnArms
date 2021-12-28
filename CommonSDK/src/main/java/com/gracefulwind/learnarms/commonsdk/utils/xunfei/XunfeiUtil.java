@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.commonsdk.utils;
+package com.gracefulwind.learnarms.commonsdk.utils.xunfei;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -7,12 +7,16 @@ import android.text.Html;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.gson.JsonObject;
 import com.gracefulwind.learnarms.commonsdk.bean.ApiResultDto;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
+import com.gracefulwind.learnarms.commonsdk.utils.EncryptUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -23,6 +27,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +47,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.WebSocket;
 import okio.BufferedSink;
 
 /**
@@ -202,6 +208,114 @@ public class XunfeiUtil {
             baseParam.put("task_id", taskId);
         }
         return baseParam;
+    }
+
+    public static final int StatusFirstFrame = 0;
+    public static final int StatusContinueFrame = 1;
+    public static final int StatusLastFrame = 2;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void sendSpeakPcm(WebSocket webSocket, InputStream open){
+        new Thread(()->{
+            //连接成功，开始发送数据
+            int frameSize = 1280; //每一帧音频的大小,建议每 40ms 发送 122B
+            int intervel = 40;
+            int status = 0;  // 音频的状态
+//            try (FileInputStream fs = new FileInputStream(file)) {
+//            try (FileInputStream fs = new FileInputStream(filePath)) {
+//            //------
+//            AssetManager assets = getAssets();
+//            InputStream open = null;
+//            try {
+////                if(null != filePath){
+////                    open = new FileInputStream(filePath);
+////                }else {
+////                    open = assets.open("16k_10.pcm");
+////                }
+//                open = assets.open("16k_10.pcm");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return;
+//            }
+            try /*(FileInputStream fs = new FileInputStream(filePath))*/ {
+                //------
+                byte[] buffer = new byte[frameSize];
+                // 发送音频
+                end:
+                while (true) {
+                    int len = open.read(buffer);
+//                    int len = fs.read(buffer);
+                    if (len == -1) {
+                        status = StatusLastFrame;  //文件读完，改变status 为 2
+                    }
+                    switch (status) {
+                        case StatusFirstFrame:   // 第一帧音频status = 0
+                            JsonObject frame = new JsonObject();
+                            JsonObject common = new JsonObject();  //第一帧必须发送
+                            JsonObject business = new JsonObject();  //第一帧必须发送
+                            JsonObject data = new JsonObject();  //每一帧都要发送
+                            // 填充common
+                            common.addProperty("app_id", Constants.XunFei.APPID);
+                            //填充business
+                            business.addProperty("language", "zh_cn");
+                            //business.addProperty("language", "en_us");//英文
+                            //business.addProperty("language", "ja_jp");//日语，在控制台可添加试用或购买
+                            //business.addProperty("language", "ko_kr");//韩语，在控制台可添加试用或购买
+                            //business.addProperty("language", "ru-ru");//俄语，在控制台可添加试用或购买
+                            business.addProperty("domain", "iat");
+                            business.addProperty("accent", "mandarin");//中文方言请在控制台添加试用，添加后即展示相应参数值
+                            //business.addProperty("nunum", 0);
+                            //business.addProperty("ptt", 0);//标点符号
+                            //business.addProperty("rlang", "zh-hk"); // zh-cn :简体中文（默认值）zh-hk :繁体香港(若未授权不生效，在控制台可免费开通)
+                            //business.addProperty("vinfo", 1);
+                            business.addProperty("dwa", "wpgs");//动态修正(若未授权不生效，在控制台可免费开通)
+                            //business.addProperty("nbest", 5);// 句子多候选(若未授权不生效，在控制台可免费开通)
+                            //business.addProperty("wbest", 3);// 词级多候选(若未授权不生效，在控制台可免费开通)
+                            //填充data
+                            data.addProperty("status", StatusFirstFrame);
+                            data.addProperty("format", "audio/L16;rate=16000");
+                            data.addProperty("encoding", "raw");
+                            data.addProperty("audio", Base64.getEncoder().encodeToString(Arrays.copyOf(buffer, len)));
+                            //填充frame
+                            frame.add("common", common);
+                            frame.add("business", business);
+                            frame.add("data", data);
+                            webSocket.send(frame.toString());
+                            status = StatusContinueFrame;  // 发送完第一帧改变status 为 1
+                            break;
+                        case StatusContinueFrame:  //中间帧status = 1
+                            JsonObject frame1 = new JsonObject();
+                            JsonObject data1 = new JsonObject();
+                            data1.addProperty("status", StatusContinueFrame);
+                            data1.addProperty("format", "audio/L16;rate=16000");
+                            data1.addProperty("encoding", "raw");
+                            data1.addProperty("audio", Base64.getEncoder().encodeToString(Arrays.copyOf(buffer, len)));
+                            frame1.add("data", data1);
+                            webSocket.send(frame1.toString());
+                            // System.out.println("send continue");
+                            break;
+                        case StatusLastFrame:    // 最后一帧音频status = 2 ，标志音频发送结束
+                            JsonObject frame2 = new JsonObject();
+                            JsonObject data2 = new JsonObject();
+                            data2.addProperty("status", StatusLastFrame);
+                            data2.addProperty("audio", "");
+                            data2.addProperty("format", "audio/L16;rate=16000");
+                            data2.addProperty("encoding", "raw");
+                            frame2.add("data", data2);
+                            webSocket.send(frame2.toString());
+                            System.out.println("sendlast");
+                            break end;
+                    }
+                    Thread.sleep(intervel); //模拟音频采样延时
+                }
+                System.out.println("all data is send");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 }

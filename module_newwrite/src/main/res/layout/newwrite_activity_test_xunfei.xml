@@ -47,6 +47,20 @@
             android:layout_height="wrap_content"
             android:text="角色分离"
             />
+
+        <Button
+            android:id="@+id/natx_btn_test_pcm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="录制PCM"
+            />
+
+        <Button
+            android:id="@+id/natx_btn_connect_pcm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="讯飞识别"
+            />
     </LinearLayout>
 
     <EditText

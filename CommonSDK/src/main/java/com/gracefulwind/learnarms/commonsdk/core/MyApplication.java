@@ -1,6 +1,7 @@
 package com.gracefulwind.learnarms.commonsdk.core;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.jess.arms.base.BaseApplication;
 
@@ -27,5 +28,13 @@ public class MyApplication extends BaseApplication {
 
     public static MyApplication getInstance(){
         return mApp;
+    }
+
+    public static Context getContext(){
+        Context context = null;
+        if(null != mApp){
+            context = mApp.getBaseContext();
+        }
+        return context;
     }
 }
