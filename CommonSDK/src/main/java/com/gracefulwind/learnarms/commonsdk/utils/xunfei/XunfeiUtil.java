@@ -220,22 +220,6 @@ public class XunfeiUtil {
             int frameSize = 1280; //每一帧音频的大小,建议每 40ms 发送 122B
             int intervel = 40;
             int status = 0;  // 音频的状态
-//            try (FileInputStream fs = new FileInputStream(file)) {
-//            try (FileInputStream fs = new FileInputStream(filePath)) {
-//            //------
-//            AssetManager assets = getAssets();
-//            InputStream open = null;
-//            try {
-////                if(null != filePath){
-////                    open = new FileInputStream(filePath);
-////                }else {
-////                    open = assets.open("16k_10.pcm");
-////                }
-//                open = assets.open("16k_10.pcm");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return;
-//            }
             try /*(FileInputStream fs = new FileInputStream(filePath))*/ {
                 //------
                 byte[] buffer = new byte[frameSize];

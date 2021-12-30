@@ -188,7 +188,12 @@ public class TestXunfeiActivity extends BaseActivity {
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
                 LogUtil.e(TAG, "onOpen, response = " + (null != response ? response.message() : null));
-                natxTvResult.setText("");
+                natxTvResult.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        natxTvResult.setText("开始语音识别...");
+                    }
+                });
 //                if(null == )
                 if(null != pcmList && pcmList.size() > 0){
                     try {
@@ -197,9 +202,7 @@ public class TestXunfeiActivity extends BaseActivity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-
                 }
-//                XunfeiUtil.sendSpeakPcm(webSocket, open);
             }
 
             @Override
@@ -207,9 +210,13 @@ public class TestXunfeiActivity extends BaseActivity {
                 super.onMessage(webSocket, text);
                 LogUtil.e(TAG, "onMessage String = " + text);
                 FlowSpeakEntity1 flowSpeakEntity = new Gson().fromJson(text, FlowSpeakEntity1.class);
-                natxTvResult.setText(natxTvResult.getText() + flowSpeakEntity.getData());
-                System.out.println("===");
-                System.out.println("===");
+                natxTvResult.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        natxTvResult.setText(natxTvResult.getText().toString().replace("开始语音识别...", "") + flowSpeakEntity.getData());
+                    }
+                });
+                LogUtil.e(TAG, "== json = " + flowSpeakEntity.getData());
             }
 
             @Override
@@ -222,19 +229,24 @@ public class TestXunfeiActivity extends BaseActivity {
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
                 super.onClosing(webSocket, code, reason);
-                LogUtil.e(TAG, "onClosing = ");
+                LogUtil.e(TAG, "onClosing : code = " + code + ", reason = " + reason);
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
-                LogUtil.e(TAG, "onClosed = ");
+                LogUtil.e(TAG, "onClosed = " + reason);
             }
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, @org.jetbrains.annotations.Nullable Response response) {
                 super.onFailure(webSocket, t, response);
-                LogUtil.e(TAG, "onFailure: response = " + (null != response ? response.message() : null));
+//                natxTvResult.setText("语音识别失败");
+                try {
+                    LogUtil.e(TAG, "onFailure: response = " + (null != response ? response.body().string() : null));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 //                t.printStackTrace();
                 LogUtil.e(TAG, t.toString() + "\r\n" + t.getMessage() + "\r\n" + t.getCause());
             }

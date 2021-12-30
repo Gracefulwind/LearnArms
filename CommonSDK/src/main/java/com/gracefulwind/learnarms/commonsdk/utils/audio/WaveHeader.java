@@ -15,18 +15,32 @@ import java.io.IOException;
  * @Email: 429344332@qq.com
  */
 public class WaveHeader {
+    //‘RIFF‘文件标志, 4, String
     public final char fileID[] = {'R', 'I', 'F', 'F'};
+    //文件总长, 4, Integer
     public int fileLength;
+    //‘WAVE‘文件标志, 4, String
     public char wavTag[] = {'W', 'A', 'V', 'E'};;
+    //‘fmt‘标志, 4, String
     public char fmtHdrID[] = {'f', 'm', 't', ' '};
+    //块长度, 4 Integer  ???
     public int fmtHdrLength;
+    //PCM格式类别, 2, Short
     public short formatTag;
+    //声道数目, 2,
     public short channels;
+    //采样率, 4,
     public int samplesPerSec;
+    //码率, 4, 采样率x采样深度x通道数/8 比如双通道的44.1K 16位采样的码率为176400
     public int avgBytesPerSec;
+    //数据块对齐, 2, 采样一次，占内存大小 ： 采样深度x通道数/8
     public short blockAlign;
+    //每样本bit数, 2, 采样深度 ? 16bit?
     public short bitsPerSample;
+
+    //‘data‘文件标志, 4, 表述payload数据开头
     public char dataHdrID[] = {'d','a','t','a'};
+    //数据块总长, 4
     public int dataHdrLength;
 
     public byte[] getHeader() throws IOException {

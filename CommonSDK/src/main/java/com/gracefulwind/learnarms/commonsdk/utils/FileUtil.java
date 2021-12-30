@@ -316,8 +316,8 @@ public class FileUtil {
                 fileName = fileName + ".pcm";
             }
 //            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_PCM_BASEPATH;
-            File file1 = FileUtil.makeExternalFolder(rootPath);
-            String fileBasePath = file1 + "/pcm/";
+            File baseFolder = FileUtil.makeExternalFolder(rootPath);
+            String fileBasePath = baseFolder + "/pcm/";
 
             File file = new File(fileBasePath);
             //创建目录

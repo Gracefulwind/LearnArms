@@ -58,11 +58,11 @@ public class PcmToWav {
         header.fileLength = TOTAL_SIZE + (44 - 8);
         header.fmtHdrLength = 16;
         header.bitsPerSample = 16;
-        header.channels = 2;
+        header.channels = 1;
         header.formatTag = 0x0001;
         header.samplesPerSec = 16000;
-        header.blockAlign = (short) (header.channels * header.bitsPerSample / 8);
-        header.avgBytesPerSec = header.blockAlign * header.samplesPerSec;
+        header.avgBytesPerSec = header.samplesPerSec * header.bitsPerSample * header.channels / 8;
+        header.blockAlign = (short) (header.bitsPerSample * header.channels / 8);
         header.dataHdrLength = TOTAL_SIZE;
 
         byte[] h = null;
@@ -142,8 +142,8 @@ public class PcmToWav {
         header.channels = 1;
         header.formatTag = 0x0001;
         header.samplesPerSec = 16000;
-        header.blockAlign = (short) (header.channels * header.bitsPerSample / 8);
-        header.avgBytesPerSec = header.blockAlign * header.samplesPerSec;
+        header.avgBytesPerSec = header.samplesPerSec * header.bitsPerSample * header.channels / 8;
+        header.blockAlign = (short) (header.bitsPerSample * header.channels / 8);
         header.dataHdrLength = TOTAL_SIZE;
 
         byte[] h = null;
