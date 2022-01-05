@@ -136,7 +136,7 @@ public class XunfeiUtil {
     /**
      * 文件分片大小,可根据实际情况调整
      */
-    public static final int SLICE_SICE = 10485760;// 10M
+    public static final int SLICE_SICE = 10 * 1024 *1024;// 10M
     public static String prepare(File audio) throws SignatureException, IOException {
         Map<String, String> prepareParam = getBaseAuthParam(null);
         long fileLength = audio.length();
@@ -146,7 +146,7 @@ public class XunfeiUtil {
         prepareParam.put("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
 
         /********************TODO 可配置参数********************/
-        // 转写类型
+        // 转写类型,已取消
 //        prepareParam.put("lfasr_type", "0");
         // 开启分词
 //        prepareParam.put("has_participle", "true");

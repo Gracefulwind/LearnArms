@@ -15,6 +15,8 @@ import android.util.Base64;
 
 import com.gracefulwind.learnarms.commonsdk.core.MyApplication;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -295,13 +297,13 @@ public class FileUtil {
 //==pcm相关=================================================================================================
     private static String rootPath = "AudioRecord";
     //原始文件(不能播放)
-    private final static String AUDIO_PCM_BASEPATH = "/" + rootPath + "/pcm/";
+    private final static String AUDIO_PCM_FOLDER_NAME = "/pcm/";
     //可播放的高质量音频文件
-    private final static String AUDIO_WAV_BASEPATH = "/" + rootPath + "/wav/";
+    private final static String AUDIO_WAV_FOLDER_NAME = "/wav/";
 
-    private static void setRootPath(String rootPath) {
-        FileUtil.rootPath = rootPath;
-    }
+//    private static void setRootPath(String rootPath) {
+//        FileUtil.rootPath = rootPath;
+//    }
 
     public static String getPcmFileAbsolutePath(String fileName) {
         if (TextUtils.isEmpty(fileName)) {
@@ -316,8 +318,8 @@ public class FileUtil {
                 fileName = fileName + ".pcm";
             }
 //            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_PCM_BASEPATH;
-            File baseFolder = FileUtil.makeExternalFolder(rootPath);
-            String fileBasePath = baseFolder + "/pcm/";
+//            File baseFolder = getAudioBaseFolder();
+            String fileBasePath = getPcmFolder();
 
             File file = new File(fileBasePath);
             //创建目录
@@ -343,8 +345,8 @@ public class FileUtil {
                 fileName = fileName + ".wav";
             }
 //            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_WAV_BASEPATH;
-            File file1 = FileUtil.makeExternalFolder(rootPath);
-            String fileBasePath = file1 + "/wav/";
+//            File file1 = getAudioBaseFolder();
+            String fileBasePath = getWavFolder();
 
             File file = new File(fileBasePath);
             //创建目录
@@ -362,10 +364,11 @@ public class FileUtil {
      * @return true | false
      */
     public static boolean isSdcardExit() {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             return true;
-        else
+        }else{
             return false;
+        }
     }
 
     /**
@@ -376,8 +379,8 @@ public class FileUtil {
     public static List<File> getPcmFiles() {
         List<File> list = new ArrayList<>();
 //        String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_PCM_BASEPATH;
-        File file1 = FileUtil.makeExternalFolder(rootPath);
-        String fileBasePath = file1 + "/pcm/";
+//        File baseFolder = getAudioBaseFolder();
+        String fileBasePath = getPcmFolder();
 
         File rootFile = new File(fileBasePath);
         if (rootFile.exists()) {
@@ -398,8 +401,8 @@ public class FileUtil {
     public static List<File> getWavFiles() {
         List<File> list = new ArrayList<>();
 //        String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + AUDIO_WAV_BASEPATH;
-        File file1 = FileUtil.makeExternalFolder(rootPath);
-        String fileBasePath = file1 + "/wav/";
+//        File baseFolder = getAudioBaseFolder();
+        String fileBasePath = getWavFolder();
 
         File rootFile = new File(fileBasePath);
         if (!rootFile.exists()) {
@@ -412,6 +415,24 @@ public class FileUtil {
         }
         return list;
     }
+
+    //--------------
+    @NotNull
+    private static File getAudioBaseFolder() {
+        return FileUtil.makeExternalFolder(rootPath);
+    }
+
+    public static String getPcmFolder(){
+        File baseFolder = getAudioBaseFolder();
+        return baseFolder + AUDIO_PCM_FOLDER_NAME;
+    }
+
+    public static String getWavFolder(){
+        File baseFolder = getAudioBaseFolder();
+        return baseFolder + AUDIO_WAV_FOLDER_NAME;
+    }
+
+
 
 //===================================================================================================
 
