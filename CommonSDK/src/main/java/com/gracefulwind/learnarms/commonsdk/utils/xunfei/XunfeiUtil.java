@@ -64,6 +64,11 @@ import okio.BufferedSink;
 public class XunfeiUtil {
     public static final String TAG = "XunfeiUtil";
 
+    /**
+     *
+     * 流式语音听写，PCM
+     *
+     * */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static HttpUrl getVoiceUrl() throws MalformedURLException, NoSuchAlgorithmException, InvalidKeyException {
         String baseUrl = Constants.XunFei.Voice.BaseUrl;
@@ -98,6 +103,9 @@ public class XunfeiUtil {
         return httpUrl;
     }
 
+    /**
+     * OCR识别
+     * */
     public static String language = "cn|en";
     public static String location = "false";
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -133,18 +141,21 @@ public class XunfeiUtil {
         return request;
     }
 
+//==角色分离==================
     /**
      * 文件分片大小,可根据实际情况调整
      */
     public static final int SLICE_SICE = 10 * 1024 *1024;// 10M
     public static String prepare(File audio) throws SignatureException, IOException {
         Map<String, String> prepareParam = getBaseAuthParam(null);
-        long fileLength = audio.length();
 
+//        prepareParam.put("app_id", Constants.XunFei.APPID);
+
+        long fileLength = audio.length();
         prepareParam.put("file_len", fileLength + "");
         prepareParam.put("file_name", audio.getName());
         prepareParam.put("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
-
+        LogUtil.e(TAG, "params = " + prepareParam.toString());
         /********************TODO 可配置参数********************/
         // 转写类型,已取消
 //        prepareParam.put("lfasr_type", "0");
@@ -162,12 +173,14 @@ public class XunfeiUtil {
                 .build();
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
-//        Response response = client.newCall(request).execute();
         client.newCall(request).enqueue(new Callback() {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String message = response.body().string();
+                System.out.println("=================");
+                System.out.println("response : " + message);
+                System.out.println("=================");
             }
 
             @Override
@@ -177,23 +190,6 @@ public class XunfeiUtil {
             }
 
         });
-//
-//        {
-//            String response = HttpUtil.post(url, prepareParam);
-//            if (response == null) {
-//                throw new RuntimeException("预处理接口请求失败！");
-//            }
-//            ApiResultDto resultDto = JSON.parseObject(response, ApiResultDto.class);
-//            String taskId = resultDto.getData();
-//            if (resultDto.getOk() != 0 || taskId == null) {
-//                throw new RuntimeException("预处理失败！" + response);
-//            }
-//
-//            System.out.println("预处理成功, taskid：" + taskId);
-//        }
-
-
-
 
         return null;
     }
@@ -203,6 +199,7 @@ public class XunfeiUtil {
         String ts = String.valueOf(System.currentTimeMillis() / 1000L);
         baseParam.put("app_id", Constants.XunFei.APPID);
         baseParam.put("ts", ts);
+
         baseParam.put("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
         if (taskId != null) {
             baseParam.put("task_id", taskId);

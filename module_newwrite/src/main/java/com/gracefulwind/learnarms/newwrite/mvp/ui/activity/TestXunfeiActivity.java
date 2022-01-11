@@ -285,12 +285,14 @@ public class TestXunfeiActivity extends BaseActivity {
 
 
     private void connectLongFormASR() throws SignatureException, IOException {
-        AssetManager assets = getAssets();
-        InputStream open = assets.open("lfasr.wav");
-        int available = open.available();
+//        AssetManager assets = getAssets();
+//        InputStream open = assets.open("lfasr.wav");
+//        int available = open.available();
+//        // 预处理
+//        String taskId = XunfeiUtil.prepare(new File("lfasr.wav"));
 
-        // 预处理
-        String taskId = XunfeiUtil.prepare(new File("lfasr.wav"));
+        String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
+        String taskId = XunfeiUtil.prepare(new File(pcmFileAbsolutePath));
         //分片上传
         int len = 0;
         byte[] slice = new byte[XunfeiUtil.SLICE_SICE];

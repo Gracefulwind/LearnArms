@@ -326,7 +326,8 @@ public class FileUtil {
             if (!file.exists()) {
                 file.mkdirs();
             }
-            mAudioRawPath = fileBasePath + fileName;
+//            mAudioRawPath = fileBasePath + fileName;
+            mAudioRawPath = new File(fileBasePath, fileName).toString();
         }
         return mAudioRawPath;
     }
