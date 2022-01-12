@@ -17,7 +17,7 @@ public class TextBoxBean {
     String str;
     //离原点的x，y轴距离
     int disX;
-    int dixY;
+    int disY;
     //文本框宽度
     int width;
 }

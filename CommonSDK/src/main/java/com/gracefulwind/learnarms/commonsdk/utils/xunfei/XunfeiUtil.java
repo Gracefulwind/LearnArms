@@ -3,19 +3,25 @@ package com.gracefulwind.learnarms.commonsdk.utils.xunfei;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
+import android.os.Handler;
 import android.text.Html;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.gracefulwind.learnarms.commonsdk.bean.ApiResultDto;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.EncryptUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.GsonUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.XunfeiAsrPrepareEntity;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -142,19 +148,21 @@ public class XunfeiUtil {
     }
 
 //==角色分离==================
+    Handler handler = new Handler(){};
+
     /**
      * 文件分片大小,可根据实际情况调整
      */
     public static final int SLICE_SICE = 10 * 1024 *1024;// 10M
-    public static String prepare(File audio) throws SignatureException, IOException {
-        Map<String, String> prepareParam = getBaseAuthParam(null);
+    public static void prepare(File audio) throws SignatureException, IOException {
+        FormBody.Builder prepareParam = getBaseAuthParam(null);
 
 //        prepareParam.put("app_id", Constants.XunFei.APPID);
 
         long fileLength = audio.length();
-        prepareParam.put("file_len", fileLength + "");
-        prepareParam.put("file_name", audio.getName());
-        prepareParam.put("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
+        prepareParam.add("file_len", fileLength + "");
+        prepareParam.add("file_name", audio.getName());
+        prepareParam.add("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
         LogUtil.e(TAG, "params = " + prepareParam.toString());
         /********************TODO 可配置参数********************/
         // 转写类型,已取消
@@ -170,6 +178,7 @@ public class XunfeiUtil {
         //构造request对象
         Request request = new Request.Builder()
                 .url(url)
+                .post(prepareParam.build())
                 .build();
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
@@ -178,9 +187,19 @@ public class XunfeiUtil {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String message = response.body().string();
-                System.out.println("=================");
-                System.out.println("response : " + message);
-                System.out.println("=================");
+                XunfeiAsrPrepareEntity responseEntity = new Gson().fromJson(message, XunfeiAsrPrepareEntity.class);
+                if(0 == responseEntity.ok){
+                    //消息队列，发送taskId
+                    String taskId = responseEntity.data;
+                    uploadAudioFile(audio, taskId);
+                }else{
+                    //发送失败，根据错误原因判断
+                    //最好别自动重试，免得死循环
+                }
+//                System.out.println("=================");
+//                System.out.println("response : " + message);
+//                System.out.println("=================");
+//                String taskId = null;
             }
 
             @Override
@@ -190,21 +209,50 @@ public class XunfeiUtil {
             }
 
         });
-
-        return null;
     }
 
-    public static Map<String, String> getBaseAuthParam(String taskId) throws SignatureException {
-        Map<String, String> baseParam = new HashMap<String, String>();
-        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
-        baseParam.put("app_id", Constants.XunFei.APPID);
-        baseParam.put("ts", ts);
-
-        baseParam.put("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
-        if (taskId != null) {
-            baseParam.put("task_id", taskId);
+    private static void uploadAudioFile(File audio, String taskId) {
+        FileInputStream fis = null;
+        try{
+            fis = new FileInputStream(audio);
+            // 分片上传文件
+            int len = 0;
+            byte[] slice = new byte[SLICE_SICE];
+            SliceIdGenerator generator = new SliceIdGenerator();
+            uploadSliceRecursive(taskId, fis, len, slice, generator);
+        }catch (IOException e){
+            FileUtil.closeIO(fis);
+        } catch (SignatureException e) {
+            e.printStackTrace();
         }
-        return baseParam;
+
+    }
+
+    private static void uploadSliceRecursive(String taskId, FileInputStream fis, int len, byte[] slice, SliceIdGenerator generator) throws IOException, SignatureException {
+        if ((len = fis.read(slice)) > 0) {
+            // 上传分片
+            if (fis.available() == 0) {
+                slice = Arrays.copyOfRange(slice, 0, len);
+            }
+            uploadSlice(taskId, generator.getNextSliceId(), slice);
+        }
+    }
+
+    private static void uploadSlice(String taskId, String nextSliceId, byte[] slice) throws SignatureException {
+        getBaseAuthParam(taskId);
+    }
+
+    public static FormBody.Builder  getBaseAuthParam(String taskId) throws SignatureException {
+        FormBody.Builder builder = new FormBody.Builder();
+        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
+        builder.add("app_id", Constants.XunFei.APPID);
+        builder.add("ts", ts);
+
+        builder.add("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
+        if (taskId != null) {
+            builder.add("task_id", taskId);
+        }
+        return builder;
     }
 
     public static final int StatusFirstFrame = 0;

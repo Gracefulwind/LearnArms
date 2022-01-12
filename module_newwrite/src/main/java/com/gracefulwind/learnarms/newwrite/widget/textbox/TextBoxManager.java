@@ -6,6 +6,7 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.gracefulwind.learnarms.commonsdk.utils.KeyboardUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.StringUtil;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNote;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView;
 
@@ -46,7 +47,7 @@ public class TextBoxManager {
         //todo:wd 健壮性
         ViewParent realParent = getRealParent();
         SmartHandNoteView parent = (SmartHandNoteView) realParent;
-        TextBoxView editText = new TextBoxView(mContext, parent, this);
+
         float startX = Math.min(prevX, movedX);
         float startY = Math.min(prevY, movedY);
         float width = Math.abs(prevX - movedX);
@@ -58,16 +59,20 @@ public class TextBoxManager {
         if(startX + width > parentWidth){
             startX = parentWidth - width;
         }
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) width, FrameLayout.LayoutParams.WRAP_CONTENT);
+        addNewBox((int) startX, (int) startY, (int) width, null);
+    }
+
+    private void addNewBox(int startX, int startY, int width, String text) {
+        ViewParent realParent = getRealParent();
+        SmartHandNoteView parent = (SmartHandNoteView) realParent;
+        TextBoxView editText = new TextBoxView(mContext, parent, this);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.WRAP_CONTENT);
         editText.setLayoutParams(layoutParams);
-        layoutParams.leftMargin = (int) startX;
-        layoutParams.topMargin = (int) startY;
-        //todo:wd find out why it doesn't work
-//        editText.setMinimumHeight(0);
-//        editText.setMinimumHeight(600);
-//        editText.setMinHeight(600);
-//        TextView textView = new TextView();
-//        textView.setMinHeight();
+        layoutParams.leftMargin = startX;
+        layoutParams.topMargin = startY;
+        if(!StringUtil.isEmpty(text)){
+            editText.setText(text);
+        }
         mEditViewList.add(editText);
         mContainer.addView(editText);
         callSmartHandViewChanged();
@@ -134,8 +139,34 @@ public class TextBoxManager {
         for (TextBoxView view: mEditViewList) {
             TextBoxBean bean = new TextBoxBean();
             bean.str = view.getText();
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
+            bean.disX = lp.leftMargin;
+            bean.disY = lp.topMargin;
+            bean.width = view.getWidth();
             containList.add(bean);
         }
         return containList;
+    }
+
+    /**
+     * 反显textBox的内容
+     */
+    public void setTextBoxContain(List<TextBoxBean> textBoxContain) {
+        for (TextBoxBean boxBean: textBoxContain) {
+            addNewBox(boxBean.disX, boxBean.disY, boxBean.width, boxBean.str);
+        }
+    }
+
+    /**
+     * 清空textBox的内容
+     */
+    public void clearTextBoxContain() {
+//        mEditViewList.add(editText);
+//        mContainer.addView(editText);
+        while(mEditViewList.size() > 0){
+            TextBoxView textBoxView = mEditViewList.remove(0);
+            mContainer.removeView(textBoxView);
+        }
+        callSmartHandViewChanged();
     }
 }

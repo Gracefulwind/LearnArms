@@ -18,10 +18,14 @@ import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNote;
 import com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView;
+import com.gracefulwind.learnarms.newwrite.widget.textbox.TextBoxBean;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -61,8 +65,12 @@ public class TestNewWriteActivity extends BaseActivity {
 
     }
 
+    List<TextBoxBean> textBoxContain = new ArrayList<>();
+
     @OnClick({R2.id.natnw_btn_click1, R2.id.natnw_btn_click2, R2.id.natnw_btn_click3, R2.id.natnw_btn_click4
-            , R2.id.natnw_btn_click2_1, R2.id.natnw_btn_click2_2, R2.id.natnw_btn_click2_3, R2.id.natnw_btn_click2_4})
+            , R2.id.natnw_btn_click2_1, R2.id.natnw_btn_click2_2, R2.id.natnw_btn_click2_3, R2.id.natnw_btn_click2_4
+            , R2.id.natnw_btn_click3_1, R2.id.natnw_btn_click3_2, R2.id.natnw_btn_click3_3, R2.id.natnw_btn_click3_4
+    })
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.natnw_btn_click1 == id){
@@ -95,6 +103,17 @@ public class TestNewWriteActivity extends BaseActivity {
         }else if(R.id.natnw_btn_click2_4 == id){
             //文本框
             smartHandNoteView.setViewMode(SmartHandNote.MODE_TEXT_BOX);
+        }else if(R.id.natnw_btn_click3_1 == id){
+            textBoxContain = smartHandNoteView.getTextBoxContain();
+            System.out.println("=======");
+            System.out.println("=======");
+            System.out.println("=======");
+        }else if(R.id.natnw_btn_click3_2 == id){
+            smartHandNoteView.setTextBoxContain(textBoxContain);
+        }else if(R.id.natnw_btn_click3_3 == id){
+            smartHandNoteView.clearTextBoxContain();
+        }else if(R.id.natnw_btn_click3_4 == id){
+
         }else if(R.id.natnw_btn_click4 == id){
 
         }

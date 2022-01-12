@@ -67,6 +67,37 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/natnw_btn_click3_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文本框保存"
+            />
+        <Button
+            android:id="@+id/natnw_btn_click3_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文本框反显"
+            />
+        <Button
+            android:id="@+id/natnw_btn_click3_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="null"
+            />
+        <Button
+            android:id="@+id/natnw_btn_click3_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="null"
+            />
+    </LinearLayout>
+
     <com.gracefulwind.learnarms.newwrite.widget.SmartHandNoteView
         android:id="@+id/natnw_shv_hand_view"
         android:layout_width="match_parent"

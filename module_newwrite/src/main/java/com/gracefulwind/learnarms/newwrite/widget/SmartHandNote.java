@@ -3,6 +3,10 @@ package com.gracefulwind.learnarms.newwrite.widget;
 import android.graphics.Rect;
 import android.view.View;
 
+import com.gracefulwind.learnarms.newwrite.widget.textbox.TextBoxBean;
+
+import java.util.List;
+
 /**
  * @ClassName: SmartHandWrite
  * @Author: Gracefulwind
@@ -39,4 +43,5 @@ public interface SmartHandNote {
      * */
     void setChanged(boolean changed);
     boolean isChanged();
+
 }

@@ -292,7 +292,7 @@ public class TestXunfeiActivity extends BaseActivity {
 //        String taskId = XunfeiUtil.prepare(new File("lfasr.wav"));
 
         String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
-        String taskId = XunfeiUtil.prepare(new File(pcmFileAbsolutePath));
+        XunfeiUtil.prepare(new File(pcmFileAbsolutePath));
         //分片上传
         int len = 0;
         byte[] slice = new byte[XunfeiUtil.SLICE_SICE];

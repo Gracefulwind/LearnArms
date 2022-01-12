@@ -180,6 +180,20 @@ public class TextBoxContainer extends FrameLayout implements Smartable {
         return mTextBoxManager.getTextBoxContain();
     }
 
+    /**
+     * 反显textBox的内容
+     */
+    public void setTextBoxContain(List<TextBoxBean> textBoxContain) {
+        mTextBoxManager.setTextBoxContain(textBoxContain);
+    }
+
+    /**
+     * 清空textBox的内容
+     */
+    public void clearTextBoxContain() {
+        mTextBoxManager.clearTextBoxContain();
+    }
+
     @Override
     public void clearFocus(){
         super.clearFocus();

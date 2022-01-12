@@ -328,12 +328,30 @@ public class SmartHandNoteView extends ScrollView implements SmartHandNote {
         return mDoodleView.getBitmap();
     }
 
+//==================================================================================================
+
     /**
      * 获取textBox的内容
      */
     public List<TextBoxBean> getTextBoxContain() {
         return mTextBoxContainer.getTextBoxContain();
     }
+
+    /**
+     * 反显textBox的内容
+     */
+    public void setTextBoxContain(List<TextBoxBean> textBoxContain) {
+        mTextBoxContainer.setTextBoxContain(textBoxContain);
+    }
+
+    /**
+     * 清空textBox的内容
+     */
+    public void clearTextBoxContain() {
+        mTextBoxContainer.clearTextBoxContain();
+    }
+
+//==================================================================================================
 
     /**
      * 获取带文字和涂鸦的图
