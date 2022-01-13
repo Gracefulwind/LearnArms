@@ -1,22 +1,16 @@
 package com.gracefulwind.learnarms.commonsdk.utils.xunfei;
 
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Handler;
-import android.text.Html;
 
 import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.gracefulwind.learnarms.commonsdk.bean.ApiResultDto;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.EncryptUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.GsonUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.XunfeiAsrPrepareEntity;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrBaseEntity;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -36,25 +30,21 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.WebSocket;
-import okio.BufferedSink;
 
 /**
  * @ClassName: XunfeiUtil
@@ -153,78 +143,132 @@ public class XunfeiUtil {
     /**
      * 文件分片大小,可根据实际情况调整
      */
-    public static final int SLICE_SICE = 10 * 1024 *1024;// 10M
-    public static void prepare(File audio) throws SignatureException, IOException {
-        FormBody.Builder prepareParam = getBaseAuthParam(null);
-
-//        prepareParam.put("app_id", Constants.XunFei.APPID);
-
+    public static final int SLICE_SICE = 10 * 1024 * 1024;// 10M
+    public static String prepare(File audio) throws SignatureException, IOException {
+        MultipartBody.Builder params = getBaseAuthParam(null);
+        params.addFormDataPart("has_seperate", "true");
         long fileLength = audio.length();
-        prepareParam.add("file_len", fileLength + "");
-        prepareParam.add("file_name", audio.getName());
-        prepareParam.add("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
-        LogUtil.e(TAG, "params = " + prepareParam.toString());
+        params.addFormDataPart("file_len", fileLength + "");
+        params.addFormDataPart("file_name", audio.getName());
+        params.addFormDataPart("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
+
+//        FormBody.Builder params = getBaseAuthFormParam(null);
+//        params.add("has_seperate", "true");
+//        long fileLength = audio.length();
+//        params.add("file_len", fileLength + "");
+//        params.add("file_name", audio.getName());
+//        params.add("slice_num", (fileLength / SLICE_SICE) + (fileLength % SLICE_SICE == 0 ? 0 : 1) + "");
+
         /********************TODO 可配置参数********************/
         // 转写类型,已取消
-//        prepareParam.put("lfasr_type", "0");
+//        params.put("lfasr_type", "0");
         // 开启分词
-//        prepareParam.put("has_participle", "true");
+//        params.put("has_participle", "true");
         // 说话人分离
-//        prepareParam.put("has_seperate", "true");
+//        params.put("has_seperate", "true");
         // 设置多候选词个数
-//        prepareParam.put("max_alternatives", "2");
+//        params.put("max_alternatives", "2");
         /****************************************************/
         String url = Constants.XunFei.ASR.BaseUrl + Constants.XunFei.ASR.PREPARE;
         //构造request对象
         Request request = new Request.Builder()
                 .url(url)
-                .post(prepareParam.build())
+                .post(params.build())
                 .build();
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
-        client.newCall(request).enqueue(new Callback() {
+        Response response = client.newCall(request).execute();
+        String message = response.body().string();
+        AsrBaseEntity responseEntity = new Gson().fromJson(message, AsrBaseEntity.class);
+        if (response == null) {
+            throw new RuntimeException("预处理接口请求失败！");
+        }
+        String taskId = responseEntity.data;
+        if(0 == responseEntity.ok && taskId != null){
+            //消息队列，发送taskId
+//                    uploadAudioFile(audio, taskId);
+            LogUtil.e(TAG, "taskId = " + taskId);
+            return taskId;
+        }else{
+            //发送失败，根据错误原因判断
+            //最好别自动重试，免得死循环
+            throw new RuntimeException("预处理失败！" + response);
+        }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String message = response.body().string();
-                XunfeiAsrPrepareEntity responseEntity = new Gson().fromJson(message, XunfeiAsrPrepareEntity.class);
-                if(0 == responseEntity.ok){
-                    //消息队列，发送taskId
-                    String taskId = responseEntity.data;
-                    uploadAudioFile(audio, taskId);
-                }else{
-                    //发送失败，根据错误原因判断
-                    //最好别自动重试，免得死循环
-                }
-//                System.out.println("=================");
-//                System.out.println("response : " + message);
-//                System.out.println("=================");
-//                String taskId = null;
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                LogUtil.e(TAG, "error : " + e.getMessage());
-            }
-
-        });
+//        client.newCall(request).enqueue(new Callback() {
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String message = response.body().string();
+//                XunfeiAsrPrepareEntity responseEntity = new Gson().fromJson(message, XunfeiAsrPrepareEntity.class);
+//                if(0 == responseEntity.ok){
+//                    //消息队列，发送taskId
+//                    String taskId = responseEntity.data;
+////                    uploadAudioFile(audio, taskId);
+//                }else{
+//                    //发送失败，根据错误原因判断
+//                    //最好别自动重试，免得死循环
+//                }
+////                System.out.println("=================");
+////                System.out.println("response : " + message);
+////                System.out.println("=================");
+////                String taskId = null;
+//            }
+//
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                e.printStackTrace();
+//                LogUtil.e(TAG, "error : " + e.getMessage());
+//            }
+//
+//        });
     }
 
     private static void uploadAudioFile(File audio, String taskId) {
-        FileInputStream fis = null;
-        try{
-            fis = new FileInputStream(audio);
-            // 分片上传文件
-            int len = 0;
-            byte[] slice = new byte[SLICE_SICE];
-            SliceIdGenerator generator = new SliceIdGenerator();
-            uploadSliceRecursive(taskId, fis, len, slice, generator);
-        }catch (IOException e){
-            FileUtil.closeIO(fis);
-        } catch (SignatureException e) {
-            e.printStackTrace();
-        }
+        //=====================================
+//        直接创建个子线程做得了。。。
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileInputStream fis = new FileInputStream(audio);
+                    // 分片上传文件
+                    int len = 0;
+                    byte[] slice = new byte[SLICE_SICE];
+                    SliceIdGenerator generator = new SliceIdGenerator();
+                    while ((len =fis.read(slice)) > 0) {
+                        // 上传分片
+                        if (fis.available() == 0) {
+                            slice = Arrays.copyOfRange(slice, 0, len);
+                        }
+
+                        uploadSlice(taskId, generator.getNextSliceId(), slice);
+                    }
+                    } catch (SignatureException e) {
+                        e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // 合并文件
+//                merge(taskId);
+            }
+        }).start();
+
+//        FileInputStream fis = null;
+//        try{
+//            fis = new FileInputStream(audio);
+//            // 分片上传文件
+//            int len = 0;
+//            byte[] slice = new byte[SLICE_SICE];
+//            SliceIdGenerator generator = new SliceIdGenerator();
+//            uploadSliceRecursive(taskId, fis, len, slice, generator);
+//        }catch (IOException e){
+//            FileUtil.closeIO(fis);
+//        } catch (SignatureException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -238,21 +282,111 @@ public class XunfeiUtil {
         }
     }
 
-    private static void uploadSlice(String taskId, String nextSliceId, byte[] slice) throws SignatureException {
-        getBaseAuthParam(taskId);
+    public static AsrBaseEntity uploadSlice(String taskId, String nextSliceId, byte[] slice) throws SignatureException, IOException {
+        MultipartBody.Builder params = getBaseAuthParam(taskId);
+
+//        MultipartBody.Builder params = new MultipartBody.Builder();
+//        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
+//        params.addFormDataPart("app_id", Constants.XunFei.APPID);
+//        params.addFormDataPart("ts", ts);
+//
+//        params.addFormDataPart("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
+//        if (taskId != null) {
+//            params.addFormDataPart("task_id", taskId);
+//        }
+
+
+        params.setType(MultipartBody.FORM);
+        params.addFormDataPart("slice_id", nextSliceId);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), slice);
+        params.addFormDataPart("content", nextSliceId, requestBody);
+
+//        RequestBody requestBody = new RequestBody() {
+//
+//            @Override
+//            public long contentLength() throws IOException {
+//                return slice.length;
+//            }
+//
+//            @Override
+//            public MediaType contentType() {
+//                return MediaType.parse("application/octet-stream");
+//            }
+//
+//            @Override
+//            public void writeTo(BufferedSink sink) throws IOException {
+//                //写byte数组
+//                Source source;
+//                try {
+//                    if (slice != null){
+//                        source = Okio.source(new ByteArrayInputStream(slice));
+//                        Buffer buf = new Buffer();
+//                        long remaining = contentLength();
+//                        for (long readCount; (readCount = source.read(buf, 1024 * 4)) != -1; ) {
+//                            sink.write(buf, readCount);
+//                            //callback  进度通知
+//                        }
+//                    } else {
+////                        source = Okio.source(file);
+////                        Buffer buf = new Buffer();
+////                        long remaining = contentLength();
+////                        long current = 0;
+////                        for (long readCount; (readCount = source.read(buf, 2048)) != -1; ) {
+////                            sink.write(buf, readCount);
+////                            current += readCount;
+////                            //callback 进度通知
+////                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        params.addFormDataPart("content", nextSliceId, requestBody);
+
+        String url = Constants.XunFei.ASR.BaseUrl + Constants.XunFei.ASR.UPLOAD;
+        //构造request对象
+        Request request = new Request.Builder()
+                .url(url)
+                .post(params.build())
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+        Response response = client.newCall(request).execute();
+        String msg = response.body().string();
+        AsrBaseEntity asrResponseBean = new Gson().fromJson(msg, AsrBaseEntity.class);
+        LogUtil.e(TAG, "response : " + msg);
+        System.out.println("==========");
+        System.out.println("==========");
+        return asrResponseBean;
     }
 
-    public static FormBody.Builder  getBaseAuthParam(String taskId) throws SignatureException {
-        FormBody.Builder builder = new FormBody.Builder();
-        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
-        builder.add("app_id", Constants.XunFei.APPID);
-        builder.add("ts", ts);
 
-        builder.add("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
+    public static MultipartBody.Builder  getBaseAuthParam(String taskId) throws SignatureException {
+        MultipartBody.Builder params = new MultipartBody.Builder();
+        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
+        params.addFormDataPart("app_id", Constants.XunFei.APPID);
+        params.addFormDataPart("ts", ts);
+
+        params.addFormDataPart("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
         if (taskId != null) {
-            builder.add("task_id", taskId);
+            params.addFormDataPart("task_id", taskId);
         }
-        return builder;
+        return params;
+    }
+
+    public static FormBody.Builder  getBaseAuthFormParam(String taskId) throws SignatureException {
+        FormBody.Builder params = new FormBody.Builder();
+        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
+        params.add("app_id", Constants.XunFei.APPID);
+        params.add("ts", ts);
+
+        params.add("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(Constants.XunFei.APPID + ts), Constants.XunFei.ASR.SecretKey));
+        if (taskId != null) {
+            params.add("task_id", taskId);
+        }
+        return params;
     }
 
     public static final int StatusFirstFrame = 0;

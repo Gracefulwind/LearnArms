@@ -17,18 +17,24 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.SliceIdGenerator;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.XunfeiUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.audio.AudioRecorder;
-import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.FlowSpeakEntity;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrBaseEntity;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.FlowSpeakEntity1;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
+import com.iflytek.msp.lfasr.LfasrClient;
+import com.iflytek.msp.lfasr.exception.LfasrException;
+import com.iflytek.msp.lfasr.model.Message;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 
@@ -47,6 +53,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -150,13 +157,15 @@ public class TestXunfeiActivity extends BaseActivity {
             System.out.println("=========");
         }else if(R.id.natx_btn_test_click1 == id){
             //======测试角色分离
-            try {
-                connectLongFormASR();
-            } catch (SignatureException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            connectLongFormASR();
+//            connectLongFormASRSdk();
+//            try {
+//                connectLongFormASR();
+//            } catch (SignatureException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }else if(R.id.natx_btn_test_pcm == id){
             //======测试pcm
             testPcm();
@@ -283,19 +292,78 @@ public class TestXunfeiActivity extends BaseActivity {
         isPcmRecording = false;
     }
 
+    private void connectLongFormASRSdk(){
+        //1、创建客户端实例
+        LfasrClient lfasrClient = LfasrClient.getInstance(Constants.XunFei.APPID, Constants.XunFei.ASR.SecretKey);
+        String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
+        //2、上传
+        Message task = lfasrClient.upload(pcmFileAbsolutePath);
+        String taskId = task.getData();
+        System.out.println("转写任务 taskId：" + taskId);
 
-    private void connectLongFormASR() throws SignatureException, IOException {
+        //3、查看转写进度
+        int status = 0;
+        while (status != 9) {
+            Message message = lfasrClient.getProgress(taskId);
+            JSONObject object = JSON.parseObject(message.getData());
+            if (object ==null) throw new LfasrException(message.toString());
+            status = object.getInteger("status");
+            System.out.println(message.getData());
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        //4、获取结果
+        Message result = lfasrClient.getResult(taskId);
+        System.out.println("转写结果: \n" + result.getData());
+    }
+
+    private void connectLongFormASR(){
 //        AssetManager assets = getAssets();
 //        InputStream open = assets.open("lfasr.wav");
 //        int available = open.available();
 //        // 预处理
 //        String taskId = XunfeiUtil.prepare(new File("lfasr.wav"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
+                try {
+                    File audio = new File(pcmFileAbsolutePath);
+                    String taskId = XunfeiUtil.prepare(audio);
+//                    String taskId = "5d349aac8f4447a2931d0e0366b98740";
+                    //分片上传
+                    FileInputStream fis = new FileInputStream(audio);
+                    int len = 0;
+                    byte[] slice = new byte[XunfeiUtil.SLICE_SICE];
+                    SliceIdGenerator generator = new SliceIdGenerator();
+                    while ((len =fis.read(slice)) > 0) {
+                        // 上传分片
+                        if (fis.available() == 0) {
+                            slice = Arrays.copyOfRange(slice, 0, len);
+                        }
+                        int tryTime = 1;
+                        boolean isOk = false;
+                        while(tryTime <= 3 && !isOk){
+                            AsrBaseEntity result = XunfeiUtil.uploadSlice(taskId, generator.getNextSliceId(), slice);
+                            //最多尝试3次
+                            tryTime++;
+                            isOk = result.ok == 0;
+                        }
+                    }
+//                    // 合并文件
+//                    merge(taskId);
+                } catch (SignatureException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
-        String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
-        XunfeiUtil.prepare(new File(pcmFileAbsolutePath));
-        //分片上传
-        int len = 0;
-        byte[] slice = new byte[XunfeiUtil.SLICE_SICE];
+
     }
 
     int writeFlag = 6;
