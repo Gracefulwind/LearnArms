@@ -21,14 +21,19 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.StringUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.TryTimesUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.SliceIdGenerator;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.XunfeiUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.audio.AudioRecorder;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrBaseEntity;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrProgressData;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrResultData;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.FlowSpeakEntity1;
 import com.gracefulwind.learnarms.newwrite.R;
 import com.gracefulwind.learnarms.newwrite.R2;
@@ -329,11 +334,16 @@ public class TestXunfeiActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
+                String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath(pcmName);
+//                String pcmFileAbsolutePath = FileUtil.getWavFileAbsolutePath("20211229_153909");
                 try {
                     File audio = new File(pcmFileAbsolutePath);
+                    //--------------
+                    //预处理
+//                    String taskId = "dd11cd40a19c44768a076d2260f007b1";
                     String taskId = XunfeiUtil.prepare(audio);
-//                    String taskId = "5d349aac8f4447a2931d0e0366b98740";
+                    LogUtil.e(TAG, "taskId = " + taskId);
+                    //--------------
                     //分片上传
                     FileInputStream fis = new FileInputStream(audio);
                     int len = 0;
@@ -344,17 +354,76 @@ public class TestXunfeiActivity extends BaseActivity {
                         if (fis.available() == 0) {
                             slice = Arrays.copyOfRange(slice, 0, len);
                         }
-                        int tryTime = 1;
-                        boolean isOk = false;
-                        while(tryTime <= 3 && !isOk){
-                            AsrBaseEntity result = XunfeiUtil.uploadSlice(taskId, generator.getNextSliceId(), slice);
-                            //最多尝试3次
-                            tryTime++;
-                            isOk = result.ok == 0;
+                        byte[] finalSlice = slice;
+                        TryTimesUtil.tryByTimes(new TryTimesUtil.Runnable() {
+                            @Override
+                            public boolean run() {
+                                AsrBaseEntity result = null;
+                                try {
+                                    result = XunfeiUtil.uploadSlice(taskId, generator.getNextSliceId(), finalSlice);
+                                } catch (SignatureException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return result == null ? false : result.ok == 0;
+                            }
+                        });
+                    }
+                    //--------------
+                    // 合并文件
+                    TryTimesUtil.tryByTimes(new TryTimesUtil.Runnable() {
+                        @Override
+                        public boolean run() {
+                            AsrBaseEntity result = null;
+                            try {
+                                result = XunfeiUtil.merge(taskId);
+                            } catch (SignatureException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return result == null ? false : result.ok == 0;
+                        }
+                    });
+                    //--------------
+                    // 轮询获取任务结果
+                    boolean recycleFlag = false;
+                    //要不要设置重试次数？
+                    while(!recycleFlag){
+                        try{
+                            AsrBaseEntity result = XunfeiUtil.getProgress(taskId);
+                            if(null != result && 0 == result.ok && !StringUtil.isEmpty(result.data)){
+                                AsrProgressData data = new Gson().fromJson(result.data, AsrProgressData.class);
+                                if(9 == data.getStatus()){
+                                    LogUtil.e(TAG, "语音转写已出");
+                                    recycleFlag = true;
+                                    break;
+                                }else {
+                                    LogUtil.e(TAG, "语音转写结果未出 : " + data.getDesc());
+                                }
+                            }else {
+                                LogUtil.e(TAG, "语音转写结果未出 : 接口返回异常");
+                            }
+                            Thread.sleep(60 * 1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
-//                    // 合并文件
-//                    merge(taskId);
+                    //--------------
+                    //语音转写结果获取:
+                    if(!recycleFlag){
+                        //语音转写未完成，前面是while死循环，逻辑不动不会到这里
+                        return;
+                    }
+                    AsrBaseEntity result = XunfeiUtil.getResult(taskId);
+                    if(null != result && 0 == result.ok && !StringUtil.isEmpty(result.data)){
+                        List<AsrResultData> dataList = new Gson().fromJson(result.data
+                                , new TypeToken<List<AsrResultData>>(){}.getType());
+                        LogUtil.e(TAG, "语音转写结果 = " + dataList.toString());
+                    }else {
+                        LogUtil.e(TAG, "接口返回异常");
+                    }
                 } catch (SignatureException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

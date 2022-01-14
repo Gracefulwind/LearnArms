@@ -12,7 +12,7 @@ package com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity;
  * @Email: 429344332@qq.com
  */
 public class AsrBaseEntity {
-    public int ok;
+    public int ok = -1;
     public String data;
     public int err_no;
     public String failed;

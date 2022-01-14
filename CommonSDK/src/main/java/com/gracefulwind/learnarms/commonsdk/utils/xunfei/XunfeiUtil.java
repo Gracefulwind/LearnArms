@@ -7,10 +7,12 @@ import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.gracefulwind.learnarms.commonsdk.core.Constants;
 import com.gracefulwind.learnarms.commonsdk.utils.EncryptUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrBaseEntity;
+import com.gracefulwind.learnarms.commonsdk.utils.xunfei.entity.AsrProgressData;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -183,7 +185,8 @@ public class XunfeiUtil {
         if (response == null) {
             throw new RuntimeException("预处理接口请求失败！");
         }
-        String taskId = responseEntity.data;
+        System.out.println("============");
+        String taskId = (String) responseEntity.data;
         if(0 == responseEntity.ok && taskId != null){
             //消息队列，发送taskId
 //                    uploadAudioFile(audio, taskId);
@@ -362,6 +365,66 @@ public class XunfeiUtil {
         return asrResponseBean;
     }
 
+    /**
+     * 文件合并
+     *
+     * @param taskId        任务id
+     * @throws SignatureException
+     * @return
+     */
+    public static AsrBaseEntity merge(String taskId) throws SignatureException, IOException {
+        String url = Constants.XunFei.ASR.BaseUrl + Constants.XunFei.ASR.MERGE;
+        //构造request对象
+        Request request = new Request.Builder()
+                .url(url)
+                .post(getBaseAuthParam(taskId).build())
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseStr = response.body().string();
+        AsrBaseEntity result = new Gson().fromJson(responseStr, AsrBaseEntity.class);
+        if (result == null) {
+            throw new RuntimeException("文件合并接口请求失败！");
+        }
+        return result;
+    }
+
+    public static AsrBaseEntity getProgress(String taskId) throws SignatureException, IOException {
+        String url = Constants.XunFei.ASR.BaseUrl + Constants.XunFei.ASR.GET_PROGRESS;
+        //构造request对象
+        Request request = new Request.Builder()
+                .url(url)
+                .post(getBaseAuthParam(taskId).build())
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseStr = response.body().string();
+        AsrBaseEntity result = new Gson().fromJson(responseStr, AsrBaseEntity.class);
+        if (result == null) {
+            throw new RuntimeException("文件合并接口请求失败！");
+        }
+        return result;
+    }
+
+    public static AsrBaseEntity getResult(String taskId) throws SignatureException, IOException {
+        String url = Constants.XunFei.ASR.BaseUrl + Constants.XunFei.ASR.GET_RESULT;
+        //构造request对象
+        Request request = new Request.Builder()
+                .url(url)
+                .post(getBaseAuthParam(taskId).build())
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseStr = response.body().string();
+        AsrBaseEntity result = new Gson().fromJson(responseStr, AsrBaseEntity.class);
+        if (result == null) {
+            throw new RuntimeException("文件合并接口请求失败！");
+        }
+        return result;
+    }
 
     public static MultipartBody.Builder  getBaseAuthParam(String taskId) throws SignatureException {
         MultipartBody.Builder params = new MultipartBody.Builder();
@@ -480,5 +543,6 @@ public class XunfeiUtil {
             }
         }).start();
     }
+
 
 }

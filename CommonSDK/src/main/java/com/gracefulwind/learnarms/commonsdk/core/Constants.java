@@ -62,8 +62,8 @@ public class Constants {
             String PREPARE = "/prepare";
             String UPLOAD = "/upload";
             String MERGE = "/merge";
-            String GET_RESULT = "/getResult";
             String GET_PROGRESS = "/getProgress";
+            String GET_RESULT = "/getResult";
         }
     }
 }
