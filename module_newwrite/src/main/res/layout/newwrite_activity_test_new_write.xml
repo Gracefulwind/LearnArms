@@ -88,13 +88,13 @@
             android:id="@+id/natnw_btn_click3_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="null"
+            android:text="清空文本框"
             />
         <Button
             android:id="@+id/natnw_btn_click3_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="null"
+            android:text="涂鸦画圈"
             />
     </LinearLayout>
 

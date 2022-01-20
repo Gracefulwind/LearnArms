@@ -64,6 +64,7 @@ public class FileUtil {
     public static File getExternalFolder(Context context, String folderName){
         File folderDir = null;
         folderDir = context.getExternalFilesDir(folderName);
+//        folderDir = context.getExternalFilesDirs(folderName);
         return folderDir;
     }
 

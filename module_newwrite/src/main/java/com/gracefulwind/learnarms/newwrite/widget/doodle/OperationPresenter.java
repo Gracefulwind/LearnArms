@@ -170,7 +170,9 @@ public class OperationPresenter {
         mPrevY = y;
         createPathAndPaint();
         //将 Path 起始坐标设为手指按下屏幕的坐标
-        mPath.moveTo(x, y);
+
+//        mPath.moveTo(x, y);
+        mOperation.moveTo(x, y);
         doodleView.refreshUi();
     }
 
@@ -192,7 +194,9 @@ public class OperationPresenter {
 //        }
 ////        float mpveToX = (x + mPrevX) / 2;
 ////        float mpveToY = (y + mPrevY) / 2;
-        mPath.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2, (y + mPrevY) / 2);
+
+//        mPath.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2f, (y + mPrevY) / 2f);
+        mOperation.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2f, (y + mPrevY) / 2f);
 //        mPath.lineTo(x, y);
         mPrevX = x;
         mPrevY = y;
@@ -208,7 +212,9 @@ public class OperationPresenter {
         if(mPrevY > height){
             mPrevY = height;
         }
-        mPath.moveTo(mPrevX, mPrevY);
+
+//        mPath.moveTo(mPrevX, mPrevY);
+        mOperation.moveTo(mPrevX, mPrevY);
         mPrevX = x;
         mPrevY = y;
     }
@@ -219,9 +225,11 @@ public class OperationPresenter {
             mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
             mPaint.setColor(mBackgroundColor);
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+//            mPaint.setStyle(Paint.Style.FILL);
             mPaint.setStrokeJoin(Paint.Join.ROUND);
         }
         clearRedoList();
+//        mPath.computeBounds( , false);
         doodleView.refreshUi();
     }
 
