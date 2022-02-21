@@ -156,6 +156,7 @@ public interface RouterHub {
         String TEST_GESTURE_ACTIVITY = BASE + "/TestGestureActivity";
         String HAND_NOTE_ACTIVITY = BASE + "/HandNoteActivity";
         String TEST_TEXT_ACTIVITY = BASE + "/TestTextActivity";
+        String READER_MAIN_ACTIVITY = BASE + "/ReaderMainActivity";
 
         interface Server{
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";
