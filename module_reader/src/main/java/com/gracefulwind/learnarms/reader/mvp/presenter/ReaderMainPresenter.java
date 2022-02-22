@@ -48,4 +48,10 @@ public class ReaderMainPresenter extends BasePresenter<ReaderMainContract.Model,
         this.mImageLoader = null;
         this.mApplication = null;
     }
+
+    public void initData() {
+        System.out.println("=========");
+        System.out.println("=========");
+        System.out.println("=========");
+    }
 }

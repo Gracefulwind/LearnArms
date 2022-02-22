@@ -20,6 +20,7 @@ ext {
             espressoSdkVersion      : "3.0.1",
             canarySdkVersion        : "1.6.3",
             constraintlayout        : "1.1.3"
+            //flycoTabLayout          : "3.0.0" //,io.github.h07000223:flycoTabLayout
     ]
 
     dependencies = [
@@ -59,7 +60,8 @@ ext {
             "autosize"                 : "me.jessyan:autosize:1.1.2",
 
 //=============================================================================================================================================
-            "FlycoTabLayout_Lib"       :'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar',
+//            "FlycoTabLayout_Lib"       :'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar',
+            "FlycoTabLayout_Lib"       :'io.github.h07000223:flycoTabLayout:3.0.0',
 //=============================================================================================================================================
 
             //todo:wd 废弃了，rx1可以全删了

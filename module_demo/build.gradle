@@ -10,7 +10,8 @@ dependencies {
     api project(":CommonRes")
     api project(":CommonService")
 
-    implementation rootProject.ext.dependencies["FlycoTabLayout_Lib"]
+//    implementation rootProject.ext.dependencies["FlycoTabLayout_Lib"]
+
 //    implementation rootProject.ext.dependencies["support-v4"]
 //    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 //    implementation 'com.google.code.gson:gson:2.6.2'
