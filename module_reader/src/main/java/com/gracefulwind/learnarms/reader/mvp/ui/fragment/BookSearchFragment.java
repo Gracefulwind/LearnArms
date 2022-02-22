@@ -10,17 +10,18 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gracefulwind.learnarms.commonsdk.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.reader.R;
-import com.gracefulwind.learnarms.reader.mvp.contract.BookShelfContract;
-import com.gracefulwind.learnarms.reader.mvp.contract.MainContract;
-import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerBookShelfComponent;
-import com.gracefulwind.learnarms.reader.mvp.presenter.BookShelfPresenter;
-import com.gracefulwind.learnarms.reader.mvp.presenter.MainPresenter;
+import com.gracefulwind.learnarms.reader.mvp.contract.BookMallContract;
+import com.gracefulwind.learnarms.reader.mvp.contract.BookSearchContract;
+import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerBookMallComponent;
+import com.gracefulwind.learnarms.reader.mvp.di.component.DaggerBookSearchComponent;
+import com.gracefulwind.learnarms.reader.mvp.presenter.BookMallPresenter;
+import com.gracefulwind.learnarms.reader.mvp.presenter.BookSearchPresenter;
 import com.jess.arms.di.component.AppComponent;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @ClassName: BookShelfFragment
+ * @ClassName: BookSearchFragment
  * @Author: Gracefulwind
  * @CreateDate: 2022/2/22
  * @Description: ---------------------------
@@ -30,12 +31,12 @@ import org.jetbrains.annotations.NotNull;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-@Route(path = RouterHub.Reader.BOOK_SHELF_FRAGMENT)
-public class BookShelfFragment extends BaseLazyLoadFragment<BookShelfPresenter> implements BookShelfContract.View{
+@Route(path = RouterHub.Reader.BOOK_SEARCH_FRAGMENT)
+public class BookSearchFragment extends BaseLazyLoadFragment<BookSearchPresenter> implements BookSearchContract.View{
 
     @Override
     public void setupFragmentComponent(@NonNull @NotNull AppComponent appComponent) {
-        DaggerBookShelfComponent //如找不到该类,请编译一下项目
+        DaggerBookSearchComponent //如找不到该类,请编译一下项目
                 .builder()
                 .view(this)
                 .appComponent(appComponent)
@@ -45,7 +46,7 @@ public class BookShelfFragment extends BaseLazyLoadFragment<BookShelfPresenter> 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.reader_fragment_book_shelf;
+        return R.layout.reader_fragment_book_search;
     }
 
     @Override
@@ -59,6 +60,4 @@ public class BookShelfFragment extends BaseLazyLoadFragment<BookShelfPresenter> 
         TextView view = mRootView.findViewById(R.id.test);
         view.setText(view.getText() + "\r\n" + this.toString());
     }
-
-
 }
