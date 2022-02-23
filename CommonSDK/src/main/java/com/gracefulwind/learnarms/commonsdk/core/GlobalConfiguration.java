@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.commonsdk.BuildConfig;
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.TypefaceUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.jess.arms.base.delegate.AppLifecycles;
@@ -56,9 +57,11 @@ import timber.log.Timber;
 
 //todo: 核心config，在application中的初始化在这里完成。
 public class GlobalConfiguration implements ConfigModule {
+    public static final String TAG = "GlobalConfiguration";
 
     @Override
     public void applyOptions(Context context, GlobalConfigModule.Builder builder) {
+//        LogUtil.e(TAG,"core applyOptions");
         if (!BuildConfig.LOG_DEBUG) //Release 时,让框架不再打印 Http 请求和响应的信息
             builder.printHttpLogLevel(RequestInterceptor.Level.NONE);
         builder.baseurl(Api.APP_DOMAIN)
@@ -88,6 +91,7 @@ public class GlobalConfiguration implements ConfigModule {
 
     @Override
     public void injectAppLifecycle(Context context, List<AppLifecycles> lifecycles) {
+//        LogUtil.e(TAG,"core injectAppLifecycle");
         // AppDelegate.Lifecycle 的所有方法都会在基类Application对应的生命周期中被调用,所以在对应的方法中可以扩展一些自己需要的逻辑
         LogUtils.debugInfo("===context==" + context.toString());
         lifecycles.add(new AppLifecycles() {
@@ -127,11 +131,13 @@ public class GlobalConfiguration implements ConfigModule {
 
     @Override
     public void injectActivityLifecycle(Context context, List<Application.ActivityLifecycleCallbacks> lifecycles) {
+//        LogUtil.e(TAG,"core injectActivityLifecycle");
         lifecycles.add(new ActivityLifecycleCallbacksImpl());
     }
 
     @Override
     public void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles) {
+//        LogUtil.e(TAG,"core injectFragmentLifecycle");
         lifecycles.add(new FragmentLifecycleCallbacksImpl());
     }
 }

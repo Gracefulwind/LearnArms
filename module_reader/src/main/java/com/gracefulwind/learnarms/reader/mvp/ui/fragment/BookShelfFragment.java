@@ -17,6 +17,7 @@ import com.gracefulwind.learnarms.reader.mvp.presenter.BookShelfPresenter;
 import com.gracefulwind.learnarms.reader.mvp.presenter.MainPresenter;
 import com.jess.arms.di.component.AppComponent;
 
+import org.greenrobot.greendao.annotation.Entity;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -58,6 +59,7 @@ public class BookShelfFragment extends BaseLazyLoadFragment<BookShelfPresenter> 
         //loadData
         TextView view = mRootView.findViewById(R.id.test);
         view.setText(view.getText() + "\r\n" + this.toString());
+
     }
 
 
