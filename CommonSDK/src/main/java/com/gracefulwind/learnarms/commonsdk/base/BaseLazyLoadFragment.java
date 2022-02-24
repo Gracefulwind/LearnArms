@@ -164,6 +164,7 @@ public abstract class BaseLazyLoadFragment<P extends IPresenter> extends BaseFra
     }
 
     public void tryLoadData() {
+        //只加载一次
         if (isViewCreated && getUserVisibleHint() && isParentVisible() && !isDataLoaded) {
             lazyLoadData();
             isDataLoaded = true;
