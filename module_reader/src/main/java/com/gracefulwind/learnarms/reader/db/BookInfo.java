@@ -32,16 +32,15 @@ public class BookInfo {
     String updateTime;
     String lastChapter;
     String coverUrl;
-    String last_chapter;
     long chapterNumber;
     String bookDesc;
     int state;
     int delete = 0;
-    @Generated(hash = 1970206906)
+    @Generated(hash = 944831075)
     public BookInfo(long id, @NotNull String uid, String name, String author,
             String kind, String origin, String updateTime, String lastChapter,
-            String coverUrl, String last_chapter, long chapterNumber,
-            String bookDesc, int state, int delete) {
+            String coverUrl, long chapterNumber, String bookDesc, int state,
+            int delete) {
         this.id = id;
         this.uid = uid;
         this.name = name;
@@ -51,7 +50,6 @@ public class BookInfo {
         this.updateTime = updateTime;
         this.lastChapter = lastChapter;
         this.coverUrl = coverUrl;
-        this.last_chapter = last_chapter;
         this.chapterNumber = chapterNumber;
         this.bookDesc = bookDesc;
         this.state = state;
@@ -113,12 +111,6 @@ public class BookInfo {
     }
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
-    }
-    public String getLast_chapter() {
-        return this.last_chapter;
-    }
-    public void setLast_chapter(String last_chapter) {
-        this.last_chapter = last_chapter;
     }
     public long getChapterNumber() {
         return this.chapterNumber;

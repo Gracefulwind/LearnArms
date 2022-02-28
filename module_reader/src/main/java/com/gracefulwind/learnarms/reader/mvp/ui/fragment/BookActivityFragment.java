@@ -15,6 +15,8 @@ import com.gracefulwind.learnarms.commonsdk.base.BaseLazyLoadFragment;
 import com.gracefulwind.learnarms.commonsdk.core.RouterHub;
 import com.gracefulwind.learnarms.reader.R;
 import com.gracefulwind.learnarms.reader.R2;
+import com.gracefulwind.learnarms.reader.app.AppLifecyclesImpl;
+import com.gracefulwind.learnarms.reader.greendao.BookInfoDao;
 import com.gracefulwind.learnarms.reader.greendao.DaoMaster;
 import com.gracefulwind.learnarms.reader.greendao.DaoSession;
 import com.gracefulwind.learnarms.reader.mvp.contract.BookActivityContract;
@@ -101,12 +103,13 @@ public class BookActivityFragment extends BaseLazyLoadFragment<BookActivityPrese
         if(R.id.rfba_btn_test == id){
             MySQLiteOpenHelper dbHelper = new MySQLiteOpenHelper(this.getContext());
             SQLiteDatabase db = dbHelper.getWritableDatabase();
+
 //            db.insert();
         }else if (R.id.rfba_btn_add == id){
-            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "novel.db");
-            SQLiteDatabase db = helper.getWritableDatabase();
-            DaoMaster daoMaster = new DaoMaster(db);
-            DaoSession daoSession = daoMaster.newSession();
+            DaoSession daoSession = AppLifecyclesImpl.getDaoSession();
+            BookInfoDao bookInfoDao = daoSession.getBookInfoDao();
+            
+//            bookInfoDao.readEntity()
 //            new AbstractDaoMaster()
         }else if (R.id.rfba_btn_test == id){
 

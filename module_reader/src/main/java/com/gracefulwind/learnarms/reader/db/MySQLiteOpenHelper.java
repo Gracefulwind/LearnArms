@@ -33,8 +33,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //数据库创建
-        String sql = "create table book_shell (_id integer primary key autoincrement, " +
-                "uid char(10) not null unique, name char(20), author char(20), kind char(20), origin text, update_time char(20)" +
+        String sql = "--- \r\n" +
+                "create table book_info (_id integer primary key autoincrement, " +
+                "id char(20) not null unique, name nchar(20), author nchar(20), kind char(20), origin text, update_time char(20)" +
                 ", last_chapter text)";
         db.execSQL(sql);
     }

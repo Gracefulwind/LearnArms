@@ -33,11 +33,10 @@ public class BookInfoDao extends AbstractDao<BookInfo, Long> {
         public final static Property UpdateTime = new Property(6, String.class, "updateTime", false, "UPDATE_TIME");
         public final static Property LastChapter = new Property(7, String.class, "lastChapter", false, "LAST_CHAPTER");
         public final static Property CoverUrl = new Property(8, String.class, "coverUrl", false, "COVER_URL");
-        public final static Property Last_chapter = new Property(9, String.class, "last_chapter", false, "LAST_CHAPTER");
-        public final static Property ChapterNumber = new Property(10, long.class, "chapterNumber", false, "CHAPTER_NUMBER");
-        public final static Property BookDesc = new Property(11, String.class, "bookDesc", false, "BOOK_DESC");
-        public final static Property State = new Property(12, int.class, "state", false, "STATE");
-        public final static Property Delete = new Property(13, int.class, "delete", false, "DELETE");
+        public final static Property ChapterNumber = new Property(9, long.class, "chapterNumber", false, "CHAPTER_NUMBER");
+        public final static Property BookDesc = new Property(10, String.class, "bookDesc", false, "BOOK_DESC");
+        public final static Property State = new Property(11, int.class, "state", false, "STATE");
+        public final static Property Delete = new Property(12, int.class, "delete", false, "DELETE");
     }
 
 
@@ -62,11 +61,10 @@ public class BookInfoDao extends AbstractDao<BookInfo, Long> {
                 "\"UPDATE_TIME\" TEXT," + // 6: updateTime
                 "\"LAST_CHAPTER\" TEXT," + // 7: lastChapter
                 "\"COVER_URL\" TEXT," + // 8: coverUrl
-                "\"LAST_CHAPTER\" TEXT," + // 9: last_chapter
-                "\"CHAPTER_NUMBER\" INTEGER NOT NULL ," + // 10: chapterNumber
-                "\"BOOK_DESC\" TEXT," + // 11: bookDesc
-                "\"STATE\" INTEGER NOT NULL ," + // 12: state
-                "\"DELETE\" INTEGER NOT NULL );"); // 13: delete
+                "\"CHAPTER_NUMBER\" INTEGER NOT NULL ," + // 9: chapterNumber
+                "\"BOOK_DESC\" TEXT," + // 10: bookDesc
+                "\"STATE\" INTEGER NOT NULL ," + // 11: state
+                "\"DELETE\" INTEGER NOT NULL );"); // 12: delete
     }
 
     /** Drops the underlying database table. */
@@ -115,19 +113,14 @@ public class BookInfoDao extends AbstractDao<BookInfo, Long> {
         if (coverUrl != null) {
             stmt.bindString(9, coverUrl);
         }
- 
-        String last_chapter = entity.getLast_chapter();
-        if (last_chapter != null) {
-            stmt.bindString(10, last_chapter);
-        }
-        stmt.bindLong(11, entity.getChapterNumber());
+        stmt.bindLong(10, entity.getChapterNumber());
  
         String bookDesc = entity.getBookDesc();
         if (bookDesc != null) {
-            stmt.bindString(12, bookDesc);
+            stmt.bindString(11, bookDesc);
         }
-        stmt.bindLong(13, entity.getState());
-        stmt.bindLong(14, entity.getDelete());
+        stmt.bindLong(12, entity.getState());
+        stmt.bindLong(13, entity.getDelete());
     }
 
     @Override
@@ -170,19 +163,14 @@ public class BookInfoDao extends AbstractDao<BookInfo, Long> {
         if (coverUrl != null) {
             stmt.bindString(9, coverUrl);
         }
- 
-        String last_chapter = entity.getLast_chapter();
-        if (last_chapter != null) {
-            stmt.bindString(10, last_chapter);
-        }
-        stmt.bindLong(11, entity.getChapterNumber());
+        stmt.bindLong(10, entity.getChapterNumber());
  
         String bookDesc = entity.getBookDesc();
         if (bookDesc != null) {
-            stmt.bindString(12, bookDesc);
+            stmt.bindString(11, bookDesc);
         }
-        stmt.bindLong(13, entity.getState());
-        stmt.bindLong(14, entity.getDelete());
+        stmt.bindLong(12, entity.getState());
+        stmt.bindLong(13, entity.getDelete());
     }
 
     @Override
@@ -202,11 +190,10 @@ public class BookInfoDao extends AbstractDao<BookInfo, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // updateTime
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // lastChapter
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // coverUrl
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // last_chapter
-            cursor.getLong(offset + 10), // chapterNumber
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // bookDesc
-            cursor.getInt(offset + 12), // state
-            cursor.getInt(offset + 13) // delete
+            cursor.getLong(offset + 9), // chapterNumber
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // bookDesc
+            cursor.getInt(offset + 11), // state
+            cursor.getInt(offset + 12) // delete
         );
         return entity;
     }
@@ -222,11 +209,10 @@ public class BookInfoDao extends AbstractDao<BookInfo, Long> {
         entity.setUpdateTime(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setLastChapter(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setCoverUrl(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setLast_chapter(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setChapterNumber(cursor.getLong(offset + 10));
-        entity.setBookDesc(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setState(cursor.getInt(offset + 12));
-        entity.setDelete(cursor.getInt(offset + 13));
+        entity.setChapterNumber(cursor.getLong(offset + 9));
+        entity.setBookDesc(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setState(cursor.getInt(offset + 11));
+        entity.setDelete(cursor.getInt(offset + 12));
      }
     
     @Override
