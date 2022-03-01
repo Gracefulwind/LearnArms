@@ -110,7 +110,8 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
         }
     }
 
-    private boolean testThread = false;
+//    private boolean testThread = false;
+    private boolean testThread = true;
     public void setUpdateDialog() {
         updateDialog = new UpdateLoadingDialog.Builder(this)
             .setIndicator(UpdateLoadingDialog.Builder.TYPE_FOX)
@@ -164,7 +165,7 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
                 })
             .build();
         updateDialog.show();
-        test1DialogStep3();
+        test1DialogStep1();
     }
 
     public void test1DialogStep1() {

@@ -118,7 +118,6 @@ public class UpdateLoadingDialog extends Dialog {
 
     private void initView(@NotNull Context context) {
         mContext = context;
-//        View inflate = UiUtil.inflate(R.layout.dialog_update_loading);
         setContentView(R.layout.dialog_update_loading);
         ButterKnife.bind(this, this);
         status = StatusEnum.STEP1;
@@ -129,7 +128,6 @@ public class UpdateLoadingDialog extends Dialog {
         mSuccessIndicator = successIndicator;
         mErrorIndicator = errorIndicator;
         loadGif(mContext, successIndicator, dulIvIndicator);
-//        Glide.with(mContext).asGif().load(successIndicator).into(dulIvIndicator);
     }
 
     public void setStep1Callback(OnStepSuccessCallback successCallback, OnStepErrorCallback errorCallback){
@@ -329,10 +327,15 @@ public class UpdateLoadingDialog extends Dialog {
         }
     }
 
+    public void setStep0(){
+        setUploadingProgress(0);
+    }
+
     public void startStep1() {
         step1Flag = false;
         loadGif(mContext, mSuccessIndicator, dulIvIndicator);
         loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep1);
+        setStep0();
     }
 
     public void setStep1Finished(){
@@ -350,6 +353,7 @@ public class UpdateLoadingDialog extends Dialog {
         //set step3
         loadBitmap(mContext, R.drawable.gif_uld_upload_ing, dulIvStep3);
         //setIndicator Animator
+        setStep1Finished();
         if(null == vaProgress1To2){
             vaProgress1To2 = ValueAnimator.ofInt(0, LOAD_FAKE_PROGRESS, LOAD_FAKE_PROGRESS_2);
             vaProgress1To2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -364,24 +368,12 @@ public class UpdateLoadingDialog extends Dialog {
             vaProgress1To2.cancel();
         }
         vaProgress1To2.start();
-//        //=============================
-//        if(null == oaProgress1To2){
-//            oaProgress1To2 = ObjectAnimator.ofInt(dulPbStep1To2, "progress"
-//                    , 0, LOAD_FAKE_PROGRESS, LOAD_FAKE_PROGRESS_2);
-//            oaProgress1To2.setDuration(PROGRESS_DURATION_TIME);
-//        }else {
-//            oaProgress1To2.cancel();
-//        }
-//        oaProgress1To2.start();
     }
 
     public void setStep2Finished() {
         if (null != vaProgress1To2) {
             vaProgress1To2.cancel();
         }
-//        if (null != oaProgress1To2) {
-//            oaProgress1To2.cancel();
-//        }
         setUploadingProgress(BASE_PROGRESS_LENGTH);
 
     }
@@ -392,13 +384,13 @@ public class UpdateLoadingDialog extends Dialog {
         loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep1);
         //set step2
         loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep2);
-        dulPbStep1To2.setProgress(100);
-        //set setp3
+//        dulPbStep1To2.setProgress(100);
+        //set step3
         loadGif(mContext, mSuccessIndicator, dulIvIndicator);
         loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep3);
-        dulPbStep1To2.setProgress(100);
         dulPbStep2To3.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
         //=====================
+        setStep2Finished();
         if(null == vaProgress2To3){
             vaProgress2To3 = ValueAnimator.ofInt(0, LOAD_FAKE_PROGRESS, LOAD_FAKE_PROGRESS_2);
             vaProgress2To3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
