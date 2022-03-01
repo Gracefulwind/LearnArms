@@ -110,23 +110,8 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
         }
     }
 
+    private boolean testThread = false;
     public void setUpdateDialog() {
-//        RxTimerUtil.cancel();
-//        RxTimerUtil.timer(5000, new RxTimerUtil.IRxNext() {
-//            @Override
-//            public void doNext(long number) {
-//                setStep2Success(true);
-//                RxTimerUtil.cancel();
-//                RxTimerUtil.timer(5000, new RxTimerUtil.IRxNext() {
-//                    @Override
-//                    public void doNext(long number) {
-//                        setStep3Success(false);
-//
-//                    }
-//                });
-//            }
-//        });
-
         updateDialog = new UpdateLoadingDialog.Builder(this)
             .setIndicator(UpdateLoadingDialog.Builder.TYPE_FOX)
             .setStep1Callback(new UpdateLoadingDialog.OnStepSuccessCallback() {
@@ -179,41 +164,49 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
                 })
             .build();
         updateDialog.show();
-        test1DialogStep1();
+        test1DialogStep3();
     }
 
     public void test1DialogStep1() {
         updateDialog.startStep1();
-        RxTimerUtil.cancel();
-        RxTimerUtil.timer(500, new RxTimerUtil.IRxNext() {
-            @Override
-            public void doNext(long number) {
-                int i = new Random().nextInt(10);
-                LogUtil.e(TAG, "test1DialogStep1  == " + (i > 2));
-                if(i > 2){
-                    updateDialog.setStep1Result(true);
-                }else {
-                    updateDialog.setStep1Result(false);
+        if(testThread){
+            RxTimerUtil.cancel();
+            RxTimerUtil.timer(1500, new RxTimerUtil.IRxNext() {
+                @Override
+                public void doNext(long number) {
+                    int i = new Random().nextInt(10);
+                    LogUtil.e(TAG, "test1DialogStep1  == " + (i > 2));
+                    if(i > 2){
+                        updateDialog.setStep1Result(true);
+                    }else {
+                        updateDialog.setStep1Result(false);
+                    }
                 }
-            }
-        });
+            });
+        }else {
+            updateDialog.setStep1Result(true);
+        }
     }
 
     public void test1DialogStep2() {
         updateDialog.startStep2();
-        RxTimerUtil.cancel();
-        RxTimerUtil.timer(200, new RxTimerUtil.IRxNext() {
-            @Override
-            public void doNext(long number) {
-                int i = new Random().nextInt(10);
-                LogUtil.e(TAG, "test1DialogStep2  == " + (i > 8));
-                if(i > 4){
-                    updateDialog.setStep2Result(true);
-                }else {
-                    updateDialog.setStep2Result(false);
+        if(testThread){
+            RxTimerUtil.cancel();
+            RxTimerUtil.timer(2500, new RxTimerUtil.IRxNext() {
+                @Override
+                public void doNext(long number) {
+                    int i = new Random().nextInt(10);
+                    LogUtil.e(TAG, "test1DialogStep2  == " + (i > 8));
+                    if(i > 4){
+                        updateDialog.setStep2Result(true);
+                    }else {
+                        updateDialog.setStep2Result(false);
+                    }
                 }
-            }
-        });
+            });
+        }else {
+            updateDialog.setStep2Result(true);
+        }
     }
 
     public void test1DialogStep3() {

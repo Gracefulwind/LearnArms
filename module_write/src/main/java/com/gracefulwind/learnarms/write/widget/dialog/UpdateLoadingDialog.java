@@ -1,6 +1,6 @@
 package com.gracefulwind.learnarms.write.widget.dialog;
 
-import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,13 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
 import com.gracefulwind.learnarms.commonsdk.utils.GlideUtil;
 import com.gracefulwind.learnarms.write.R;
 import com.gracefulwind.learnarms.write.R2;
@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.gracefulwind.learnarms.commonsdk.utils.GlideUtil.loadBitmap;
+import static com.gracefulwind.learnarms.commonsdk.utils.GlideUtil.loadGif;
 import static com.gracefulwind.learnarms.commonsdk.utils.GlideUtil.loadGifOneTime;
 
 /**
@@ -55,10 +56,12 @@ public class UpdateLoadingDialog extends Dialog {
 
     StatusEnum status;
 
-    private ObjectAnimator oaIndicator1To2;
-    private ObjectAnimator oaProgress1To2;
-    private ObjectAnimator oaIndicator2To3;
-    private ObjectAnimator oaProgress2To3;
+    private static final int BASE_PROGRESS_LENGTH = 100;
+    private static final int LOAD_FAKE_PROGRESS = (int) (0.85f * BASE_PROGRESS_LENGTH);
+    private static final int LOAD_FAKE_PROGRESS_2 = (int) (0.95f * BASE_PROGRESS_LENGTH);
+    private static final int PROGRESS_DURATION_TIME = 2000;
+    private ValueAnimator vaProgress1To2;
+    private ValueAnimator vaProgress2To3;
 
     enum StatusEnum{
         STEP1,
@@ -81,6 +84,10 @@ public class UpdateLoadingDialog extends Dialog {
     LinearLayout dulLlProgressContainer;
     @BindView(R2.id.dul_iv_indicator)
     ImageView dulIvIndicator;
+    @BindView(R2.id.dul_s_indicator_weight_left)
+    Space dulSIndicatorWeightLeft;
+    @BindView(R2.id.dul_s_indicator_weight_right)
+    Space dulSIndicatorWeightRight;
     @BindView(R2.id.dul_iv_step1)
     ImageView dulIvStep1;
     @BindView(R2.id.dul_iv_step2)
@@ -93,6 +100,7 @@ public class UpdateLoadingDialog extends Dialog {
     ProgressBar dulPbStep2To3;
     @BindView(R2.id.dul_rl_error_buttons)
     RelativeLayout dulRlErrorButtons;
+
 
     public UpdateLoadingDialog(@NonNull @NotNull Context context) {
         this(context, R.style.public_dialog_progress);
@@ -120,7 +128,8 @@ public class UpdateLoadingDialog extends Dialog {
     public void setIndicator(@DrawableRes int successIndicator, @DrawableRes int errorIndicator) {
         mSuccessIndicator = successIndicator;
         mErrorIndicator = errorIndicator;
-        Glide.with(mContext).asGif().load(successIndicator).into(dulIvIndicator);
+        loadGif(mContext, successIndicator, dulIvIndicator);
+//        Glide.with(mContext).asGif().load(successIndicator).into(dulIvIndicator);
     }
 
     public void setStep1Callback(OnStepSuccessCallback successCallback, OnStepErrorCallback errorCallback){
@@ -142,9 +151,7 @@ public class UpdateLoadingDialog extends Dialog {
     public void onViewClicked(View view){
         int id = view.getId();
         if(R.id.dul_iv_indicator == id){
-            System.out.println("==============");
-            System.out.println("=====test======");
-            System.out.println("==============");
+            //do nothing
         }else if(R.id.dul_tv_cancel == id){
             switch (status){
                 case STEP1:
@@ -183,7 +190,7 @@ public class UpdateLoadingDialog extends Dialog {
                     break;
             }
         }else if(R.id.dul_ll_status == id){
-
+            //do nothing
         }
     }
 
@@ -199,6 +206,7 @@ public class UpdateLoadingDialog extends Dialog {
     public void setStep1Result(boolean isSuccess){
         step1Result = isSuccess;
         step1Flag = true;
+        setStep1Finished();
         if(isSuccess){
             dulRlErrorButtons.setVisibility(View.GONE);
             if(null != step1SuccessCallback){
@@ -327,106 +335,135 @@ public class UpdateLoadingDialog extends Dialog {
         loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep1);
     }
 
-    public void step1Finished() {
-        int containerWidth = dulLlProgressContainer.getWidth();
-        int indicatorWidth = dulIvIndicator.getWidth();
-        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
-        dulPbStep1To2.setProgress(100);
-        dulIvIndicator.setTranslationX(oneStepWidth);
+    public void setStep1Finished(){
+        setUploadingProgress(0);
     }
 
     public void startStep2() {
         step2Flag = false;
+        //set step1
+        loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep1);
+        //set step2
         loadGif(mContext, mSuccessIndicator, dulIvIndicator);
         loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep2);
         dulPbStep1To2.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
-        int containerWidth = dulLlProgressContainer.getWidth();
-        int indicatorWidth = dulIvIndicator.getWidth();
-        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
-        if(null == oaIndicator1To2){
-            oaIndicator1To2 = ObjectAnimator.ofFloat(dulIvIndicator, "translationX"
-                    , 0f, oneStepWidth * loadFakeProgress, oneStepWidth * loadFakeProgress2);
-            oaIndicator1To2.setDuration(2000);
+        //set step3
+        loadBitmap(mContext, R.drawable.gif_uld_upload_ing, dulIvStep3);
+        //setIndicator Animator
+        if(null == vaProgress1To2){
+            vaProgress1To2 = ValueAnimator.ofInt(0, LOAD_FAKE_PROGRESS, LOAD_FAKE_PROGRESS_2);
+            vaProgress1To2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int animatedValue = (int) animation.getAnimatedValue();
+                    setUploadingProgress(animatedValue);
+                }
+            });
+            vaProgress1To2.setDuration(PROGRESS_DURATION_TIME);
         }else {
-            oaIndicator1To2.cancel();
+            vaProgress1To2.cancel();
         }
-        oaIndicator1To2.start();
-        if(null == oaProgress1To2){
-            oaProgress1To2 = ObjectAnimator.ofInt(dulPbStep1To2, "progress"
-                    , 0, (int) (100 * loadFakeProgress), (int) (100 * loadFakeProgress2));
-            oaProgress1To2.setDuration(2000);
-        }else {
-            oaProgress1To2.cancel();
-        }
-        oaProgress1To2.start();
+        vaProgress1To2.start();
+//        //=============================
+//        if(null == oaProgress1To2){
+//            oaProgress1To2 = ObjectAnimator.ofInt(dulPbStep1To2, "progress"
+//                    , 0, LOAD_FAKE_PROGRESS, LOAD_FAKE_PROGRESS_2);
+//            oaProgress1To2.setDuration(PROGRESS_DURATION_TIME);
+//        }else {
+//            oaProgress1To2.cancel();
+//        }
+//        oaProgress1To2.start();
     }
 
     public void setStep2Finished() {
-        int containerWidth = dulLlProgressContainer.getWidth();
-        int indicatorWidth = dulIvIndicator.getWidth();
-        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
-        if(null != oaIndicator1To2){
-            oaIndicator1To2.cancel();
+        if (null != vaProgress1To2) {
+            vaProgress1To2.cancel();
         }
-        if(null != oaProgress1To2){
-            oaProgress1To2.cancel();
-        }
-        dulPbStep1To2.setProgress(100);
-        dulIvIndicator.setTranslationX(oneStepWidth);
+//        if (null != oaProgress1To2) {
+//            oaProgress1To2.cancel();
+//        }
+        setUploadingProgress(BASE_PROGRESS_LENGTH);
+
     }
 
     public void startStep3() {
         step3Flag = false;
+        //set step1
+        loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep1);
+        //set step2
+        loadBitmap(mContext, R.drawable.icon_uld_upload_success, dulIvStep2);
+        dulPbStep1To2.setProgress(100);
+        //set setp3
         loadGif(mContext, mSuccessIndicator, dulIvIndicator);
         loadGif(mContext, R.drawable.gif_uld_upload_ing, dulIvStep3);
         dulPbStep1To2.setProgress(100);
         dulPbStep2To3.setProgressDrawable(mContext.getResources().getDrawable(R.drawable.progressbar_update_loading_success));
-        int containerWidth = dulLlProgressContainer.getWidth();
-        int indicatorWidth = dulIvIndicator.getWidth();
-        float oneStepWidth = (containerWidth - indicatorWidth) / 2f;
-        if(null == oaIndicator2To3){
-            oaIndicator2To3 = ObjectAnimator.ofFloat(dulIvIndicator, "translationX"
-                    , oneStepWidth, oneStepWidth + oneStepWidth * loadFakeProgress
-                    , oneStepWidth + oneStepWidth * loadFakeProgress2);
-            oaIndicator2To3.setDuration(2000);
+        //=====================
+        if(null == vaProgress2To3){
+            vaProgress2To3 = ValueAnimator.ofInt(0, LOAD_FAKE_PROGRESS, LOAD_FAKE_PROGRESS_2);
+            vaProgress2To3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int animatedValue = (int) animation.getAnimatedValue();
+                    setUploadingProgress(BASE_PROGRESS_LENGTH + animatedValue);
+                }
+            });
+            vaProgress2To3.setDuration(PROGRESS_DURATION_TIME);
         }else {
-            oaIndicator2To3.cancel();
+            vaProgress2To3.cancel();
         }
-        oaIndicator2To3.start();
-        if(null == oaProgress2To3){
-            oaProgress2To3 = ObjectAnimator.ofInt(dulPbStep2To3, "progress"
-                    , 0, (int) (100 * loadFakeProgress), (int) (100 * loadFakeProgress2));
-            oaProgress2To3.setDuration(2000);
-        }else {
-            oaProgress2To3.cancel();
-        }
-        oaProgress2To3.start();
-//        ObjectAnimator oaIndicator = ObjectAnimator.ofFloat(dulIvIndicator, "translationX", oneStepWidth, oneStepWidth + oneStepWidth * loadFakeProgress);
-//        oaIndicator.setDuration(2000);
-//        oaIndicator.start();
-//        ObjectAnimator oaProgress = ObjectAnimator.ofInt(dulPbStep2To3, "progress", 0, (int) (100 * loadFakeProgress));
-//        oaProgress.setDuration(2000);
-//        oaProgress.start();
+        vaProgress2To3.start();
+//        //=====================
+//        if(null == oaProgress2To3){
+//            oaProgress2To3 = ObjectAnimator.ofInt(dulPbStep2To3, "progress"
+//                    , 0, (int) (100 * loadFakeProgress), (int) (100 * loadFakeProgress2));
+//            oaProgress2To3.setDuration(2000);
+//        }else {
+//            oaProgress2To3.cancel();
+//        }
+//        oaProgress2To3.start();
     }
 
     public void setStep2To3Finished() {
-        int containerWidth = dulLlProgressContainer.getWidth();
-        int indicatorWidth = dulIvIndicator.getWidth();
-        float twoStepWidth = (containerWidth - indicatorWidth);
-        if(null != oaIndicator2To3){
-            oaIndicator1To2.cancel();
+        if (null != vaProgress2To3) {
+            vaProgress2To3.cancel();
         }
-        if(null != oaProgress2To3){
-            oaProgress2To3.cancel();
-        }
-        dulPbStep2To3.setProgress(100);
-        dulIvIndicator.setTranslationX(twoStepWidth);
+//        if (null != oaProgress2To3) {
+//            oaProgress2To3.cancel();
+//        }
+        setUploadingProgress(2 * BASE_PROGRESS_LENGTH);
     }
 
-    public static void loadGif(Context context, Object model, final ImageView imageView){
-        Glide.with(context).asGif().load(model).into(imageView);
+    private void setUploadingProgress(int progress) {
+        setIndicatorProgress(progress);
+        setProgressProgress(progress);
     }
 
+    private void setIndicatorProgress(int progress) {
+        setIndicatorWeight(dulSIndicatorWeightLeft, progress);
+        setIndicatorWeight(dulSIndicatorWeightRight, 2 * BASE_PROGRESS_LENGTH - progress);
+    }
+
+    private void setIndicatorWeight(View dulIvIndicatorWeightLeft, float i) {
+        LinearLayout.LayoutParams lpLeft = (LinearLayout.LayoutParams) dulIvIndicatorWeightLeft.getLayoutParams();
+        lpLeft.weight = i;
+        dulIvIndicatorWeightLeft.setLayoutParams(lpLeft);
+    }
+
+    private void setProgressProgress(int progress){
+        if(0 > progress){
+            return;
+        }else if(BASE_PROGRESS_LENGTH >= progress){
+            dulPbStep1To2.setProgress(progress);
+            dulPbStep2To3.setProgress(0);
+        }else if((BASE_PROGRESS_LENGTH * 2) >= progress){
+            dulPbStep1To2.setProgress(BASE_PROGRESS_LENGTH);
+            dulPbStep2To3.setProgress(progress - BASE_PROGRESS_LENGTH);
+        }else {
+            dulPbStep1To2.setProgress(BASE_PROGRESS_LENGTH);
+            dulPbStep2To3.setProgress(BASE_PROGRESS_LENGTH);
+        }
+    }
 
 
 //==================================================================================================
