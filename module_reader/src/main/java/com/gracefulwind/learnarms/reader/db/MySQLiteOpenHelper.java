@@ -33,14 +33,43 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
 //=================================================================================================================================
+    //----user----
+    public static final String createUser = "CREATE TABLE IF NOT EXISTS user (" +
+            "_id integer PRIMARY KEY AUTOINCREMENT" +
+            ", id char(20) NOT NULL UNIQUE" +
+            ", name nvarchar(20)" +
+            ", token varchar(255)" +  //token长度限制？ 感觉token还是放在sp里好点？
+            ", sex int" +  //1,男 2.女
+            ", is_vip int" +
+            ", icon char" +
+            ", coin long" +
+            ", gmt_create timestamp DEFAULT CURRENT_TIMESTAMP" +
+            ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
+//        ", gmt_update timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+            ", deleted int)";
+    /**
+     *
+     * ----|_id  |id              |name     |token      |sex  |is_vip |coin  |----
+     * ----|主键 |用户             |用户名     |用户token   |性别 |是否VIP |金币数 |
+     * ----|int |char20          |nvarchar20| varchar255|int  |int    |long  |
+     * ----|    |NOT NULL UNIQUE |          |           |     |       |      |
+     *
+     * */
+    public static final String createUserTrigger = "CREATE TRIGGER IF NOT EXISTS tag_user AFTER UPDATE" +
+            " ON user" +
+            " BEGIN" +
+            " UPDATE user SET gmt_update = CURRENT_TIMESTAMP;" +
+            " END;";
+    //=========================
     //----book_category----
     public static final String createBookCategory = "CREATE TABLE IF NOT EXISTS book_category (" +
-        "_id INTEGER PRIMARY KEY AUTOINCREMENT" +
-        ", id CHAR(20) NOT NULL UNIQUE" +
-        ", name NCHAR(20)" +
-        ", create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-//        ", update_time timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
-        ", deleted INT)";
+        "_id integer PRIMARY KEY AUTOINCREMENT" +
+        ", id char(20) NOT NULL UNIQUE" +
+        ", name nvarchar(20)" +
+        ", gmt_create timestamp DEFAULT CURRENT_TIMESTAMP" +
+        ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
+//        ", gmt_update timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+        ", deleted int)";
     /**
      *
      * ----|_id  |id              |name     |create_time|deleted|----
@@ -49,14 +78,20 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
      * ----|    |NOT NULL UNIQUE |          |
      *
      * */
+    public static final String createBookCategoryTrigger = "CREATE TRIGGER IF NOT EXISTS tag_book_category AFTER UPDATE" +
+            " ON book_category" +
+            " BEGIN" +
+            " UPDATE book_category SET gmt_update = CURRENT_TIMESTAMP;" +
+            " END;";
     //----book_tag----
     public static final String createBookTag = "CREATE TABLE IF NOT EXISTS book_tag (" +
-            "_id INTEGER PRIMARY KEY AUTOINCREMENT" +
-            ", id CHAR(20) NOT NULL UNIQUE" +
-            ", name NVARCHAR(20)" +
-            ", create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-//        ", update_time timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
-            ", deleted INT)";
+            "_id integer PRIMARY KEY AUTOINCREMENT" +
+            ", id char(20) NOT NULL UNIQUE" +
+            ", name nvarchar(20)" +
+            ", gmt_create timestamp DEFAULT CURRENT_TIMESTAMP" +
+            ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
+//        ", gmt_update timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+            ", deleted int)";
     /**
      *--------------------book_tag--------------------------------
      * ----|_id  |id              |name      |create_time|deleted|----
@@ -65,6 +100,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
      * ----|    |NOT NULL UNIQUE |          |          |       |----
      *
      * */
+    public static final String createBookTagTrigger = "CREATE TRIGGER IF NOT EXISTS tag_book_tag AFTER UPDATE" +
+            " ON book_tag" +
+            " BEGIN" +
+            " UPDATE book_tag SET gmt_update = CURRENT_TIMESTAMP;" +
+            " END;";
     //----book_info----
     public static final String createBookInfo = "CREATE TABLE IF NOT EXISTS book_info (" +
             "_id integer PRIMARY KEY AUTOINCREMENT" +
@@ -80,8 +120,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             ", positive_rating decimal" +
             ", last_chapter nvarchar(255)" +
             ", last_update_time nvarchar(20)" +
-            ", create_time timestamp DEFAULT CURRENT_TIMESTAMP" +
-//            ", update_time timestamp DEFAULT CURRENT_TIMESTAMP" +
+            ", gmt_create timestamp DEFAULT CURRENT_TIMESTAMP" +
+            ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
+//            ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
             ", deleted int)";
     /**
      *
@@ -93,6 +134,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
      * ----
      * last_update_time 考虑用timedate？
      * */
+    public static final String createBookInfoTrigger = "CREATE TRIGGER IF NOT EXISTS tag_book_info AFTER UPDATE" +
+            " ON book_info" +
+            " BEGIN" +
+            " UPDATE book_info SET gmt_update = CURRENT_TIMESTAMP;" +
+            " END;";
     //----book_shelf----
     public static final String createBookShelf = "CREATE TABLE IF NOT EXISTS book_shelf (" +
             "_id integer PRIMARY KEY AUTOINCREMENT" +
@@ -104,8 +150,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             ", current_progress long" +
             ", is_local int" +
             ", is_advertisement int" +
-            ", create_time timestamp DEFAULT CURRENT_TIMESTAMP" +
-//        ", update_time timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+            ", gmt_create timestamp DEFAULT CURRENT_TIMESTAMP" +
+            ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
+//        ", gmt_update timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
             ", deleted int)";
     /**
      *--------------------book_shelf--------------------------------
@@ -116,6 +163,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
      *
      * 书架id关联下user表
      * */
+    public static final String createBookShelfTrigger = "CREATE TRIGGER IF NOT EXISTS tag_book_shelf AFTER UPDATE" +
+            " ON book_shelf" +
+            " BEGIN" +
+            " UPDATE book_shelf SET gmt_update = CURRENT_TIMESTAMP;" +
+            " END;";
     //----book_chapter----
     public static final String createBookChapter = "CREATE TABLE IF NOT EXISTS book_chapter (" +
             "_id integer PRIMARY KEY AUTOINCREMENT" +
@@ -124,24 +176,45 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             ", book_id char(20)" +
             ", chapter_number long" +
             ", chapter_content ntext" +
-            ", create_time timestamp DEFAULT CURRENT_TIMESTAMP" +
-//        ", update_time timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+            ", gmt_create timestamp DEFAULT CURRENT_TIMESTAMP" +
+            ", gmt_update timestamp DEFAULT CURRENT_TIMESTAMP" +
+//        ", gmt_update timestamp  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
             ", deleted int)";
-
+    /**
+     *--------------------book_chapter--------------------------------
+     * ----|_id  |id       |book_id|chapter_number|chapter_content|----
+     * ----|主键 |章节id    |书本id  |章节号         |章节内容       |----
+     * ----|int |char20   |char20  | long        |ntext        |----
+     * ----|    |UNIQUE   |        |          |       |----
+     *
+     * */
+    public static final String createBookChapterTrigger = "CREATE TRIGGER IF NOT EXISTS tag_book_chapter AFTER UPDATE" +
+            " ON book_chapter" +
+            " BEGIN" +
+            " UPDATE book_chapter SET gmt_update = CURRENT_TIMESTAMP;" +
+            " END;";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //数据库创建
+        //----user
+        db.execSQL(createUser);
+//        db.execSQL(createUserTrigger);
         //----book_category
         db.execSQL(createBookCategory);
+//        db.execSQL(createBookCategoryTrigger);
         //----book_tag
         db.execSQL(createBookTag);
+//        db.execSQL(createBookTagTrigger);
         //----book_info
         db.execSQL(createBookInfo);
+//        db.execSQL(createBookInfoTrigger);
         //----book_shelf
         db.execSQL(createBookShelf);
+//        db.execSQL(createBookShelfTrigger);
         //----book_chapter
         db.execSQL(createBookChapter);
+//        db.execSQL(createBookChapterTrigger);
         //----
     }
 
