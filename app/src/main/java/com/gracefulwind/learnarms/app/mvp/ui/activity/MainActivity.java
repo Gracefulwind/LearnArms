@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity {
      * @param view
      */
     @OnClick({R.id.bt_zhihu, R.id.bt_gank, R.id.bt_gold, R.id.am_tv_click1, R.id.am_tv_weather_report
-            , R.id.am_tv_see_novels, R.id.am_tv_smart_write, R.id.am_tv_new_smart_write, R.id.am_tv_copy})
+            , R.id.am_tv_see_novels, R.id.am_tv_smart_write, R.id.am_tv_new_smart_write, R.id.am_tv_ocr, R.id.am_tv_copy})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_zhihu:
@@ -174,6 +174,10 @@ public class MainActivity extends BaseActivity {
             case R.id.am_tv_new_smart_write:
                 //新手写板
                 Utils.navigation(MainActivity.this, RouterHub.NewWrite.HOME_ACTIVITY);
+                break;
+            case R.id.am_tv_ocr:
+                //拷贝组件
+                Utils.navigation(MainActivity.this, RouterHub.Ocr.HOME_ACTIVITY);
                 break;
             case R.id.am_tv_copy:
                 //拷贝组件

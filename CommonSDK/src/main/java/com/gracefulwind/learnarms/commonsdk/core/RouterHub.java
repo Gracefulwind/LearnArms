@@ -43,7 +43,7 @@ public interface RouterHub {
      * 组名
      */
     String APP_HOME = "/app";//宿主 App 组件
-    String COPY = "/copy";//copy组件
+    String COPY_HOME = "/copy";//copy组件
     String ZHIHU_HOME = "/zhihu";//知乎组件
     String GANK_HOME = "/gank";//干货集中营组件
     String GOLD_HOME = "/gold";//稀土掘金组件
@@ -52,6 +52,7 @@ public interface RouterHub {
     String READER_HOME = "/novels";//小说组件
     String WRITE_HOME = "/smart_write";//智能手写组件
     String NEW_WRITE_HOME = "/new_write";//智能手写组件-新
+    String OCR_HOME = "/ocr";//ocr相关测试
 
     /**
      * 服务组件, 用于给每个组件暴露特有的服务
@@ -70,7 +71,7 @@ public interface RouterHub {
      * copy组件
      * */
     interface Copy{
-        String BASE = COPY;
+        String BASE = COPY_HOME;
         String HOME_ACTIVITY = BASE + "/HomeActivity";
     }
 
@@ -184,4 +185,12 @@ public interface RouterHub {
         String TEST_XUNFEI_ACTIVITY = BASE + "/TestXunfeiActivity";
     }
 
+//====================================================================
+    /**
+     * ocr组件
+     * */
+    interface Ocr{
+        String BASE = OCR_HOME;
+        String HOME_ACTIVITY = BASE + "/HomeActivity";
+    }
 }
