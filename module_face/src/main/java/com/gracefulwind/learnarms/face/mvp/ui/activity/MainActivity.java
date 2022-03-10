@@ -4,6 +4,7 @@ package com.gracefulwind.learnarms.face.mvp.ui.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -75,7 +76,9 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     public void onClick(View view) {
         int id = view.getId();
         if(R.id.oam_btn_two_picture == id){
-            mPresenter.testNet();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mPresenter.testNet();
+            }
         }else if(R.id.oam_btn_find_people == id){
 
         }else if(R.id.oam_btn_find_people == id){
