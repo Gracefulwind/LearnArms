@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!--&lt;!&ndash;    title&ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/rarm_ll_title"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/rarm_vp_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        >-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="ReaderMain"-->
+<!--            />-->
+<!--    </LinearLayout>-->
+
+<!--    content-->
+    <com.gracefulwind.learnarms.commonres.widget.NoScrollViewPager
+        android:id="@+id/rarm_vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/public_dimen_0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rarm_ctl_tab"
+        />
+
+<!--    tab-->
+<!--    背景色添加到主题色-->
+    <com.flyco.tablayout.CommonTabLayout
+        android:id="@+id/rarm_ctl_tab"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/public_dimen_48dp"
+        app:layout_constraintTop_toBottomOf="@id/rarm_vp_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tl_textSelectColor="@color/public_red"
+        app:tl_textUnselectColor="@color/public_color_53A8F4"
+        android:background="@color/public_white"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

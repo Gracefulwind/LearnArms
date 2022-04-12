@@ -125,14 +125,15 @@ public class MainActivity extends MyBaseActivity<MainPresenter> implements MainC
     public void onViewClicked(View view) {
         int id = view.getId();
         if(R.id.ram_tv_clcik1 == id){
-            Editable baseText = ramEtTest0.getText();
-            Editable targetText = ramStvTest1.getText();
-            if(StringUtil.isEmpty(baseText.toString())){
-                targetText.append("testetttttttttt=========================testeeeteeteee\r\n");
-            }else {
-                targetText.append(baseText);
-            }
-            ramStvTest1.setText(targetText);
+//            Editable baseText = ramEtTest0.getText();
+//            Editable targetText = ramStvTest1.getText();
+//            if(StringUtil.isEmpty(baseText.toString())){
+//                targetText.append("testetttttttttt=========================testeeeteeteee\r\n");
+//            }else {
+//                targetText.append(baseText);
+//            }
+//            ramStvTest1.setText(targetText);
+            ARouter.getInstance().build(RouterHub.Reader.READER_MAIN_ACTIVITY).navigation();
         }else if (R.id.ram_tv_clcik2 == id){
             //
             System.out.println("=========================");

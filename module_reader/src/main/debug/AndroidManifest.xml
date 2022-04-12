@@ -49,6 +49,9 @@
         <activity android:name=".mvp.ui.activity.TestTextActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".mvp.ui.activity.ReaderMainActivity"
+            android:screenOrientation="portrait"
+            />
 
 <!--        ============================================-->
         <!-- 只要依赖 AutoSize 就必须填写设计图尺寸, 否则报错, 不想使用 AutoSize 就不要依赖 AutoSize

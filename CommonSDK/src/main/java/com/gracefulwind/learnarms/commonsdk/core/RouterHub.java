@@ -44,6 +44,7 @@ public interface RouterHub {
      */
     String APP_HOME = "/app";//宿主 App 组件
     String COPY_HOME = "/copy";//copy组件
+    String DEFAULT = "/default";//default组件
     String ZHIHU_HOME = "/zhihu";//知乎组件
     String GANK_HOME = "/gank";//干货集中营组件
     String GOLD_HOME = "/gold";//稀土掘金组件
@@ -65,6 +66,18 @@ public interface RouterHub {
      */
     String APP_SPLASHACTIVITY = APP_HOME + "/SplashActivity";
     String APP_MAINACTIVITY = APP_HOME + "/MainActivity";
+
+//====================================================================
+    /**
+     * 通用基础组件组件
+     * */
+    interface Default{
+        String BASE = DEFAULT;
+        String DEFAULT_ACTIVITY = BASE + "/DefaultActivity";
+        String DEFAULT_FRAGMENT = BASE + "/DefaultFragment";
+    }
+
+//====================================================================================================
 
 //====================================================================
     /**
@@ -157,6 +170,15 @@ public interface RouterHub {
         String TEST_GESTURE_ACTIVITY = BASE + "/TestGestureActivity";
         String HAND_NOTE_ACTIVITY = BASE + "/HandNoteActivity";
         String TEST_TEXT_ACTIVITY = BASE + "/TestTextActivity";
+        String READER_MAIN_ACTIVITY = BASE + "/ReaderMainActivity";
+
+        //=======================
+        String BOOK_SHELF_FRAGMENT = BASE + "/BookShelfFragment";
+        String BOOK_MALL_FRAGMENT = BASE + "/BookMallFragment";
+        String BOOK_SEARCH_FRAGMENT = BASE + "/BookSearchFragment";
+        String BOOK_ACTIVITY_FRAGMENT = BASE + "/BookActivityFragment";
+        String BOOK_MINE_FRAGMENT = BASE + "/BookMineFragment";
+
 
         interface Server{
             String COMMON_SERVER = BASE + SERVICE + "/CommonService";
