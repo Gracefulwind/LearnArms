@@ -3,6 +3,8 @@ package com.gracefulwind.learnarms.face.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * @ClassName: FaceCompareEntity
  * @Author: Gracefulwind
@@ -23,7 +25,7 @@ public class FaceCompareEntity extends BaseFaceEntity {
     float confidence;
 
     @Expose
-    @SerializedName("confidence")
+    @SerializedName("thresholds")
     Thresholds thresholds;
 
     //通过 image_url1、image_file1 或 image_base64_1 传入的图片在系统中的标识。
@@ -35,9 +37,73 @@ public class FaceCompareEntity extends BaseFaceEntity {
     String imageId2;
 
     //涉及到face的object，暂时先不放入，等OK了再搞
-    Object faces1;
-    Object faces2;
+    @Expose
+    @SerializedName("faces1")
+    List<FaceEntity> faces1;
+    @Expose
+    @SerializedName("faces2")
+    List<FaceEntity> faces2;
 
+    @Override
+    public String toString() {
+        return "FaceCompareEntity{" +
+                "confidence=" + confidence +
+                ", thresholds=" + thresholds +
+                ", imageId1='" + imageId1 + '\'' +
+                ", imageId2='" + imageId2 + '\'' +
+                ", faces1=" + faces1 +
+                ", faces2=" + faces2 +
+                '}';
+    }
+
+
+    public float getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(float confidence) {
+        this.confidence = confidence;
+    }
+
+    public Thresholds getThresholds() {
+        return thresholds;
+    }
+
+    public void setThresholds(Thresholds thresholds) {
+        this.thresholds = thresholds;
+    }
+
+    public String getImageId1() {
+        return imageId1;
+    }
+
+    public void setImageId1(String imageId1) {
+        this.imageId1 = imageId1;
+    }
+
+    public String getImageId2() {
+        return imageId2;
+    }
+
+    public void setImageId2(String imageId2) {
+        this.imageId2 = imageId2;
+    }
+
+    public List<FaceEntity> getFaces1() {
+        return faces1;
+    }
+
+    public void setFaces1(List<FaceEntity> faces1) {
+        this.faces1 = faces1;
+    }
+
+    public List<FaceEntity> getFaces2() {
+        return faces2;
+    }
+
+    public void setFaces2(List<FaceEntity> faces2) {
+        this.faces2 = faces2;
+    }
 
     /**
      *
@@ -47,7 +113,7 @@ public class FaceCompareEntity extends BaseFaceEntity {
      * 阈值不是静态的，每次比对返回的阈值不保证相同，所以没有持久化保存阈值的必要，更不要将当前调用返回的 confidence 与之前调用返回的阈值比较。
      *
      * */
-    public class Thresholds{
+    public static class Thresholds{
 
         //误识率为千分之一的置信度阈值；
         @Expose

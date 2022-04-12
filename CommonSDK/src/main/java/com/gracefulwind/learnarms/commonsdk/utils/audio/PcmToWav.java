@@ -1,9 +1,7 @@
 package com.gracefulwind.learnarms.commonsdk.utils.audio;
 
-import android.util.Log;
 
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -69,7 +67,7 @@ public class PcmToWav {
         try {
             h = header.getHeader();
         } catch (IOException e1) {
-            Log.e("PcmToWav", e1.getMessage());
+            LogUtil.e("PcmToWav", e1.getMessage());
             return false;
         }
 
@@ -98,14 +96,14 @@ public class PcmToWav {
             }
             outStream.close();
         } catch (FileNotFoundException e) {
-            Log.e("PcmToWav", e.getMessage());
+            LogUtil.e("PcmToWav", e.getMessage());
             return false;
         } catch (IOException ioe) {
-            Log.e("PcmToWav", ioe.getMessage());
+            LogUtil.e("PcmToWav", ioe.getMessage());
             return false;
         }
 //        clearFiles(filePathList);
-        Log.i("PcmToWav", "mergePCMFilesToWAVFile  success!" + new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date()));
+        LogUtil.i("PcmToWav", "mergePCMFilesToWAVFile  success!" + new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date()));
         return true;
     }
 

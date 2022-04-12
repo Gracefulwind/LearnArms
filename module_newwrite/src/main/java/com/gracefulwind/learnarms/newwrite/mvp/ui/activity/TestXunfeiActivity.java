@@ -272,6 +272,7 @@ public class TestXunfeiActivity extends BaseActivity {
     }
 
     boolean isPcmRecording = false;
+    //利用recorder存wav
     private void testPcm() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if(isPcmRecording){

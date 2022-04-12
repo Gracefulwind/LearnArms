@@ -178,7 +178,7 @@ public class AudioRecorder {
                 //这里由于只要录音过filesName.size都会大于0,没录音时fileName为null
                 //会报空指针 NullPointerException
                 // 将单个pcm文件转化为wav文件
-                //Log.d("AudioRecorder", "=====makePCMFileToWAVFile======");
+                //LogUtil.d("AudioRecorder", "=====makePCMFileToWAVFile======");
                 //makePCMFileToWAVFile();
             }
         } catch (IllegalStateException e) {

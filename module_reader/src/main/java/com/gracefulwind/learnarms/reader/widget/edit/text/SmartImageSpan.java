@@ -11,6 +11,8 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
 
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+
 import java.io.InputStream;
 
 
@@ -213,7 +215,7 @@ public class SmartImageSpan extends SmartDynamicDrawableSpan {
                         drawable.getIntrinsicHeight());
                 is.close();
             } catch (Exception e) {
-                Log.e("ImageSpan", "Failed to loaded content " + mContentUri, e);
+                LogUtil.e("ImageSpan", "Failed to loaded content " + mContentUri, e);
             }
         } else {
             try {
@@ -221,7 +223,7 @@ public class SmartImageSpan extends SmartDynamicDrawableSpan {
                 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
                         drawable.getIntrinsicHeight());
             } catch (Exception e) {
-                Log.e("ImageSpan", "Unable to find resource: " + mResourceId);
+                LogUtil.e("ImageSpan", "Unable to find resource: " + mResourceId);
             }
         }
 

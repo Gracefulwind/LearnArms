@@ -56,7 +56,7 @@ package com.gracefulwind.learnarms.write.widget;//package com.gracefulwind.learn
 //
 //            @Override
 //            public boolean onScaleBegin(ScaleGestureDetectorApi27 detector) {
-//                Log.d(TAG, "onScaleBegin: ");
+//                LogUtil.d(TAG, "onScaleBegin: ");
 //                mLastFocusX = null;
 //                mLastFocusY = null;
 //                return true;
@@ -64,12 +64,12 @@ package com.gracefulwind.learnarms.write.widget;//package com.gracefulwind.learn
 //
 //            @Override
 //            public void onScaleEnd(ScaleGestureDetectorApi27 detector) {
-//                Log.d(TAG, "onScaleEnd: ");
+//                LogUtil.d(TAG, "onScaleEnd: ");
 //            }
 //
 //            @Override
 //            public boolean onScale(ScaleGestureDetectorApi27 detector) { // 双指缩放中
-//                Log.d(TAG, "onScale: ");
+//                LogUtil.d(TAG, "onScale: ");
 //                // 屏幕上的焦点
 //                mTouchCentreX = detector.getFocusX();
 //                mTouchCentreY = detector.getFocusY();
@@ -117,7 +117,7 @@ package com.gracefulwind.learnarms.write.widget;//package com.gracefulwind.learn
 //
 //            @Override
 //            public void onScrollBegin(MotionEvent e) { // 滑动开始
-//                Log.d(TAG, "onScrollBegin: ");
+//                LogUtil.d(TAG, "onScrollBegin: ");
 //                float x = toX(e.getX()), y = toY(e.getY());
 //                if (mSelectedPathItem == null) {
 //                    mCurrentPathItem = new PathItem(); // 新的涂鸦
@@ -131,7 +131,7 @@ package com.gracefulwind.learnarms.write.widget;//package com.gracefulwind.learn
 //
 //            @Override
 //            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) { // 滑动中
-//                Log.d(TAG, "onScroll: " + e2.getX() + " " + e2.getY());
+//                LogUtil.d(TAG, "onScroll: " + e2.getX() + " " + e2.getY());
 //                float x = toX(e2.getX()), y = toY(e2.getY());
 //                if (mSelectedPathItem == null) { // 没有选中的涂鸦
 //                    mCurrentPathItem.mPath.quadTo(
@@ -151,7 +151,7 @@ package com.gracefulwind.learnarms.write.widget;//package com.gracefulwind.learn
 //
 //            @Override
 //            public void onScrollEnd(MotionEvent e) { // 滑动结束
-//                Log.d(TAG, "onScrollEnd: ");
+//                LogUtil.d(TAG, "onScrollEnd: ");
 //                float x = toX(e.getX()), y = toY(e.getY());
 //                if (mSelectedPathItem == null) {
 //                    mCurrentPathItem.mPath.quadTo(
