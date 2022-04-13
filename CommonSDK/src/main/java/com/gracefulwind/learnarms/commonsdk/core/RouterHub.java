@@ -171,6 +171,7 @@ public interface RouterHub {
         String HAND_NOTE_ACTIVITY = BASE + "/HandNoteActivity";
         String TEST_TEXT_ACTIVITY = BASE + "/TestTextActivity";
         String READER_MAIN_ACTIVITY = BASE + "/ReaderMainActivity";
+        String BOOK_READ_ACTIVITY = BASE + "/BookReadActivity";
 
         //=======================
         String BOOK_SHELF_FRAGMENT = BASE + "/BookShelfFragment";

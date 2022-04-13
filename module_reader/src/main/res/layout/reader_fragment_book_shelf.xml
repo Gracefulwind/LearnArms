@@ -15,4 +15,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="bookShelf"/>
 
+    <LinearLayout
+        android:layout_width="@dimen/public_dimen_0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/rfbs_btn_book_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="进入书页"
+            />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ package com.gracefulwind.learnarms.reader.db;
  * @Author: Gracefulwind
  * @CreateDate: 2022/2/28
  * @Description: ---------------------------
+ * 不用了，在外部关键字没高亮
  * @UpdateUser:
  * @UpdateDate: 2022/2/28
  * @UpdateRemark:
