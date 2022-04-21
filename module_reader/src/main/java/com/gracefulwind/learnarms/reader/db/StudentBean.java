@@ -10,6 +10,9 @@ import org.greenrobot.greendao.annotation.Generated;
  * @Author: Gracefulwind
  * @CreateDate: 2022/2/24
  * @Description: ---------------------------
+ * 利用GreenDao创建数据库
+ * 优点:可视化，方便操作
+ * 缺点:数据库升级时会删库重建
  * @UpdateUser:
  * @UpdateDate: 2022/2/24
  * @UpdateRemark:

@@ -1,0 +1,41 @@
+package com.gracefulwind.learnarms.reader.widget.reader;
+
+import androidx.annotation.ColorRes;
+
+import com.gracefulwind.learnarms.reader.R;
+
+/**
+ * @ClassName: PageStyle
+ * @Author: Gracefulwind
+ * @CreateDate: 2022/4/21
+ * @Description: ---------------------------
+ * @UpdateUser:
+ * @UpdateDate: 2022/4/21
+ * @UpdateRemark:
+ * @Version: 1.0
+ * @Email: 429344332@qq.com
+ */
+public enum PageStyle {
+    BG_0(R.color.nb_read_font_1, R.color.nb_read_bg_1),
+    BG_1(R.color.nb_read_font_2, R.color.nb_read_bg_2),
+    BG_2(R.color.nb_read_font_3, R.color.nb_read_bg_3),
+    BG_3(R.color.nb_read_font_4, R.color.nb_read_bg_4),
+    BG_4(R.color.nb_read_font_5, R.color.nb_read_bg_5),
+    NIGHT(R.color.nb_read_font_night, R.color.nb_read_bg_night),;
+
+    private int fontColor;
+    private int bgColor;
+
+    PageStyle(@ColorRes int fontColor, @ColorRes int bgColor) {
+        this.fontColor = fontColor;
+        this.bgColor = bgColor;
+    }
+
+    public int getFontColor() {
+        return fontColor;
+    }
+
+    public int getBgColor() {
+        return bgColor;
+    }
+}

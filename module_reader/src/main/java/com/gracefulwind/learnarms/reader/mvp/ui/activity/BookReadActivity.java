@@ -1,6 +1,7 @@
 package com.gracefulwind.learnarms.reader.mvp.ui.activity;
 
 import android.os.Bundle;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +42,7 @@ public class BookReadActivity extends MyBaseActivity<BookReadPresenter> implemen
 
     @Override
     public int initView(@Nullable @org.jetbrains.annotations.Nullable Bundle bundle) {
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         return R.layout.reader_activity_book_read;
     }
 
