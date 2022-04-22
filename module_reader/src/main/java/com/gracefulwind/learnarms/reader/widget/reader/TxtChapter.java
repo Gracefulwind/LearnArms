@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.reader.entity;
+package com.gracefulwind.learnarms.reader.widget.reader;
 
 /**
  * @ClassName: TxtChapter
