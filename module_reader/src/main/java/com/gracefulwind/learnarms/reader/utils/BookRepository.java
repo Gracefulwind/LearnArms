@@ -1,61 +1,66 @@
-//package com.gracefulwind.learnarms.reader.utils;
-//
-//import android.util.Log;
-//
-//import com.gracefulwind.learnarms.reader.entity.CollBookBean;
-//import com.gracefulwind.learnarms.reader.greendao.DaoSession;
-//
-//import java.io.BufferedReader;
-//import java.io.BufferedWriter;
-//import java.io.File;
-//import java.io.FileNotFoundException;
-//import java.io.FileReader;
-//import java.io.FileWriter;
-//import java.io.IOException;
-//import java.io.Reader;
-//import java.io.Writer;
-//import java.util.List;
-//
-//import io.reactivex.Single;
-//import io.reactivex.SingleEmitter;
-//import io.reactivex.SingleOnSubscribe;
-//
-///**
-// * @ClassName: BookRepository
-// * @Author: Gracefulwind
-// * @CreateDate: 2022/4/22
-// * @Description: ---------------------------
-// * 存储关于书籍内容的信息(CollBook(收藏书籍),BookChapter(书籍列表),ChapterInfo(书籍章节),BookRecord(记录))
-// * @UpdateUser:
-// * @UpdateDate: 2022/4/22
-// * @UpdateRemark:
-// * @Version: 1.0
-// * @Email: 429344332@qq.com
-// */
-//public class BookRepository {
-//    private static final String TAG = "CollBookManager";
-//    private static volatile BookRepository sInstance;
-//    private DaoSession mSession;
+package com.gracefulwind.learnarms.reader.utils;
+
+import android.util.Log;
+
+import com.gracefulwind.learnarms.commonsdk.utils.FileUtil;
+import com.gracefulwind.learnarms.reader.api.Constant;
+import com.gracefulwind.learnarms.reader.entity.BookChapterBean;
+import com.gracefulwind.learnarms.reader.entity.BookRecordBean;
+import com.gracefulwind.learnarms.reader.entity.CollBookBean;
+import com.gracefulwind.learnarms.reader.greendao.DaoSession;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+
+/**
+ * @ClassName: BookRepository
+ * @Author: Gracefulwind
+ * @CreateDate: 2022/4/22
+ * @Description: ---------------------------
+ * 存储关于书籍内容的信息(CollBook(收藏书籍),BookChapter(书籍列表),ChapterInfo(书籍章节),BookRecord(记录))
+ * todo:read 将数据库用系统数据库来做
+ * @UpdateUser:
+ * @UpdateDate: 2022/4/22
+ * @UpdateRemark:
+ * @Version: 1.0
+ * @Email: 429344332@qq.com
+ */
+public class BookRepository {
+    private static final String TAG = "CollBookManager";
+    private static volatile BookRepository sInstance;
+    private DaoSession mSession;
 //    private CollBookBeanDao mCollBookDao;
-//    private BookRepository(){
+    private BookRepository(){
 //        mSession = DaoDbHelper.getInstance()
 //                .getSession();
 //        mCollBookDao = mSession.getCollBookBeanDao();
-//    }
-//
-//    public static BookRepository getInstance(){
-//        if (sInstance == null){
-//            synchronized (BookRepository.class){
-//                if (sInstance == null){
-//                    sInstance = new BookRepository();
-//                }
-//            }
-//        }
-//        return sInstance;
-//    }
-//
-//    //存储已收藏书籍
-//    public void saveCollBookWithAsync(CollBookBean bean){
+    }
+
+    public static BookRepository getInstance(){
+        if (sInstance == null){
+            synchronized (BookRepository.class){
+                if (sInstance == null){
+                    sInstance = new BookRepository();
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    //存储已收藏书籍
+    public void saveCollBookWithAsync(CollBookBean bean){
 //        //启动异步存储
 //        mSession.startAsyncSession()
 //                .runInTx(
@@ -69,13 +74,13 @@
 //                            mCollBookDao.insertOrReplace(bean);
 //                        }
 //                );
-//    }
-//    /**
-//     * 异步存储。
-//     * 同时保存BookChapter
-//     * @param beans
-//     */
-//    public void saveCollBooksWithAsync(List<CollBookBean> beans){
+    }
+    /**
+     * 异步存储。
+     * 同时保存BookChapter
+     * @param beans
+     */
+    public void saveCollBooksWithAsync(List<CollBookBean> beans){
 //        mSession.startAsyncSession()
 //                .runInTx(
 //                        () -> {
@@ -90,21 +95,22 @@
 //                            mCollBookDao.insertOrReplaceInTx(beans);
 //                        }
 //                );
-//    }
-//
-//    public void saveCollBook(CollBookBean bean){
+    }
+
+    public void saveCollBook(CollBookBean bean){
 //        mCollBookDao.insertOrReplace(bean);
-//    }
-//
-//    public void saveCollBooks(List<CollBookBean> beans){
+    }
+
+    public void saveCollBooks(List<CollBookBean> beans){
 //        mCollBookDao.insertOrReplaceInTx(beans);
-//    }
-//
-//    /**
-//     * 异步存储BookChapter
-//     * @param beans
-//     */
-//    public void saveBookChaptersWithAsync(List<BookChapterBean> beans){
+    }
+
+    /**
+     * 异步存储BookChapter
+     * todo:read 完成代码
+     * @param beans
+     */
+    public void saveBookChaptersWithAsync(List<BookChapterBean> beans){
 //        mSession.startAsyncSession()
 //                .runInTx(
 //                        () -> {
@@ -114,15 +120,15 @@
 //                            Log.d(TAG, "saveBookChaptersWithAsync: "+"进行存储");
 //                        }
 //                );
-//    }
-//
-//    /**
-//     * 存储章节
-//     * @param folderName
-//     * @param fileName
-//     * @param content
-//     */
-//    public void saveChapterInfo(String folderName,String fileName,String content){
+    }
+
+    /**
+     * 存储章节
+     * @param folderName
+     * @param fileName
+     * @param content
+     */
+    public void saveChapterInfo(String folderName,String fileName,String content){
 //        File file = BookManager.getBookFile(folderName, fileName);
 //        //获取流并存储
 //        Writer writer = null;
@@ -132,35 +138,37 @@
 //            writer.flush();
 //        } catch (IOException e) {
 //            e.printStackTrace();
-//            IOUtils.close(writer);
+//            FileUtil.closeIO(writer);
 //        }
-//    }
-//
-//    public void saveBookRecord(BookRecordBean bean){
+    }
+
+    public void saveBookRecord(BookRecordBean bean){
 //        mSession.getBookRecordBeanDao()
 //                .insertOrReplace(bean);
-//    }
-//
-//    /*****************************get************************************************/
-//    public CollBookBean getCollBook(String bookId){
+    }
+
+    /*****************************get************************************************/
+    public CollBookBean getCollBook(String bookId){
 //        CollBookBean bean = mCollBookDao.queryBuilder()
 //                .where(CollBookBeanDao.Properties._id.eq(bookId))
 //                .unique();
 //        return bean;
-//    }
-//
-//
-//    public  List<CollBookBean> getCollBooks(){
+        return null;
+    }
+
+
+    public  List<CollBookBean> getCollBooks(){
 //        return mCollBookDao
 //                .queryBuilder()
 //                .orderDesc(CollBookBeanDao.Properties.LastRead)
 //                .list();
-//    }
-//
-//
-//
-//    //获取书籍列表
-//    public Single<List<BookChapterBean>> getBookChaptersInRx(String bookId){
+        return null;
+    }
+
+
+
+    //获取书籍列表
+    public Single<List<BookChapterBean>> getBookChaptersInRx(String bookId){
 //        return Single.create(new SingleOnSubscribe<List<BookChapterBean>>() {
 //            @Override
 //            public void subscribe(SingleEmitter<List<BookChapterBean>> e) throws Exception {
@@ -172,20 +180,22 @@
 //                e.onSuccess(beans);
 //            }
 //        });
-//    }
-//
-//    //获取阅读记录
-//    public BookRecordBean getBookRecord(String bookId){
+        return null;
+    }
+
+    //获取阅读记录
+    public BookRecordBean getBookRecord(String bookId){
 //        return mSession.getBookRecordBeanDao()
 //                .queryBuilder()
 //                .where(BookRecordBeanDao.Properties.BookId.eq(bookId))
 //                .unique();
-//    }
-//
-//    //TODO:需要进行获取编码并转换的问题
+        return null;
+    }
+
+//    //TODO:需要进行获取编码并转换的问题 todo:reader
 //    public ChapterInfoBean getChapterInfoBean(String folderName,String fileName){
 //        File file = new File(Constant.BOOK_CACHE_PATH + folderName
-//                + File.separator + fileName + FileUtils.SUFFIX_NB);
+//                + File.separator + fileName + FileUtil.SUFFIX_NB);
 //        if (!file.exists()) return null;
 //        Reader reader = null;
 //        String str = null;
@@ -209,63 +219,64 @@
 //        bean.setBody(sb.toString());
 //        return bean;
 //    }
-//
-//    /************************************************************/
-//
-//    /************************************************************/
-//    public Single<Void> deleteCollBookInRx(CollBookBean bean) {
-////        return Single.create(new SingleOnSubscribe<Void>() {
-////            @Override
-////            public void subscribe(SingleEmitter<Void> e) throws Exception {
-////                //查看文本中是否存在删除的数据
-////                deleteBook(bean.get_id());
-////                //删除任务
-////                deleteDownloadTask(bean.get_id());
-////                //删除目录
-////                deleteBookChapter(bean.get_id());
-////                //删除CollBook
-////                mCollBookDao.delete(bean);
-////                e.onSuccess(new Void());
-////            }
-////        });
-//    }
-//
-//    //这个需要用rx，进行删除
-//    public void deleteBookChapter(String bookId){
-////        mSession.getBookChapterBeanDao()
-////                .queryBuilder()
-////                .where(BookChapterBeanDao.Properties.BookId.eq(bookId))
-////                .buildDelete()
-////                .executeDeleteWithoutDetachingEntities();
-//    }
-//
-//    public void deleteCollBook(CollBookBean collBook){
-////        mCollBookDao.delete(collBook);
-//    }
-//
-//    //删除书籍
-//    public void deleteBook(String bookId){
-////        FileUtils.deleteFile(Constant.BOOK_CACHE_PATH+bookId);
-//    }
-//
-//    public void deleteBookRecord(String id){
-////        mSession.getBookRecordBeanDao()
-////                .queryBuilder()
-////                .where(BookRecordBeanDao.Properties.BookId.eq(id))
-////                .buildDelete()
-////                .executeDeleteWithoutDetachingEntities();
-//    }
-//
-//    //删除任务
-//    public void deleteDownloadTask(String bookId){
-////        mSession.getDownloadTaskBeanDao()
-////                .queryBuilder()
-////                .where(DownloadTaskBeanDao.Properties.BookId.eq(bookId))
-////                .buildDelete()
-////                .executeDeleteWithoutDetachingEntities();
-//    }
-//
-//    public DaoSession getSession(){
-//        return mSession;
-//    }
-//}
+
+    /************************************************************/
+
+    /************************************************************/
+    public Single<Void> deleteCollBookInRx(CollBookBean bean) {
+//        return Single.create(new SingleOnSubscribe<Void>() {
+//            @Override
+//            public void subscribe(SingleEmitter<Void> e) throws Exception {
+//                //查看文本中是否存在删除的数据
+//                deleteBook(bean.get_id());
+//                //删除任务
+//                deleteDownloadTask(bean.get_id());
+//                //删除目录
+//                deleteBookChapter(bean.get_id());
+//                //删除CollBook
+//                mCollBookDao.delete(bean);
+//                e.onSuccess(new Void());
+//            }
+//        });
+        return null;
+    }
+
+    //这个需要用rx，进行删除
+    public void deleteBookChapter(String bookId){
+//        mSession.getBookChapterBeanDao()
+//                .queryBuilder()
+//                .where(BookChapterBeanDao.Properties.BookId.eq(bookId))
+//                .buildDelete()
+//                .executeDeleteWithoutDetachingEntities();
+    }
+
+    public void deleteCollBook(CollBookBean collBook){
+//        mCollBookDao.delete(collBook);
+    }
+
+    //删除书籍
+    public void deleteBook(String bookId){
+//        FileUtils.deleteFile(Constant.BOOK_CACHE_PATH+bookId);
+    }
+
+    public void deleteBookRecord(String id){
+//        mSession.getBookRecordBeanDao()
+//                .queryBuilder()
+//                .where(BookRecordBeanDao.Properties.BookId.eq(id))
+//                .buildDelete()
+//                .executeDeleteWithoutDetachingEntities();
+    }
+
+    //删除任务
+    public void deleteDownloadTask(String bookId){
+//        mSession.getDownloadTaskBeanDao()
+//                .queryBuilder()
+//                .where(DownloadTaskBeanDao.Properties.BookId.eq(bookId))
+//                .buildDelete()
+//                .executeDeleteWithoutDetachingEntities();
+    }
+
+    public DaoSession getSession(){
+        return mSession;
+    }
+}

@@ -6,11 +6,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
-import androidx.core.widget.NestedScrollView;
-
-import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
-import com.gracefulwind.learnarms.commonsdk.utils.NumberUtils;
-
 /**
  * @ClassName: SmartScrollView1
  * @Author: Gracefulwind

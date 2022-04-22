@@ -176,9 +176,13 @@ public class CollBookBean {
     public void setLocal(boolean local) {
         isLocal = local;
     }
-//--todo: mix this-----------
+//--todo:read mix this-----------
     public List<BookChapterBean> getBookChapters() {
         return bookChapterList;
+    }
+
+    public void setBookChapters(List<BookChapterBean> bookChapterList) {
+        this.bookChapterList = bookChapterList;
     }
 
     public List<BookChapterBean> getBookChapterList() {

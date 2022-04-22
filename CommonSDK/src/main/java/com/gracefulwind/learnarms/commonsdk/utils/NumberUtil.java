@@ -11,7 +11,7 @@ package com.gracefulwind.learnarms.commonsdk.utils;
  * @Version: 1.0
  * @Email: 429344332@qq.com
  */
-public class NumberUtils {
+public class NumberUtil {
 
     /**
      * 与逻辑

@@ -1,4 +1,4 @@
-package com.gracefulwind.learnarms.reader.utils;
+package com.gracefulwind.learnarms.commonsdk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

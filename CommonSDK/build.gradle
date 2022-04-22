@@ -59,7 +59,10 @@ dependencies {
     api rootProject.ext.dependencies["retrofit-converter-gson"]
     api rootProject.ext.dependencies["retrofit-adapter-rxjava2"]
 
+//===todo:read 用config===
 //    api(name: 'commons-codec-1.6', ext: 'jar')
     implementation files('libs/commons-codec-1.6.jar')
     implementation files('libs/lfasr-sdk-3.0.1.jar')
+
+    implementation "com.github.qichuan:android-opencc:1.2.0"
 }

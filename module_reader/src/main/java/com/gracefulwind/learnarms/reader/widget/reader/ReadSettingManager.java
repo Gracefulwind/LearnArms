@@ -1,7 +1,7 @@
 package com.gracefulwind.learnarms.reader.widget.reader;
 
 import com.gracefulwind.learnarms.reader.utils.ScreenUtils;
-import com.gracefulwind.learnarms.reader.utils.SharedPreUtils;
+import com.gracefulwind.learnarms.commonsdk.utils.SharedPreUtils;
 
 /**
  * @ClassName: ReadSettingManager
