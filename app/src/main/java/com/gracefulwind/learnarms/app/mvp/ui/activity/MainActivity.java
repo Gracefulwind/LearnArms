@@ -18,13 +18,17 @@ package com.gracefulwind.learnarms.app.mvp.ui.activity;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.app.R;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -48,7 +52,7 @@ import com.gracefulwind.learnarms.commonservice.zhihu.service.ZhihuInfoService;
  * ================================================
  */
 @Route(path = RouterHub.APP_MAINACTIVITY)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends MyBaseActivity {
     @BindView(R.id.bt_zhihu)
     Button mZhihuButton;
     @BindView(R.id.bt_gank)
@@ -72,6 +76,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
+
         return R.layout.activity_main;
     }
 
