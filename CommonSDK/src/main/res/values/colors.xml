@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="app_common_title_color">#ff0099cc</color>
+    <color name="translation">#00000000</color>
 
 </resources>

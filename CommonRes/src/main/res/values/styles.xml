@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="public_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -7,6 +7,18 @@
         <item name="colorPrimaryDark">@color/public_color_transparent</item>
         <item name="colorAccent">@color/public_colorAccent</item>
         <item name="android:windowAnimationStyle">@style/public_Activity_Animation</item>
+<!--        沉浸式 ==> 转代码中实现-->
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+<!--        todo:wd 黑色的明显点，后续看下修改statusBar图标属性方法-->
+        <item name="android:statusBarColor">@android:color/background_dark</item>
+
+<!--        V29中重写该style-->
+<!--        <item name="android:enforceStatusBarContrast">false</item>-->
+<!--        <item name="android:enforceNavigationBarContrast">false</item>-->
     </style>
 
     <style name="public_Activity_Animation">

@@ -1,10 +1,13 @@
 <resources>
     <style name="SplashTheme" parent="public_AppTheme">
 <!--        <item name="android:windowBackground">@drawable/layer_splash_bg</item>-->
-        <item name="colorPrimaryDark">@android:color/black</item>
+
+<!--        <item name="colorPrimaryDark">@android:color/black</item>-->
+<!--        activity透明-->
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
+<!--        这句似乎有问题，用了反而有顶部黑框-->
+<!--        <item name="android:windowFullscreen">true</item>-->
     </style>
 
     <style name="style_common_text_button">

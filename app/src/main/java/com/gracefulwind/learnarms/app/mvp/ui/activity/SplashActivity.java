@@ -15,10 +15,17 @@
  */
 package com.gracefulwind.learnarms.app.mvp.ui.activity;
 
+import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,16 +65,43 @@ public class SplashActivity extends MyBaseActivity {
     @BindView(R.id.as_tv_jump_button)
     TextView asTvJumpButton;
     private Disposable jumpToMainTimer;
+    static int delayTime = 5;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
 
     }
 
+    /**
+     * 在setView前
+     * */
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
-        getWindow().getDecorView()
-                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+//        View decorView = getWindow().getDecorView();
+//
+//        // Hide the status bar.
+//        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
+//
+//        // Remember that you should never show the action bar if the
+//        // status bar is hidden, so hide that too if necessary.
+//        ActionBar actionBar = getActionBar();
+//        if(null != actionBar){
+//            actionBar.hide();
+//        }
+
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_VISIBLE
+////                | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+////                | View.INVISIBLE
+////                | View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+
+
+//        View decorView = getWindow().getDecorView();
+//        int statusOptions = decorView.getVisibility();
+//        decorView.setSystemUiVisibility(statusOptions | View.SYSTEM_UI_FLAG_FULLSCREEN);
         return R.layout.activity_splash;
     }
 
@@ -82,43 +116,44 @@ public class SplashActivity extends MyBaseActivity {
 //                        jumpToMain();
 //                    }
 //                });
+        asTvJumpButton = findViewById(R.id.as_tv_jump_button);
         asTvJumpButton.setText(String.format("%d秒后跳转", 3));
         //延迟时间，间隔时间，时间单位
         Observable.interval(0, 1, TimeUnit.SECONDS)
-                //重复次数
-//                .take(3)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Long>() {
-                    int counter = 3;
+            //重复次数
+//            .take(delayTime)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<Long>() {
+                int counter = delayTime;
 
-                    @Override
-                    public void onSubscribe(@NotNull Disposable disposable) {
-                        jumpToMainTimer = disposable;
-                        counter = 3;
-                    }
+                @Override
+                public void onSubscribe(@NotNull Disposable disposable) {
+                    jumpToMainTimer = disposable;
+                    counter = delayTime;
+                }
 
-                    @Override
-                    public void onNext(@NotNull Long aLong) {
-                        LogUtil.e(TAG, "onNext : " + aLong);
-                        long now = counter - aLong;
-                        if(0 <= now){
-                            asTvJumpButton.setText(String.format("%d秒后跳转", now));
-                        }else {
-                            jumpToMainImmediately();
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NotNull Throwable throwable) {
-                        closeTimer();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        LogUtil.e(TAG, "onComplete : ");
+                @Override
+                public void onNext(@NotNull Long aLong) {
+//                    LogUtil.e(TAG, "onNext : " + aLong);
+                    long now = counter - aLong;
+                    if(0 <= now){
+                        asTvJumpButton.setText(String.format("%d秒后跳转", now));
+                    }else {
                         jumpToMainImmediately();
                     }
-                });
+                }
+
+                @Override
+                public void onError(@NotNull Throwable throwable) {
+                    closeTimer();
+                }
+
+                @Override
+                public void onComplete() {
+//                    LogUtil.e(TAG, "onComplete : ");
+                    jumpToMainImmediately();
+                }
+            });
     }
 
     private void closeTimer() {

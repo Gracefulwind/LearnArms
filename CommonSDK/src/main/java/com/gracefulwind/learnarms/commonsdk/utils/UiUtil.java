@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+
 import static android.util.TypedValue.applyDimension;
 
 /**
@@ -25,6 +27,7 @@ import static android.util.TypedValue.applyDimension;
  */
 
 public class UiUtil {
+    public static final String TAG = "UiUtil";
 
     private static Context appContext = null;
 
@@ -106,6 +109,45 @@ public class UiUtil {
         int desired = layout.getLineTop(tv.getLineCount());
         int padding = tv.getCompoundPaddingTop() + tv.getCompoundPaddingBottom();
         return desired + padding;
+    }
+
+    /**
+     * todo:wd 0
+     * 此方法在jessYan的工具包里也有，但是走了Exception。网上看是可以的，有空查下问题原因
+     * 经测试，在android 7.1上正常，估计和mSemiTransparentStatusBarColor一样。高版本api的反射有被禁止的
+     * 查询9.0/10.0反射问题
+     * */
+    public static int getStatusBarHeight(Context context){
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        boolean var4 = false;
+
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            int x = Integer.parseInt(field.get(obj).toString());
+            return context.getResources().getDimensionPixelSize(x);
+        } catch (Exception var6) {
+            var6.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 相比上面的方法{@link #getStatusBarHeight(Context)}, 这个方法经测试可行
+     * */
+    public static int getRealStatusBarHeight(Context context){
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }else {
+            //获取不到statusBarHeight则为0
+            result = 0;
+        }
+        return result;
     }
 
 }
