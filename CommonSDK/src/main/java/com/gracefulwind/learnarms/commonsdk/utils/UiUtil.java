@@ -8,6 +8,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -112,42 +113,30 @@ public class UiUtil {
     }
 
     /**
-     * todo:wd 0
-     * 此方法在jessYan的工具包里也有，但是走了Exception。网上看是可以的，有空查下问题原因
-     * 经测试，在android 7.1上正常，估计和mSemiTransparentStatusBarColor一样。高版本api的反射有被禁止的
-     * 查询9.0/10.0反射问题
-     * */
-    public static int getStatusBarHeight(Context context){
-        Class<?> c = null;
-        Object obj = null;
-        Field field = null;
-        boolean var4 = false;
-
-        try {
-            c = Class.forName("com.android.internal.R$dimen");
-            obj = c.newInstance();
-            field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            return context.getResources().getDimensionPixelSize(x);
-        } catch (Exception var6) {
-            var6.printStackTrace();
-            return 0;
-        }
+     * 获取当前屏幕的尺寸大小，不包含状态栏
+     * @param context
+     * @return
+     */
+    public static DisplayMetrics getMetrics(Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getMetrics(metrics);
+        return metrics;
     }
 
     /**
-     * 相比上面的方法{@link #getStatusBarHeight(Context)}, 这个方法经测试可行
-     * */
-    public static int getRealStatusBarHeight(Context context){
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }else {
-            //获取不到statusBarHeight则为0
-            result = 0;
-        }
-        return result;
+     * 获取当前屏幕包含状态栏的尺寸大小
+     * @param context
+     * @return
+     * todo:wd 存疑，测试出来似乎不带statusBar的高度
+     */
+    public static DisplayMetrics getRealMetrics(Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager windowMgr = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        windowMgr.getDefaultDisplay().getRealMetrics(metrics);
+        return metrics;
+
     }
+
 
 }

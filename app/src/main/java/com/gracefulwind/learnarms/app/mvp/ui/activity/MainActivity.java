@@ -20,7 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -29,6 +31,9 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gracefulwind.learnarms.app.R;
 import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
+import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.StatusBarUtil;
+import com.gracefulwind.learnarms.commonsdk.utils.UiUtil;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -76,7 +81,6 @@ public class MainActivity extends MyBaseActivity {
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
-
         return R.layout.activity_main;
     }
 
@@ -148,7 +152,8 @@ public class MainActivity extends MyBaseActivity {
      * @param view
      */
     @OnClick({R.id.bt_zhihu, R.id.bt_gank, R.id.bt_gold, R.id.am_tv_click1, R.id.am_tv_weather_report
-            , R.id.am_tv_see_novels, R.id.am_tv_smart_write, R.id.am_tv_new_smart_write, R.id.am_tv_ocr, R.id.am_tv_copy})
+            , R.id.am_tv_see_novels, R.id.am_tv_smart_write, R.id.am_tv_new_smart_write, R.id.am_tv_ocr
+            , R.id.am_tv_copy, R.id.am_tv_test})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_zhihu:
@@ -188,8 +193,29 @@ public class MainActivity extends MyBaseActivity {
                 //拷贝组件
                 Utils.navigation(MainActivity.this, RouterHub.Copy.HOME_ACTIVITY);
                 break;
+            case R.id.am_tv_test:
+                //测试按钮
+                test();
+                break;
             default:
                 break;
         }
+    }
+
+    private void test() {
+        DisplayMetrics metrics = UiUtil.getMetrics(this);
+        DisplayMetrics realMetrics = UiUtil.getRealMetrics(this);
+        int statusBarHeight = StatusBarUtil.getStatusBarHeight(this);
+        int navigationBarHeight = StatusBarUtil.getNavigationBarHeight(this);
+        LogUtil.e(TAG, "metrics : " + metrics);
+        LogUtil.e(TAG, "realMetrics : " + realMetrics);
+        LogUtil.e(TAG, "statusBarHeight : " + statusBarHeight);
+        LogUtil.e(TAG, "navigationBarHeight : " + navigationBarHeight);
+        View root = mRootView;
+        LogUtil.e(TAG, "rootView = " + root);
+        View childAt0 = ((ViewGroup) mRootView).getChildAt(0);
+        View childAt1 = ((ViewGroup) mRootView).getChildAt(1);
+        View childAt2 = ((ViewGroup) mRootView).getChildAt(2);
+        LogUtil.e(TAG, "childAt0 = " + childAt0.getHeight() + ", childAt1 = " + childAt1.getHeight() + ", childAt2 = " + childAt2.getHeight());
     }
 }
