@@ -106,6 +106,11 @@ public class SplashActivity extends MyBaseActivity {
     }
 
     @Override
+    public View getStatusBarMarginView(){
+        return asTvJumpButton;
+    }
+
+    @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 //        //timer只能发送一次数据，这里不用
 //        jumpToMainTimer = Observable.timer(3, TimeUnit.SECONDS)

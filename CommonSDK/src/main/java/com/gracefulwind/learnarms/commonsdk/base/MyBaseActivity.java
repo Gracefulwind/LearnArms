@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.gracefulwind.learnarms.commonsdk.R;
+import com.gracefulwind.learnarms.commonsdk.interfaces.Immersible;
 import com.gracefulwind.learnarms.commonsdk.utils.LogUtil;
 import com.gracefulwind.learnarms.commonsdk.utils.StatusBarUtil;
 import com.gracefulwind.learnarms.commonsdk.widget.StatusBarView;
@@ -39,9 +40,11 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * @Email: 429344332@qq.com
  */
 
-public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<P> {
+public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<P> implements Immersible {
     public static final String TAG = "MyBaseActivity";
     protected View mRootView;
+    protected boolean isImmersive = true;
+    protected boolean needSuitImmersive = true;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -50,13 +53,24 @@ public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<
         super.onCreate(savedInstanceState);
         //根据contentView来找rootView，不用管外面的那么多层级包裹
         mRootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
-        //似乎statusBar的设定时机无所谓啊。不是网上说的必须在setContent前
-        setStatusBar();
+        if(isImmersive){
+            //似乎statusBar的设定时机无所谓啊。不是网上说的必须在setContent前
+            setStatusBar();
+        }
+    }
+
+    public void setImmersiveMode(boolean isImmersive){
+        this.isImmersive = isImmersive;
+    }
+
+    public View getRootView(){
+        return mRootView;
     }
 
     /**
      * 测试代码，9.0+系统下正常的沉浸式透明状态栏
      * */
+    @Deprecated
     private void setStatusBar1() {
 
         int uiFlag = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
@@ -82,10 +96,33 @@ public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<
         int realStatusBarHeight = getStatusBarHeight(this);
         LogUtil.e(TAG, "get height on set : " + realStatusBarHeight);
         StatusBarUtil.setStatusBarImmersive(this);
+        StatusBarUtil.suitStatusBarImmersive(this, this, mRootView);
+//        int titleBarId = getResources().getIdentifier("title_bar", "id", getPackageName());
+//        int titleBarMarginId = getResources().getIdentifier("title_bar_margin", "id", getPackageName());
+//        if(null != getStatusBarView()){
+//            StatusBarUtil.addStatusBarView(this, mRootView, getStatusBarView());
+//        } else if(null != getStatusBarMarginView()){
+//            StatusBarUtil.addStatusBarMarginView(this, mRootView, getStatusBarMarginView());
+//        } else if(titleBarId > 0){
+//            View titleBar = mRootView.findViewById(titleBarId);
+//            StatusBarUtil.addStatusBarView(this, mRootView, titleBar);
+//        }else if(titleBarMarginId > 0){
+//            View titleBar = mRootView.findViewById(titleBarId);
+//            StatusBarUtil.addStatusBarMarginView(this, mRootView, titleBar);
+//        }
 
-//        StatusBarUtil.hasNaviBar(this);
-        hasNaviBar();
+        boolean hasNaviBar = StatusBarUtil.hasNaviBar(this);
+//        hasNaviBar();
+    }
 
+    @Override
+    public View getStatusBarPaddingView(){
+        return null;
+    }
+
+    @Override
+    public View getStatusBarMarginView(){
+        return null;
     }
 
     private void hasNaviBar() {
@@ -125,4 +162,6 @@ public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<
     private static int calculateStatusColor(int color, int alpha){
         return 0;
     }
+
+
 }

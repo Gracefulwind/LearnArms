@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -58,6 +59,10 @@ import com.gracefulwind.learnarms.commonservice.zhihu.service.ZhihuInfoService;
  */
 @Route(path = RouterHub.APP_MAINACTIVITY)
 public class MainActivity extends MyBaseActivity {
+    public static final String TAG = "MainActivity";
+
+    @BindView(R.id.am_ll_title)
+    LinearLayout amLlTitle;
     @BindView(R.id.bt_zhihu)
     Button mZhihuButton;
     @BindView(R.id.bt_gank)
@@ -132,6 +137,11 @@ public class MainActivity extends MyBaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public View getStatusBarPaddingView(){
+        return amLlTitle;
     }
 
     /**

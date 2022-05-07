@@ -6,7 +6,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       android:background="@color/public_white"
       android:orientation="vertical"
-      android:id="@+id/am_ll_content"
+      android:id="@+id/title_bar_padding"
     >
 
 <!--    <com.airbnb.lottie.LottieAnimationView-->
@@ -19,6 +19,7 @@
 <!--        app:lottie_loop="true"/>-->
 
     <LinearLayout
+        android:id="@+id/am_ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -30,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/public_color_transparent"
+            android:background="@color/public_color_dark_gold"
             tools:text="@string/public_name_zhihu"
             android:textColor="@color/public_color_959292"
             android:textSize="@dimen/public_font_24sp"

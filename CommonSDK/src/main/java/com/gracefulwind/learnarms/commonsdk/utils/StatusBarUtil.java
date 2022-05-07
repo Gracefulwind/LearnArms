@@ -3,21 +3,24 @@ package com.gracefulwind.learnarms.commonsdk.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.gracefulwind.learnarms.commonsdk.R;
+import com.gracefulwind.learnarms.commonsdk.base.MyBaseActivity;
+import com.gracefulwind.learnarms.commonsdk.interfaces.Immersible;
+import com.gracefulwind.learnarms.commonsdk.widget.StatusBarView;
 
 import java.lang.reflect.Field;
 
@@ -107,6 +110,34 @@ public class StatusBarUtil {
     }
 
     /**
+     * 公共适配状态栏的方法
+     * 优先顺序:
+     * 1.代码中设置的padding;   2.代码中设置的margin;   3.xml中设置的title_bar_padding;   4.xml中设置的title_bar_margin
+     * */
+    public static void suitStatusBarImmersive(Context context, Immersible immersible, View rootView){
+        //1.判断是否覆写statusBar方法
+        View statusBarView = immersible.getStatusBarPaddingView();
+        //2.判断是否覆写statusBarMargin方法
+        View statusBarMarginView = immersible.getStatusBarMarginView();
+        //3.
+        Resources resources = context.getResources();
+        String packageName = context.getPackageName();
+        int titleBarId = resources.getIdentifier("title_bar_padding", "id", packageName);
+        int titleBarMarginId = resources.getIdentifier("title_bar_margin", "id", packageName);
+        if(null != statusBarView){
+            StatusBarUtil.addStatusBarPaddingView(context, rootView, statusBarView);
+        } else if(null != statusBarMarginView){
+            StatusBarUtil.addStatusBarMarginView(context, rootView, statusBarMarginView);
+        } else if(titleBarId > 0){
+            View titleBar = rootView.findViewById(titleBarId);
+            StatusBarUtil.addStatusBarPaddingView(context, rootView, titleBar);
+        }else if(titleBarMarginId > 0){
+            View titleBar = rootView.findViewById(titleBarId);
+            StatusBarUtil.addStatusBarMarginView(context, rootView, titleBar);
+        }
+    }
+
+    /**
      * todo:wd 0
      * 获取statusBar的高度
      * android 9.0后系统hide的反射被禁用，所以此方法不再可用
@@ -147,6 +178,104 @@ public class StatusBarUtil {
     }
 
     /**
+     *
+     * 感觉是否适应了statusBar的标签放在targetView中比放在rootView中靠谱点。。。
+     * */
+    public static void addStatusBarPaddingView(Context context, View rootView, View targetView){
+        if(null == targetView){
+            return;
+        }
+        int statusBarHeight = getStatusBarHeight(context);
+        Object tag = targetView.getTag(R.id.tag_suit_status_bar);
+        //如果不存在tag或者tag标记没有适应状态栏
+        if(null == tag || (0 == (int)tag)){
+            int paddingLeft = targetView.getPaddingLeft();
+            int paddingTop = targetView.getPaddingTop();
+            int paddingRight = targetView.getPaddingRight();
+            int paddingBottom = targetView.getPaddingBottom();
+            targetView.setPadding(paddingLeft, paddingTop + statusBarHeight, paddingRight, paddingBottom);
+            targetView.setTag(R.id.tag_suit_status_bar, statusBarHeight);
+        }else {
+            int lastSuitHeight = (int) tag;
+            //当高度未变化时不用动
+            if(statusBarHeight == lastSuitHeight){
+                return;
+            }
+            int paddingLeft = targetView.getPaddingLeft();
+            int paddingTop = targetView.getPaddingTop();
+            int paddingRight = targetView.getPaddingRight();
+            int paddingBottom = targetView.getPaddingBottom();
+            targetView.setPadding(paddingLeft, paddingTop - lastSuitHeight + statusBarHeight, paddingRight, paddingBottom);
+            targetView.setTag(R.id.tag_suit_status_bar, statusBarHeight);
+        }
+    }
+
+    public static void addStatusBarMarginView(Context context, View rootView, View targetView){
+        if(null == targetView){
+            return;
+        }
+        ViewGroup.LayoutParams lp = targetView.getLayoutParams();
+        //无margin的没用
+        if(!(lp instanceof ViewGroup.MarginLayoutParams)){
+            return;
+        }
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lp;
+        int statusBarHeight = getStatusBarHeight(context);
+        Object tag = targetView.getTag(R.id.tag_suit_status_bar);
+        //如果不存在tag或者tag标记没有适应状态栏
+        if(null == tag || (0 == (int)tag)){
+            mlp.topMargin += statusBarHeight;
+            targetView.setLayoutParams(mlp);
+            targetView.setTag(R.id.tag_suit_status_bar, statusBarHeight);
+        } else {
+            int lastSuitHeight = (int) tag;
+            //当高度未变化时不用动
+            if(statusBarHeight == lastSuitHeight){
+                return;
+            }
+            mlp.topMargin = mlp.topMargin - lastSuitHeight + statusBarHeight;
+            targetView.setLayoutParams(mlp);
+            targetView.setTag(R.id.tag_suit_status_bar, statusBarHeight);
+        }
+    }
+
+    /**
+     * 利用占位view的方式适应statusBar，会对根布局有限制，这种方式不建议，没啥意义
+     * */
+    @Deprecated
+    public static void addStatusBarView(MyBaseActivity activity, int color, int alpha) {
+        View rootView = activity.getRootView();
+        //todo:wd 有没一种可能，某个页面的完整页面只有个View，而非ViewGroup
+        if(rootView instanceof ViewGroup){
+            ViewGroup root = (ViewGroup) rootView;
+            //没有
+            if(0 == root.getChildCount() || !(((ViewGroup) rootView).getChildAt(0) instanceof StatusBarView)){
+                StatusBarView statusBarView = new StatusBarView(activity);
+                root.addView(statusBarView, 0);
+                int paddingLeft = root.getPaddingLeft();
+                int paddingTop = root.getPaddingTop();
+                int paddingRight = root.getPaddingRight();
+                int paddingBottom = root.getPaddingBottom();
+                root.setPadding(paddingLeft, paddingTop + getStatusBarHeight(activity), paddingRight, paddingBottom);
+            }
+        }
+    }
+
+    public static StatusBarView createStatusBarView(Activity activity, int color, int alpha) {
+        // 绘制一个和状态栏一样高的矩形
+        StatusBarView statusBarView = new StatusBarView(activity);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(activity));
+        statusBarView.setLayoutParams(params);
+        statusBarView.setBackgroundColor(calculateStatusColor(color, alpha));
+        return statusBarView;
+    }
+
+    private static int calculateStatusColor(int color, int alpha){
+        return 0;
+    }
+
+    /**
      * 获取navigationBar的高度
      * @return px值，无法获取到资源id则返回-1
      *
@@ -161,6 +290,7 @@ public class StatusBarUtil {
         return result;
 
     }
+
 
     /**
      *
@@ -180,6 +310,11 @@ public class StatusBarUtil {
                 return v.onApplyWindowInsets(insets);
             }
         });
+        /**
+         * 起相同作用的实现
+         * 1.ViewCompat.setOnApplyWindowInsetsListener
+         * 2.ViewCompat.requestApplyInsets(decorView)
+         * */
 //        获取虚拟键盘高度=================================================
         activity.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
             //当键盘弹出隐藏的时候会 调用此方法。
@@ -221,5 +356,23 @@ public class StatusBarUtil {
                 + " , dw = " + (rWidthPix - cWidthPix) + " , dh = " + (rHeightPix - cHeightPix));
         return isSame;
 
+//        boolean hasNavigationBar = false;
+//        Resources rs = context.getResources();
+//        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+//        if (id > 0) {
+//            hasNavigationBar = rs.getBoolean(id);
+//        }
+//        try {
+//            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+//            Method m = systemPropertiesClass.getMethod("get", String.class);
+//            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+//            if ("1".equals(navBarOverride)) {
+//                hasNavigationBar = false;
+//            } else if ("0".equals(navBarOverride)) {
+//                hasNavigationBar = true;
+//            }
+//        } catch (Exception e) {
+//        }
+//        return hasNavigationBar;
     }
 }
