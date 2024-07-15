@@ -38,5 +38,7 @@ dependencies {
 //    implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     implementation rootProject.ext.dependencies["tagsoup"]
     implementation rootProject.ext.dependencies["greenDao"]
+    implementation rootProject.ext.dependencies["material"]
+//    implementation 'com.google.android.material:material:1.2.1'
 
 }

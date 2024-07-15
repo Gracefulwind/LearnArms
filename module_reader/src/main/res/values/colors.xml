@@ -18,4 +18,8 @@
     <color name="nb.read.bg.night">#000000</color>
     <color name="nb.read.font_night">#99ffffff</color>
 
+    <color name="reader_color_menu_bg">#191919</color>
+    <color name="reader_color_menu_text_color">@color/public_white</color>
+<!--    <color name="nb.read.font_night">#99ffffff</color>-->
+
 </resources>

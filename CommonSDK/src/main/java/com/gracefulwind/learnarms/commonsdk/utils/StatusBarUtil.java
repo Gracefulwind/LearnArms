@@ -124,13 +124,17 @@ public class StatusBarUtil {
         String packageName = context.getPackageName();
         int titleBarId = resources.getIdentifier("title_bar_padding", "id", packageName);
         int titleBarMarginId = resources.getIdentifier("title_bar_margin", "id", packageName);
+        //默认优先用return的PaddingView
         if(null != statusBarView){
             StatusBarUtil.addStatusBarPaddingView(context, rootView, statusBarView);
+        //第二优先级用return的MarginView
         } else if(null != statusBarMarginView){
             StatusBarUtil.addStatusBarMarginView(context, rootView, statusBarMarginView);
+        //第三优先级用xml的PaddingView
         } else if(titleBarId > 0){
             View titleBar = rootView.findViewById(titleBarId);
             StatusBarUtil.addStatusBarPaddingView(context, rootView, titleBar);
+        //第四优先级用xml的MarginView
         }else if(titleBarMarginId > 0){
             View titleBar = rootView.findViewById(titleBarId);
             StatusBarUtil.addStatusBarMarginView(context, rootView, titleBar);

@@ -1,13 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
+
+    >
+<!--    android:keepScreenOn="true"-->
+
+<!--    背景-->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#035080"
-        />
+        android:background="@drawable/reader_theme_leather_bg"
+        >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.gracefulwind.learnarms.reader.widget.reader.PageView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            tools:visibility="gone" />
+
+        <!--切换页面提示-->
+        <TextView
+            android:id="@+id/read_tv_page_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/read_ll_bottom_menu"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@color/reader_color_menu_bg"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingTop="8dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="8dp"
+            android:text="1/12"
+            android:textColor="@color/reader_color_menu_text_color"
+            android:visibility="gone" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/read_abl_top_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/reader_color_menu_bg"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/reader_theme_toolbar_menu">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_arrow_back" />
+
+                <TextView
+                    android:id="@+id/read_book_cache_download"
+                    android:layout_width="70dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="20dp"
+                    android:clickable="true"
+                    android:drawableTop="@drawable/icon_download_main_pre"
+                    android:text="下载"
+                    android:gravity="center"
+                    android:textColor="#CBCBCB"
+                    android:textSize="10sp" />
+
+                <RelativeLayout
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right"
+                    android:background="@color/reader_color_menu_bg">
+
+                    <TextView
+                        android:id="@+id/read_tv_brief"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center"
+                        android:text="加入群聊"
+                        android:textColor="#CBCBCB"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </RelativeLayout>
+
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="#035080"-->
+<!--        />-->
+
+</androidx.drawerlayout.widget.DrawerLayout>

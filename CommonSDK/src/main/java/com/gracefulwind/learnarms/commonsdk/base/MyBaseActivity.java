@@ -97,22 +97,7 @@ public abstract class MyBaseActivity<P extends IPresenter> extends BaseActivity<
         LogUtil.e(TAG, "get height on set : " + realStatusBarHeight);
         StatusBarUtil.setStatusBarImmersive(this);
         StatusBarUtil.suitStatusBarImmersive(this, this, mRootView);
-//        int titleBarId = getResources().getIdentifier("title_bar", "id", getPackageName());
-//        int titleBarMarginId = getResources().getIdentifier("title_bar_margin", "id", getPackageName());
-//        if(null != getStatusBarView()){
-//            StatusBarUtil.addStatusBarView(this, mRootView, getStatusBarView());
-//        } else if(null != getStatusBarMarginView()){
-//            StatusBarUtil.addStatusBarMarginView(this, mRootView, getStatusBarMarginView());
-//        } else if(titleBarId > 0){
-//            View titleBar = mRootView.findViewById(titleBarId);
-//            StatusBarUtil.addStatusBarView(this, mRootView, titleBar);
-//        }else if(titleBarMarginId > 0){
-//            View titleBar = mRootView.findViewById(titleBarId);
-//            StatusBarUtil.addStatusBarMarginView(this, mRootView, titleBar);
-//        }
-
-        boolean hasNaviBar = StatusBarUtil.hasNaviBar(this);
-//        hasNaviBar();
+//        boolean hasNaviBar = StatusBarUtil.hasNaviBar(this);
     }
 
     @Override
